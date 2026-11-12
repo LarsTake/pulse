@@ -14,7 +14,9 @@ param(
   [string]$AdminEmail = "",
   [string]$Network = "pulse-proxy"
 )
-$ErrorActionPreference = "Stop"
+# "Continue": Windows PowerShell 5 turns any stderr line of a native command (docker) into a terminating error under
+# "Stop", even for an expected "not found". Failures are checked through $LASTEXITCODE and thrown explicitly.
+$ErrorActionPreference = "Continue"
 function Step($t) { Write-Host "`n== $t" -ForegroundColor Cyan }
 function Ok($t) { Write-Host "   $t" -ForegroundColor Green }
 function Warn($t) { Write-Host "   $t" -ForegroundColor Yellow }
@@ -86,10 +88,18 @@ APP_URL=https://$Domain
 "@ | Set-Content -Encoding ascii .\.env
 Ok ".env written"
 
-docker network inspect $Network *> $null
-if ($LASTEXITCODE -ne 0) { docker network create $Network | Out-Null; Ok "Docker network $Network created" }
+$existing = docker network ls --filter "name=^$Network$" --format "{{.Name}}"
+if (-not $existing) {
+  docker network create $Network | Out-Null
+  if ($LASTEXITCODE -ne 0) { throw "Could not create the Docker network $Network." }
+  Ok "Docker network $Network created"
+}
 $connected = docker inspect $caddyName --format "{{range `$k, `$v := .NetworkSettings.Networks}}{{`$k}} {{end}}"
-if ($connected -notmatch "\b$Network\b") { docker network connect $Network $caddyName; Ok "Caddy joined $Network" } else { Ok "Caddy already on $Network" }
+if ($connected -notmatch "\b$Network\b") {
+  docker network connect $Network $caddyName
+  if ($LASTEXITCODE -ne 0) { throw "Could not connect $caddyName to $Network." }
+  Ok "Caddy joined $Network"
+} else { Ok "Caddy already on $Network" }
 @"
 # Pulse joins the network Caddy is on; Caddy reaches it at http://pulse:3000. No host port is published.
 services:
