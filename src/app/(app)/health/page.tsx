@@ -9,14 +9,16 @@ import { userCtx } from "@/server/queries/common"
 import { getHealthHub } from "@/server/queries/health"
 import type { HealthHubVM, VitalKey } from "@/server/queries/types"
 import { StressChart } from "@/components/charts/StressChart"
-import { CAPTION, CARD_BUTTON, LABEL, StatusChip, Tag, ValueUnit } from "@/components/metrics/primitives"
+import { CAPTION, CARD_BUTTON, LABEL, StatusChip, ValueUnit } from "@/components/metrics/primitives"
 import { TickScale } from "@/components/metrics/TickScale"
 import { AgeOrb } from "@/components/metrics/AgeOrb"
 import { MetricState } from "@/components/shells/MetricState"
 import { PageShell } from "@/components/shells/PageShell"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { Skeleton } from "@/components/ui/skeleton"
-import { categoryTone, categoryWord, ordinal } from "./format"
+import { BP_TONE, categoryTone, categoryWord, LAB_WORD, ordinal } from "./format"
+import { BP_CATEGORY_LABEL } from "@/core/algorithms/bloodPressure"
+import { getBloodPressure, getLabs, type BloodPressureVM, type LabsVM } from "@/server/queries/bodyLogs"
 import { LastReading } from "./heart-rate/LiveHeartRate"
 
 export const metadata = { title: "Health" }
@@ -111,15 +113,44 @@ function AgeBlock({ m }: { m: HealthHubVM["healthspan"] }) {
   )
 }
 
-/**
- * health-stress-card-upgrade-promo's Blood Pressure Insights (Beta), built and off (FEATURES.bloodPressure): Pulse reads no blood pressure.
- * The card says what it would show; the page renders it only when the flag is on.
- */
-function BloodPressure() {
+/** Blood Pressure card: the 7-day average (or the latest reading) and its category; opens /health/blood-pressure. */
+function BloodPressure({ bp }: { bp: BloodPressureVM }) {
+  const head = bp.week ?? (bp.latest ? { systolic: bp.latest.systolic, diastolic: bp.latest.diastolic, category: bp.latest.category, count: 1 } : null)
+  if (!head) return <p className={EMPTY}>Log readings from your cuff to see your average and trend.</p>
   return (
-    <SectionShell variant="card" level={2} title="Blood Pressure Insights" info={false} action={<Tag kind="beta" />}>
-      <p className={EMPTY}>How your blood pressure trends against your sleep, strain and recovery, from the readings your cuff shares with Google Health.</p>
-    </SectionShell>
+    <div className="flex items-end justify-between gap-4">
+      <div className="min-w-0 space-y-1">
+        <ValueUnit value={`${head.systolic}/${head.diastolic}`} unit="mmHg" className={cn(TILE, "block")} />
+        <p className={CAPTION}>{bp.week ? `7-day average · ${bp.week.count} readings` : "Latest reading"}</p>
+      </div>
+      <StatusChip tone={BP_TONE[head.category]}>{BP_CATEGORY_LABEL[head.category]}</StatusChip>
+    </div>
+  )
+}
+
+/** Labs card: markers out of range from the latest test of each. */
+function Labs({ labs }: { labs: LabsVM }) {
+  if (!labs.lastTest) return <p className={EMPTY}>Enter your blood test results to track each marker over time.</p>
+  const off = labs.groups.flatMap((g) => g.items).filter((i) => i.status === "low" || i.status === "high")
+  const total = labs.groups.reduce((n, g) => n + g.items.length, 0)
+  return (
+    <div className="space-y-2">
+      <p className="flex items-baseline gap-2">
+        <span className={TILE}>{total - off.length}</span>
+        <span className={CAPTION}>of {total} markers in range</span>
+      </p>
+      {off.length > 0 && (
+        <ul className="flex flex-wrap gap-2">
+          {off.slice(0, 4).map((i) => (
+            <li key={i.key}>
+              <StatusChip tone="warning">
+                {i.label} {LAB_WORD[i.status].toLowerCase()}
+              </StatusChip>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   )
 }
 
@@ -256,7 +287,8 @@ function HeartRate({ hr }: { hr: HealthHubVM["heartRate"] }) {
 /** Health hub `/health` (spec §7.6): today's values ; each card links to its detail screen. */
 export default async function HealthPage() {
   await connection()
-  const vm = await getHealthHub(await userCtx())
+  const ctx = await userCtx()
+  const [vm, bp, labs] = await Promise.all([getHealthHub(ctx), getBloodPressure(ctx), getLabs(ctx)])
   return (
     <PageShell title="Health">
       {/* The reference app's order (health-stress-card-upgrade-promo, health-whoop-age-hero, health-monitor-card-labs): Stress Monitor, the age block, then Health Monitor; Pulse's
@@ -268,7 +300,16 @@ export default async function HealthPage() {
         <div className="xl:col-span-2">
           <AgeBlock m={vm.healthspan} />
         </div>
-        {FEATURES.bloodPressure && <BloodPressure />}
+        {FEATURES.bloodPressure && (
+          <SectionShell variant="card" level={2} title="Blood Pressure" info={false} href="/health/blood-pressure">
+            <BloodPressure bp={bp} />
+          </SectionShell>
+        )}
+        {FEATURES.labs && (
+          <SectionShell variant="card" level={2} title="Labs" info={false} href="/health/labs">
+            <Labs labs={labs} />
+          </SectionShell>
+        )}
         <SectionShell variant="card" level={2} title="Health Monitor" info={false} href="/health/monitor">
           <Monitor m={vm.monitor} />
         </SectionShell>

@@ -572,3 +572,52 @@ export const SYNCED_TABLES = [
   healthRecords, intradayDirty, dailyScores, intradaySeries, reports, foldCheckpoints,
 ] as const;
 
+
+// ── Body logs kept in Pulse only (never sent to Google) ──────────────────────
+
+/** Blood pressure the user typed in from a cuff, one row per reading. */
+export const bpReadings = pgTable(
+  "bp_readings",
+  {
+    userId: userId(),
+    id: text("id").notNull(),
+    ts: ts("ts").notNull(),
+    day: day("day").notNull(),
+    systolic: smallint("systolic").notNull(),
+    diastolic: smallint("diastolic").notNull(),
+    pulse: smallint("pulse"),
+    createdAt: ts("created_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.id] }), index("bp_readings_ts").on(t.userId, t.ts)],
+);
+
+/** Blood test results, one row per marker and test day. `ref_low`/`ref_high`: the lab's printed range, when given. */
+export const labResults = pgTable(
+  "lab_results",
+  {
+    userId: userId(),
+    id: text("id").notNull(),
+    day: day("day").notNull(),
+    marker: text("marker").notNull(),
+    value: doublePrecision("value").notNull(),
+    refLow: doublePrecision("ref_low"),
+    refHigh: doublePrecision("ref_high"),
+    createdAt: ts("created_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.id] }), index("lab_results_marker").on(t.userId, t.marker, t.day)],
+);
+
+/** Strength sessions logged set by set. `exercises`: `[{ key, sets: [{ reps, kg }] }]` (src/core/algorithms/strength.ts). */
+export const strengthSessions = pgTable(
+  "strength_sessions",
+  {
+    userId: userId(),
+    id: text("id").notNull(),
+    ts: ts("ts").notNull(),
+    day: day("day").notNull(),
+    durationMin: smallint("duration_min"),
+    exercises: jsonb("exercises").notNull(),
+    createdAt: ts("created_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.id] }), index("strength_sessions_day").on(t.userId, t.day)],
+);

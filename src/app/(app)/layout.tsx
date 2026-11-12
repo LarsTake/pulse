@@ -7,6 +7,8 @@ import { FEATURES } from "@/lib/features"
 import { activityLogContext } from "@/server/queries/home"
 import { ActivitySheets } from "./activity/LogActivity"
 import { CheckInSheet } from "./journal/CheckIn"
+import { BpSheet, LabSheet } from "./health/BodySheets"
+import { StrengthSheet } from "./strength/StrengthSheet"
 import { avatarSrc } from "@/server/avatar"
 import { coachAccess } from "@/server/coach/store"
 import { getDb } from "@/server/db"
@@ -47,6 +49,9 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
       {/* One check-in sheet for every screen, opened over it by `?checkin=1` (spec §11 UX2). */}
       <Suspense>
         <CheckInSheet />
+        {FEATURES.strengthTrainer && <StrengthSheet />}
+        {FEATURES.bloodPressure && <BpSheet />}
+        {FEATURES.labs && <LabSheet />}
         {logging && <ActivitySheets {...logging} />}
       </Suspense>
     </AppShell>

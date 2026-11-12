@@ -24,3 +24,16 @@ export function categoryTone(c: string) {
   const k = c.toLowerCase()
   return k === "excellent" || k === "superior" ? "text-optimal-text" : k === "good" ? "text-foreground" : "text-warning-text"
 }
+
+/** Blood pressure category to chip tone: normal green, elevated neutral, stage 1 orange, stage 2 and crisis red. */
+export const BP_TONE: Record<import("@/core/algorithms/bloodPressure").BpCategory, import("@/lib/bands").ChipTone> = {
+  normal: "optimal",
+  elevated: "neutral",
+  stage1: "warning",
+  stage2: "alert",
+  crisis: "alert",
+}
+
+/** Lab status to chip tone and word. */
+export const LAB_TONE: Record<import("@/core/algorithms/labs").LabStatus, import("@/lib/bands").ChipTone> = { in_range: "optimal", low: "warning", high: "warning", no_range: "neutral" }
+export const LAB_WORD: Record<import("@/core/algorithms/labs").LabStatus, string> = { in_range: "In range", low: "Low", high: "High", no_range: "No range" }

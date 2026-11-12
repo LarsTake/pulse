@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Barlow, Figtree } from "next/font/google";
+import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/sonner";
 import { PwaRuntime } from "@/components/pwa/PwaRuntime"
 import { SW_SCRIPT } from "@/lib/sw"
@@ -9,17 +9,22 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import launchScreens from "./launch-screens.json"
 import "./globals.css";
 
-// next/font self-hosts at build time (no runtime requests to Google Fonts).
-// Figtree stands in for the reference app's Proxima Nova (text); Barlow for DIN 2014 (numerals). See docs/design/spec.md §3.
-const figtree = Figtree({
+// Fonts ship in node_modules (@fontsource), so a build needs no access to Google Fonts (home servers, offline CI).
+// Figtree: a plain geometric sans for text. Barlow: tight, even numerals for scores. See docs/design/spec.md §3.
+const figtree = localFont({
   variable: "--font-sans",
-  subsets: ["latin"],
+  src: [{ path: "../../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2", weight: "300 900", style: "normal" }],
+  display: "swap",
 });
 
-const barlow = Barlow({
+const barlow = localFont({
   variable: "--font-numeric",
-  weight: ["500", "600", "700"],
-  subsets: ["latin"],
+  src: [
+    { path: "../../node_modules/@fontsource/barlow/files/barlow-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../../node_modules/@fontsource/barlow/files/barlow-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../../node_modules/@fontsource/barlow/files/barlow-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+  display: "swap",
 });
 
 // iOS shows no launch screen unless one matches the device exactly: every iPhone and iPad, both orientations and both

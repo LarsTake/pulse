@@ -1,5 +1,6 @@
+import { FEATURES } from "@/lib/features"
 import { connection } from "next/server"
-import { Archive, BookOpen, CalendarDays, CalendarRange, ChartLine, Database, ListChecks, Palette, Plug, UserRound, BotMessageSquare } from "lucide-react"
+import { Archive, BookOpen, BotMessageSquare, CalendarDays, CalendarRange, ChartLine, Database, Dumbbell, FlaskConical, HeartPulse, ListChecks, Palette, Plug, Stethoscope, UserRound } from "lucide-react"
 import { formatDay, rangeLabel } from "@/lib/format"
 import { coachAccess } from "@/server/coach/store"
 import { userCtx } from "@/server/queries/common"
@@ -41,6 +42,15 @@ export default async function MorePage() {
         <LinkList title="Account & settings" rows={settings} className="xl:hidden" />
         <LinkList title="Reports" rows={reports} />
         <LinkList title="Trends" rows={[{ icon: ChartLine, label: "Trends", aside: "Up to 1 year", href: "/trends" }]} />
+        <LinkList
+          title="Body"
+          rows={[
+            ...(FEATURES.strengthTrainer ? [{ icon: Dumbbell, label: "Strength", href: "/strength" }] : []),
+            ...(FEATURES.bloodPressure ? [{ icon: Stethoscope, label: "Blood pressure", href: "/health/blood-pressure" }] : []),
+            ...(FEATURES.labs ? [{ icon: FlaskConical, label: "Labs", href: "/health/labs" }] : []),
+            ...(FEATURES.liveHeartRate ? [{ icon: HeartPulse, label: "Live heart rate", aside: "Chrome, Edge", href: "/live" }] : []),
+          ]}
+        />
         <LinkList
           title="Journal"
           rows={[{ icon: ListChecks, label: "Behaviours", aside: `${vm.behaviours.shown} of ${vm.behaviours.total} shown`, href: "/more/behaviours" }]}

@@ -1,7 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { Camera, Dumbbell, NotebookPen, Plus, Timer, X, type LucideIcon } from "lucide-react"
+import { Camera, Dumbbell, FlaskConical, HeartPulse, NotebookPen, Plus, Stethoscope, Timer, X, type LucideIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useBluetoothSupport } from "@/hooks/use-bluetooth"
 import { Dialog as DialogPrimitive } from "radix-ui"
 import { FEATURES } from "@/lib/features"
 import { cn } from "@/lib/utils"
@@ -22,10 +24,16 @@ const GLYPH =
  */
 export function PlusMenu({ label }: { label: string }) {
   const [info, setInfo] = React.useState(false)
+  const router = useRouter()
+  // Web Bluetooth: Chrome and Edge on a computer or Android.
+  const bluetooth = useBluetoothSupport() === true
   const entries: Entry[] = [
     { key: "start", label: "Start activity", icon: Timer, shown: FEATURES.startActivity, onSelect: () => openSheet("start-activity") },
     { key: "add", label: "Add activity", icon: Plus, shown: true, onSelect: () => (FEATURES.logActivity ? openSheet("add-activity") : setInfo(true)) },
+    { key: "live-hr", label: "Live heart rate", icon: HeartPulse, shown: FEATURES.liveHeartRate && bluetooth, onSelect: () => router.push("/live") },
     { key: "strength", label: "Strength trainer", icon: Dumbbell, shown: FEATURES.strengthTrainer, onSelect: () => openSheet("strength") },
+    { key: "bp", label: "Log blood pressure", icon: Stethoscope, shown: FEATURES.bloodPressure, onSelect: () => openSheet("bp") },
+    { key: "labs", label: "Log lab results", icon: FlaskConical, shown: FEATURES.labs, onSelect: () => openSheet("labs") },
     { key: "journal", label: "Complete your journal", icon: NotebookPen, shown: true, onSelect: () => openSheet("checkin") },
     { key: "live", label: "Share live", icon: Camera, shown: FEATURES.liveShare, onSelect: () => openSheet("live") },
   ]

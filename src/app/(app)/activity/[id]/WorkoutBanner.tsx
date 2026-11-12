@@ -3,6 +3,7 @@
 import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SheetTrigger } from "@/components/shells/SheetTrigger"
 
 const KEY = "pulse:workout-banner-dismissed"
 const dismissed = () => {
@@ -39,6 +40,9 @@ export function WorkoutBanner() {
         <p className="mt-1 text-[15px] leading-[22px] text-pretty text-foreground-secondary">
           Strain counts your heart rate. Log your sets and Pulse adds the muscular load too.
         </p>
+        <SheetTrigger sheet="strength" className="mt-3 inline-flex h-11 items-center rounded-xl bg-secondary px-4 text-[13px] font-bold tracking-[0.1em] uppercase outline-none hover:bg-secondary/80 focus-visible:ring-3 focus-visible:ring-ring/50">
+          Log sets
+        </SheetTrigger>
       </div>
       <Button variant="ghost" size="icon-touch" aria-label="Dismiss" onClick={close} className="absolute top-1 right-1">
         <X aria-hidden strokeWidth={2} className="size-5" />
