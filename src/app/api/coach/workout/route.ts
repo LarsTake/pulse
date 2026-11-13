@@ -6,7 +6,7 @@ import { z } from "zod";
 import { requestUser } from "@/server/auth";
 import { coachInstructions } from "@/server/coach/instructions";
 import { allowRequest, coachModel } from "@/server/coach/store";
-import { coachTexts } from "@/server/coach/texts";
+import { coachTexts, inUiLanguage } from "@/server/coach/texts";
 import { getDb } from "@/server/db";
 import { getActivity } from "@/server/queries/activity";
 import { ctxOf } from "@/server/queries/common";
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     const { text } = await generateText({
       model: m.model,
       instructions: coachInstructions(ctx, texts, m.instructions),
-      prompt: `${texts("workout_glance")}\n\n${workoutFacts(activity)}`,
+      prompt: `${inUiLanguage(texts("workout_glance"))}\n\n${workoutFacts(activity)}`,
       maxOutputTokens: 80,
       abortSignal: req.signal,
     });

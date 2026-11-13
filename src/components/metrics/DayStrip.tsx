@@ -85,8 +85,8 @@ function Strip({ indicator, days, variant = "tile", value: controlled, onSelect 
                     const r = day.recovery ?? null
           const label =
             indicator === "recovery"
-              ? `${formatDay(day.date, DAY.long)}, ${r === null ? "no Recovery" : `Recovery ${Math.round(r)} percent, ${BAND_WORD[recoveryBand(r)].toLowerCase()}`}`
-              : `${formatDay(day.date, DAY.long)}, ${day.done ? "checked in" : "not checked in"}`
+              ? `${formatDay(day.date, DAY.long)}, ${r === null ? "no Recovery" : tr("Recovery {0} percent, {1}", [Math.round(r), BAND_WORD[recoveryBand(r)].toLowerCase()])}`
+              : `${formatDay(day.date, DAY.long)}, ${day.done ? tr("checked in") : tr("not checked in")}`
           const on = day.date === value
           return (
             <ToggleGroupItem

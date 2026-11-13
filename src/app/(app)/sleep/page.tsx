@@ -24,9 +24,9 @@ import { t as tr } from "@/lib/i18n"
 export const metadata = { title: tr("Sleep"), description: tr("Sleep performance, stages, need and debt, plus tonight’s bedtime plan.") }
 
 const STATUS_LEGEND = [
-  ["bg-warning", "Poor"],
-  ["bg-foreground-secondary", "Sufficient"],
-  ["bg-optimal", "Optimal"],
+  ["bg-warning", tr("Poor")],
+  ["bg-foreground-secondary", tr("Sufficient")],
+  ["bg-optimal", tr("Optimal")],
 ] as const
 
 /** Weekly Trends, in the reference app's order (sleep-weekly-trends-*). */
@@ -127,8 +127,8 @@ function Planner({ vm, timeZone, timeFormat }: { vm: SleepVM; timeZone: string; 
   return (
     <div className="space-y-2">
       <div className="divide-y divide-border">
-        {plan.plans.map((p) => row(p.label, `${Math.round(p.share * 100)}% of need`, clock(p.bedtimeAt, timeZone, timeFormat)))}
-        {row("Typical wake", plan.weekdayWake ? "Weekday wake time" : "Weekend wake time", clock(plan.wakeAt, timeZone, timeFormat))}
+        {plan.plans.map((p) => row(tr(p.label), tr("{0}% of need", [Math.round(p.share * 100)]), clock(p.bedtimeAt, timeZone, timeFormat)))}
+        {row(tr("Typical wake"), plan.weekdayWake ? tr("Weekday wake time") : tr("Weekend wake time"), clock(plan.wakeAt, timeZone, timeFormat))}
       </div>
       <p className={CAPTION}>
         {tr("Need tonight:")}{" "}<span className="font-numeric tabular-nums">{hmm(plan.needMin)}</span>

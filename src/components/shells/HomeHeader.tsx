@@ -42,10 +42,10 @@ const RING_ROW_MOTION =
   "translate-y-1.5 opacity-0 transition-[opacity,translate] duration-220 ease-out-expo group-data-[state=rings]/hdr:translate-y-0 group-data-[state=rings]/hdr:opacity-100 motion-reduce:translate-y-0 motion-reduce:duration-120 group-data-[morph]/hdr:translate-y-0 group-data-[morph]/hdr:transition-none"
 
 function ringLabel(key: MiniRingVariant, label: string, value: number | null) {
-  if (value === null) return `${label}: no score. Open ${label}`
-  if (key === "recovery") return `Recovery ${formatValue("int", value)} percent, ${BAND_WORD[recoveryBand(value)].toLowerCase()}. Open Recovery`
-  if (key === "sleep") return `Sleep performance ${formatValue("int", value)} percent. Open Sleep`
-  return `Strain ${formatValue("decimal1", value)} of 21. Open Strain`
+  if (value === null) return tr("{0}: no score. Open {1}", [label, label])
+  if (key === "recovery") return tr("Recovery {0} percent, {1}. Open Recovery", [formatValue("int", value), BAND_WORD[recoveryBand(value)].toLowerCase()])
+  if (key === "sleep") return tr("Sleep performance {0} percent. Open Sleep", [formatValue("int", value)])
+  return tr("Strain {0} of 21. Open Strain", [formatValue("decimal1", value)])
 }
 
 /**

@@ -113,9 +113,7 @@ export function StrainRecoveryChart({ points, today, grow }: { points: StrainRec
   }))
   const strains = points.map((p) => p.strain).filter((v): v is number => v !== null)
   const recs = points.map((p) => p.recovery).filter((v): v is number => v !== null)
-  const summary = `Strain and Recovery over the last ${points.length} days: Strain ${
-    strains.length ? `from ${formatValue("decimal1", Math.min(...strains))} to ${formatValue("decimal1", Math.max(...strains))}` : "not recorded"
-  }, Recovery ${recs.length ? `from ${Math.round(Math.min(...recs))} to ${Math.round(Math.max(...recs))} percent` : "not recorded"}.`
+  const summary = tr("Strain and Recovery over the last {0} days: Strain {1}, Recovery {2}.", [points.length, strains.length ? `from ${formatValue("decimal1", Math.min(...strains))} to ${formatValue("decimal1", Math.max(...strains))}` : tr("not recorded"), recs.length ? `from ${Math.round(Math.min(...recs))} to ${Math.round(Math.max(...recs))} percent` : tr("not recorded")])
 
   return (
     <ChartFigure summary={summary} config={{ strain: { label: tr("Strain") }, recovery: { label: tr("Recovery") } }} className={grow ? "h-[232px] xl:h-auto xl:min-h-[232px]" : "h-[232px]"} grow={grow}>

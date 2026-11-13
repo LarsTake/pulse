@@ -52,8 +52,8 @@ export function Account({ account }: { account: SettingsAccount }) {
           <UserAvatar src={account.avatar} />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[15px] leading-[22px] font-semibold">{own ? title : "Demo"}</p>
-          <p className="truncate text-[13px] leading-[18px] text-muted-foreground">{own ? line : "Signed in to the demo"}</p>
+          <p className="truncate text-[15px] leading-[22px] font-semibold">{own ? title : tr("Demo")}</p>
+          <p className="truncate text-[13px] leading-[18px] text-muted-foreground">{own ? line : tr("Signed in to the demo")}</p>
         </div>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2">
@@ -152,7 +152,7 @@ export function DataSource({ vm, now, googleEmail = null }: { vm: Pick<SettingsV
   const { source } = vm
   const s = SOURCE[source.status]
   const last = vm.sync.reduce<number | null>((m, r) => (r.lastSuccessAt && (!m || r.lastSuccessAt > m) ? r.lastSuccessAt : m), null)
-  const line = s.line ?? (last ? `Synced ${ago(last, now)}` : "Not synced yet")
+  const line = s.line ?? (last ? tr("Synced {0}", [ago(last, now)]) : "Not synced yet")
   const actions =
     source.status === "connected" || source.status === "no_device" ? (
       <>
@@ -228,13 +228,13 @@ export function DataSource({ vm, now, googleEmail = null }: { vm: Pick<SettingsV
 
 export function Profile({ profile }: { profile: SettingsVM["profile"] }) {
   const rows: [string, string][] = [
-    ["Birth date", formatDay(profile.birthDate, DAY.full)],
-    ["Age", String(profile.age)],
-    ["Sex", profile.sex === "male" ? "Male" : "Female"],
-    ["Height", profile.heightCm ? `${profile.heightCm}\u00a0cm` : "Not set"],
-    ["Max heart rate", `${profile.maxHr}\u00a0bpm, ${profile.maxHrSource}`],
-    ["Time zone", profile.timeZone],
-    ["Time format", profile.timeFormat === "12" ? "12-hour" : "24-hour"],
+    [tr("Birth date"), formatDay(profile.birthDate, DAY.full)],
+    [tr("Age"), String(profile.age)],
+    [tr("Sex"), profile.sex === "male" ? tr("Male") : "Female"],
+    [tr("Height"), profile.heightCm ? `${profile.heightCm}\u00a0cm` : tr("Not set")],
+    [tr("Max heart rate"), tr("{0} bpm, {1}", [profile.maxHr, profile.maxHrSource])],
+    [tr("Time zone"), profile.timeZone],
+    [tr("Time format"), profile.timeFormat === "12" ? tr("12-hour") : tr("24-hour")],
   ]
   return (
     <SectionShell

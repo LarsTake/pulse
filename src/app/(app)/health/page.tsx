@@ -31,11 +31,11 @@ const VITAL_ICON: Record<VitalKey, typeof Wind> = { resp: Wind, spo2: Droplet, r
 const VITAL_ORDER: { key: VitalKey; short: string }[] = [
   { key: "resp", short: tr("Resp") },
   { key: "spo2", short: tr("SpO2") },
-  { key: "restingHr", short: "RHR" },
-  { key: "hrv", short: "HRV" },
+  { key: "restingHr", short: tr("RHR") },
+  { key: "hrv", short: tr("HRV") },
   { key: "skinTempDev", short: tr("Temp") },
 ]
-const ACWR_WORD: Record<ChipTone, string> = { optimal: "Optimal", warning: "Pushing", alert: "High risk", neutral: "Detraining" }
+const ACWR_WORD: Record<ChipTone, string> = { optimal: tr("Optimal"), warning: "Pushing", alert: "High risk", neutral: "Detraining" }
 
 const skeleton = <Skeleton className="h-16 w-full" />
 
@@ -119,8 +119,8 @@ function BloodPressure({ bp }: { bp: BloodPressureVM }) {
   return (
     <div className="flex items-end justify-between gap-4">
       <div className="min-w-0 space-y-1">
-        <ValueUnit value={`${head.systolic}/${head.diastolic}`} unit="mmHg" className={cn(TILE, "block")} />
-        <p className={CAPTION}>{bp.week ? `7-day average · ${bp.week.count} readings` : "Latest reading"}</p>
+        <ValueUnit value={`${head.systolic}/${head.diastolic}`} unit={tr("mmHg")} className={cn(TILE, "block")} />
+        <p className={CAPTION}>{bp.week ? tr("7-day average · {0} readings", [bp.week.count]) : "Latest reading"}</p>
       </div>
       <StatusChip tone={BP_TONE[head.category]}>{BP_CATEGORY_LABEL[head.category]}</StatusChip>
     </div>
@@ -160,7 +160,7 @@ function Monitor({ m }: { m: HealthHubVM["monitor"] }) {
         const Icon = VITAL_ICON[key]
         const status = v?.vitals.find((x) => x.key === key)?.status ?? "no_data"
         const ok = status === "in_range"
-        const label = `${short}: ${status === "no_data" ? "no reading" : ok ? "within range" : "out of range"}`
+        const label = `${short}: ${status === "no_data" ? "no reading" : ok ? tr("within range") : tr("out of range")}`
         return (
           <li key={key} className="flex min-w-0 flex-col items-center gap-2 px-1">
             <span className="sr-only">{label}</span>

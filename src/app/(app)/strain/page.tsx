@@ -97,7 +97,7 @@ function TargetRow({ vm }: { vm: StrainVM }) {
   const reason = t.value ? null : reasonCopy(t.reason, t.nightsLeft).short
   return (
     <div className="flex min-h-13 items-center gap-3 py-2">
-      <span className="sr-only">{reason ? `Strain Target: ${reason}` : `Strain Target ${text.replace(" - ", " to ")}`}</span>
+      <span className="sr-only">{reason ? `Strain Target: ${reason}` : tr("Strain Target {0}", [text.replace(" - ", " to ")])}</span>
       <span aria-hidden className="grid size-5 shrink-0 place-items-center text-muted-foreground [&_svg]:size-5">
         <Flame strokeWidth={1.75} />
       </span>

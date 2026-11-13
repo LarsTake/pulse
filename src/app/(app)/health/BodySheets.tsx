@@ -139,7 +139,7 @@ export function LabSheet() {
       if (value === null) continue
       const refLow = r.own ? parseNum(r.low) : null
       const refHigh = r.own ? parseNum(r.high) : null
-      if ([value, refLow, refHigh].some((x) => Number.isNaN(x))) return setError(`${m.label}: numbers only.`)
+      if ([value, refLow, refHigh].some((x) => Number.isNaN(x))) return setError(tr("{0}: numbers only.", [m.label]))
       results.push({ marker: r.marker, value, refLow, refHigh })
     }
     if (!results.length) return setError("Enter at least one value.")

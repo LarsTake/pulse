@@ -44,7 +44,7 @@ function Chart({ e }: { e: EnergySeries }) {
   const valueAt = (t: number) => e.points.reduce((best, p) => (Math.abs(p.t - t) < Math.abs(best.t - t) ? p : best), e.points[0]).value
   const drains = [...(e.drains ?? [])].sort((a, b) => b.amount - a.amount).slice(0, 3)
   const startV = e.points.find((p) => p.value !== null)?.value
-  const summary = `Energy from ${at(first, tz)}: started at ${formatValue("int", startV)} percent, now ${formatValue("int", latest?.value)} percent.`
+  const summary = tr("Energy from {0}: started at {1} percent, now {2} percent.", [at(first, tz), formatValue("int", startV), formatValue("int", latest?.value)])
 
   return (
     <ChartFigure summary={summary} config={{ all: { label: tr("Energy"), color: "var(--recovery-green)" } }} className="h-[140px]">

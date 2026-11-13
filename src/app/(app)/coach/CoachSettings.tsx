@@ -67,7 +67,7 @@ export function CoachSettings({ setup, providers, providerLabel, notifications }
           <div className="divide-y divide-border">
             <div className={ROW}>
               <span className="text-[15px] leading-[22px]">{tr("Provider")}</span>
-              <span className="truncate text-right text-[15px] leading-[22px] text-foreground-secondary">{(setup.provider && providers.find((p) => p.id === setup.provider)?.label) ?? (setup.provider ? providerLabel : "Not set")}</span>
+              <span className="truncate text-right text-[15px] leading-[22px] text-foreground-secondary">{(setup.provider && providers.find((p) => p.id === setup.provider)?.label) ?? (setup.provider ? providerLabel : tr("Not set"))}</span>
             </div>
             {setup.model && (
               <div className={ROW}>

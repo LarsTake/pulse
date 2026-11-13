@@ -71,7 +71,7 @@ export function EditDashboard({ keys, empty = [] }: EditDashboardProps) {
   const move = (from: number, to: number) => {
     if (to < 0 || to >= shown.length || to === from) return
     setShown(moveTo(shown, from, to))
-    setStatus(`${DASHBOARD_LABEL[shown[from]]} moved to position ${to + 1} of ${shown.length}`)
+    setStatus(tr("{0} moved to position {1} of {2}", [DASHBOARD_LABEL[shown[from]], to + 1, shown.length]))
   }
   // Pointer drag: the row follows the pointer over the other rows' midpoints.
   const drag = (key: DashboardKey) => (e: React.PointerEvent<HTMLButtonElement>) => {
@@ -88,14 +88,14 @@ export function EditDashboard({ keys, empty = [] }: EditDashboardProps) {
   const remove = (i: number) => {
     const next = shown.filter((_, j) => j !== i)
     setShown(next)
-    setStatus(`${DASHBOARD_LABEL[shown[i]]} removed from Home`)
+    setStatus(tr("{0} removed from Home", [DASHBOARD_LABEL[shown[i]]]))
     const after = next[Math.min(i, next.length - 1)]
     focusNext.current = after ? `dashboard-remove-${after}` : "dashboard-search"
   }
   const add = (key: DashboardKey) => {
     const i = matches.findIndex((m) => m.key === key)
     setShown([...shown, key])
-    setStatus(`${DASHBOARD_LABEL[key]} added at position ${shown.length + 1}`)
+    setStatus(tr("{0} added at position {1}", [DASHBOARD_LABEL[key], shown.length + 1]))
     const after = matches[i + 1] ?? matches[i - 1]
     focusNext.current = after ? `dashboard-add-${after.key}` : "dashboard-search"
   }
@@ -213,7 +213,7 @@ export function EditDashboard({ keys, empty = [] }: EditDashboardProps) {
                     id={`dashboard-add-${m.key}`}
                     type="button"
                     onClick={() => add(m.key)}
-                    aria-label={tr("Add {0}{1}", [m.label, noData.has(m.key) ? ", no data yet" : ""])}
+                    aria-label={tr("Add {0}{1}", [m.label, noData.has(m.key) ? tr(", no data yet") : ""])}
                     className={cn(CARD, "w-full pr-3 text-left transition-[background-color,scale] duration-150 ease-standard outline-none hover:bg-foreground/10 focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.98]")}
                   >
                     <span aria-hidden className={ICON}>
@@ -232,7 +232,7 @@ export function EditDashboard({ keys, empty = [] }: EditDashboardProps) {
         ))}
         {groups.length === 0 && (
           <p className="py-6 text-center text-[15px] leading-[22px] text-pretty text-foreground-secondary">
-            {hidden.length ? `No metric matches “${query.trim()}”.` : "Every metric is on Home."}
+            {hidden.length ? tr("No metric matches “{0}”.", [query.trim()]) : "Every metric is on Home."}
           </p>
         )}
         <p role="status" className="sr-only">

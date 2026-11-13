@@ -31,7 +31,7 @@ const STACK: Record<"calories" | "distance", readonly TrendSeries[]> = {
 
 export async function generateMetadata({ params }: PageProps<"/metric/[key]">) {
   const { key } = await params
-  return { title: isDetailKey(key) ? DASHBOARD_LABEL[key] : "Metric" }
+  return { title: isDetailKey(key) ? DASHBOARD_LABEL[key] : tr("Metric") }
 }
 
 /** A metric's own screen `/metric/[key]?d=&r=` (spec §11 MD1): the day, its history, then the metric's own sections. */
@@ -64,8 +64,8 @@ export default async function MetricPage({ params, searchParams }: PageProps<"/m
             <EmptyState
               body={
                 vm.group === "nutrition"
-                  ? `No ${vm.label.toLowerCase()} logged yet. Log it in Journal, or in Fitbit or Google Health, and it shows here.`
-                  : `No ${vm.label.toLowerCase()} from Google Health yet. It shows here once your phone, Fitbit or a connected device records it and syncs.`
+                  ? tr("No {0} logged yet. Log it in Journal, or in Fitbit or Google Health, and it shows here.", [vm.label.toLowerCase()])
+                  : tr("No {0} from Google Health yet. It shows here once your phone, Fitbit or a connected device records it and syncs.", [vm.label.toLowerCase()])
               }
               action={vm.group === "nutrition" ? { label: tr("Open Journal"), href: "/journal" } : undefined}
             />
@@ -113,7 +113,7 @@ const unitText = (unit?: string) => (unit ? (unit === "%" ? "%" : `\u00a0${unit}
 /** The day's value (a reading metric's latest reading) against its 30-day average. */
 function Hero({ vm }: { vm: MetricDetailVM }) {
   // The date switcher names the day; a reading from an earlier day says which.
-  const when = vm.valueDay && vm.valueDay !== vm.day ? `Latest reading, ${formatDay(vm.valueDay, DAY.short)}` : null
+  const when = vm.valueDay && vm.valueDay !== vm.day ? tr("Latest reading, {0}", [formatDay(vm.valueDay, DAY.short)]) : null
   return (
     <div className="flex w-full max-w-[360px] flex-col items-center gap-2 py-4 text-center">
       {when && <p className={`${LABEL} text-muted-foreground`}>{when}</p>}
@@ -136,11 +136,11 @@ function Hero({ vm }: { vm: MetricDetailVM }) {
                 <StatusChip tone={t.tone === "good" ? "optimal" : t.tone === "bad" ? "warning" : "neutral"} delta={t.dir} className="mt-1">
                   {t.dir === "flat"
                     ? "In line with your 30-day average"
-                    : `${formatValue(vm.format, Math.abs(diff))}${unitText(vm.unit)} ${t.dir === "up" ? "above" : "below"} your 30-day average`}
+                    : tr("{0}{1} {2} your 30-day average", [formatValue(vm.format, Math.abs(diff)), unitText(vm.unit), t.dir === "up" ? tr("above") : tr("below")])}
                 </StatusChip>
               )}
               <p className={CAPTION}>
-                {avg === null ? "No 30-day average yet" : `30-day average ${formatValue(vm.format, avg)}${unitText(vm.unit)}`}
+                {avg === null ? "No 30-day average yet" : tr("30-day average {0}{1}", [formatValue(vm.format, avg), unitText(vm.unit)])}
               </p>
             </>
           )

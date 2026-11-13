@@ -47,7 +47,7 @@ function Measurements({ rows, at }: { rows: MonitorVM["measurements"]; at: (href
             unit={m.unit}
             format={m.format}
             average={m.average}
-            averageLabel="prior 30-day average"
+            averageLabel={tr("prior 30-day average")}
             sd={m.sd}
             direction="neutral"
             href={at(metricHref(m.key))}
@@ -66,7 +66,7 @@ function Count({ count }: { count: MonitorVM["count"] }) {
   return (
     <div className="flex flex-col items-center gap-3 py-4 text-center">
       {/* aria-label on a <p> (generic role) is ignored by many screen readers: the sentence is sr-only text instead. */}
-      <p className="sr-only">{v ? `${v.inRange} of ${v.total} metrics within range` : `Metrics within range unavailable: ${reason!.long}`}</p>
+      <p className="sr-only">{v ? tr("{0} of {1} metrics within range", [v.inRange, v.total]) : tr("Metrics within range unavailable: {0}", [reason!.long])}</p>
       <p
         aria-hidden
         className={cn("font-numeric text-[64px] leading-none font-bold tracking-[-0.01em] tabular-nums md:text-[72px]", !v && "text-muted-foreground")}

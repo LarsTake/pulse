@@ -24,8 +24,8 @@ const ENTRY: Record<LogToolName, (i: Input) => [LogType, unknown]> = {
 export function logPreview(name: LogToolName, input: Input): { title: string; detail: string; when: string } {
   const [type, data] = ENTRY[name](input)
   const d = describeEntry(type, data)
-  const fat = name === "log_weight" && typeof input.fatPct === "number" ? `, ${input.fatPct}% body fat` : ""
-  const when = name === "log_period" ? `${input.start} to ${input.end}` : input.at ? input.at.replace("T", " at ") : "Now"
+  const fat = name === "log_weight" && typeof input.fatPct === "number" ? tr(", {0}% body fat", [input.fatPct]) : ""
+  const when = name === "log_period" ? tr("{0} to {1}", [input.start, input.end]) : input.at ? input.at.replace("T", " at ") : "Now"
   return { title: d.title, detail: d.detail + fat, when }
 }
 

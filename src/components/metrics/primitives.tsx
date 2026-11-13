@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { CHIP_TONE_CLASS, type ChipTone, type DeltaDir, type Tone } from "@/lib/bands"
 import { isSymbolUnit } from "@/lib/format"
 import { TAG_COPY, type MetricTag } from "@/lib/reasons"
+import { t as tr } from "@/lib/i18n"
 
 // Small shared marks used by every kit component (spec §5.0). One look per meaning.
 
@@ -27,10 +28,10 @@ export const SEGMENT_ITEM =
 export type TagKind = keyof typeof TAG_COPY | "so_far" | "partial_week" | "partial_month" | "estimate" | "beta"
 const EXTRA_TAGS: Record<Exclude<TagKind, keyof typeof TAG_COPY>, string> = {
   so_far: "So far",
-  partial_week: "Partial week",
+  partial_week: tr("Partial week"),
   partial_month: "Partial month",
   estimate: "Estimate",
-  beta: "Beta",
+  beta: tr("Beta"),
 }
 export const tagLabel = (kind: TagKind) =>
   kind in TAG_COPY ? TAG_COPY[kind as keyof typeof TAG_COPY].label : EXTRA_TAGS[kind as keyof typeof EXTRA_TAGS]

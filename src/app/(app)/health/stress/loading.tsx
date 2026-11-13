@@ -34,7 +34,7 @@ export default function Loading() {
               <Skeleton className="h-2 rounded-sm" />
             </div>
             <ul className="grid grid-cols-3 gap-3">
-              {["Low", "Medium", "High"].map((w) => (
+              {[tr("Low"), "Medium", tr("High")].map((w) => (
                 <li key={w}>
                   <SkeletonText className="w-[4ch] font-numeric text-xl leading-6 font-bold" />
                   <p className={`${LABEL} mt-1`}>{w}</p>

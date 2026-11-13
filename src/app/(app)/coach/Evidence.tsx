@@ -93,7 +93,7 @@ export function Evidence({ name, output }: { name: string; output: unknown }) {
   if (name === "get_report") {
     const d = output as CoachOutputs["get_report"]
     if (!("scores" in d) || !d.scores) return <p className="text-[13px] text-muted-foreground">{tr("No report available yet.")}</p>
-    return <div className="space-y-2"><Card title={tr("Report · {0} to {1}{2}", [d.start, d.end, d.partial ? " · Partial" : ""])}>
+    return <div className="space-y-2"><Card title={tr("Report · {0} to {1}{2}", [d.start, d.end, d.partial ? tr(" · Partial") : ""])}>
       {d.scores.map((v) => <KeyStatRow key={v.score} variant="row" label={v.score} metric={metric(v)} format="decimal1" direction="none" />)}
     </Card><BasedOn href={d.period ? `/reports/${encodeURIComponent(d.period)}` : "/reports"}>{tr("Report ·")}{" "}{d.start} to {d.end}</BasedOn></div>
   }

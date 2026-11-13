@@ -162,19 +162,19 @@ const MOOD_LABEL = Object.fromEntries([...MOODS, ...VALENCES].map(([v, l]) => [v
 function tileValue(k: LogKind, vm: LogVM): { value: string; sub?: string } | null {
   switch (k) {
     case "water":
-      return vm.water.total ? { value: `${n(vm.water.total)} ml` } : { value: "None" }
+      return vm.water.total ? { value: tr("{0} ml", [n(vm.water.total)]) } : { value: tr("None") }
     case "food":
-      return vm.food.total ? { value: `${n(vm.food.total.kcal)} kcal` } : { value: "None" }
+      return vm.food.total ? { value: `${n(vm.food.total.kcal)} kcal` } : { value: tr("None") }
     case "weight": {
       const w = vm.body.latest
-      return w ? { value: `${w.kg} kg`, sub: w.day === vm.day ? undefined : formatDay(w.day, DAY.monthDay) } : null
+      return w ? { value: tr("{0} kg", [w.kg]), sub: w.day === vm.day ? undefined : formatDay(w.day, DAY.monthDay) } : null
     }
     case "mood": {
       const m = vm.moods.at(-1)?.data as LogData["moods"] | undefined
       return m ? { value: MOOD_LABEL[m.moods[0] ?? m.valence ?? ""] ?? "Logged" } : null
     }
     case "symptoms":
-      return { value: vm.symptoms.length ? `${vm.symptoms.length} logged` : "None" }
+      return { value: vm.symptoms.length ? tr("{0} logged", [vm.symptoms.length]) : tr("None") }
     default:
       return null
   }
@@ -233,7 +233,7 @@ export function Log({ vm }: LogProps) {
       return
     }
     if (close) shut()
-    toast.success(r.data.demo ? `${KIND_LABEL[input.kind]} saved in Pulse (demo)` : `${KIND_LABEL[input.kind]} saved to Google Health`)
+    toast.success(r.data.demo ? tr("{0} saved in Pulse (demo)", [KIND_LABEL[input.kind]]) : tr("{0} saved to Google Health", [KIND_LABEL[input.kind]]))
     router.refresh()
   }
 
@@ -265,7 +265,7 @@ export function Log({ vm }: LogProps) {
                 type="button"
                 aria-haspopup="dialog"
                 onClick={() => openSheet("log", k)}
-                aria-label={t ? `${label}, ${t.value}${t.sub ? ` on ${t.sub}` : ""}. Log ${label.toLowerCase()}` : `Log ${label.toLowerCase()}`}
+                aria-label={t ? tr("{0}, {1}{2}. Log {3}", [label, t.value, t.sub ? tr(" on {0}", [t.sub]) : "", label.toLowerCase()]) : tr("Log {0}", [label.toLowerCase()])}
                 className={cn(
                   CARD_MATERIAL,
                   "flex h-24 w-24 flex-col items-start justify-between p-3 text-left md:px-2.5 transition-[scale,--tw-gradient-from] duration-150 ease-standard outline-none hover:from-card-hover focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96] md:w-full"

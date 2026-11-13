@@ -1,6 +1,6 @@
-
-import { t as tr } from "@/lib/i18n"// The line under each Healthspan factor (spec §11 R43): where the factor stands for long-term health, from the years it
+// The line under each Healthspan factor (spec §11 R43): where the factor stands for long-term health, from the years it
 // adds to or takes off Pulse Age. See docs/algorithms/healthspan.md, "Factor copy".
+import { t as tr } from "@/lib/i18n";
 
 /** Years either side of zero that count as "on track" (*tunable*). */
 export const ON_TRACK_YEARS = 0.3;

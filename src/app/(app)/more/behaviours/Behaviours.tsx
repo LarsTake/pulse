@@ -61,7 +61,7 @@ export function Behaviours({ vm }: { vm: BehavioursVM }) {
     if (!r.ok) return invalid(r.error.startsWith("Tag already exists") ? "That behaviour already exists." : r.error.startsWith("Too many") ? "You’ve reached the behaviour limit." : "Couldn’t add it. Try again.")
     setAddError(null)
     setLabel("")
-    toast.success(`${name} added`)
+    toast.success(tr("{0} added", [name]))
     router.refresh()
   }
 
@@ -101,8 +101,8 @@ export function Behaviours({ vm }: { vm: BehavioursVM }) {
               className="h-11 min-w-0 flex-1 text-base"
             />
             {/* "Add" fits beside the field on a phone; the name says what it adds (label in name). */}
-            <Button type="submit" variant="secondary" size="touch" disabled={adding || !label.trim()} aria-label={adding ? undefined : "Add behaviour"}>
-              {adding ? "Adding…" : "Add"}
+            <Button type="submit" variant="secondary" size="touch" disabled={adding || !label.trim()} aria-label={adding ? undefined : tr("Add behaviour")}>
+              {adding ? "Adding…" : tr("Add")}
             </Button>
           </div>
           {addError && (

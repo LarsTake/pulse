@@ -21,7 +21,7 @@ import { STAT_ICON } from "../../_lib/view"
 import { t as tr } from "@/lib/i18n"
 
 const RANGE_TEXT: Record<TrendViewRange, string> = { w: "W", m: "M", "6m": "6M" }
-const RANGE_ARIA: Record<TrendViewRange, string> = { w: "1 week", m: "1 month", "6m": "6 months" }
+const RANGE_ARIA: Record<TrendViewRange, string> = { w: tr("1 week"), m: tr("1 month"), "6m": tr("6 months") }
 
 export async function generateMetadata({ params }: PageProps<"/trend/[key]">) {
   const { key } = await params

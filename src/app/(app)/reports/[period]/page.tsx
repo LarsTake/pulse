@@ -29,7 +29,7 @@ const SEGMENT =
 
 export async function generateMetadata({ params }: PageProps<"/reports/[period]">) {
   const { period } = await params
-  return { title: `${WEEK.test(period) ? "Weekly" : "Monthly"} report` }
+  return { title: `${WEEK.test(period) ? tr("Weekly") : tr("Monthly")} report` }
 }
 
 const FORMAT: Record<string, { format: FormatKey; unit?: string; scale?: number }> = {
@@ -53,7 +53,7 @@ function PeriodSwitcher({ vm }: { vm: ReportVM }) {
   const unit = vm.kind
   const step = (to: string | null, dir: "prev" | "next") => {
     const Icon = dir === "prev" ? ChevronLeft : ChevronRight
-    const label = `${dir === "prev" ? "Previous" : "Next"} ${unit}`
+    const label = tr(dir === "prev" ? "Previous {0}" : "Next {0}", [tr(unit)])
     return to ? (
       <Link href={`/reports/${to}`} replace className={STEP} aria-label={label}>
         <Icon aria-hidden className="size-[18px]" strokeWidth={2} />
@@ -90,14 +90,14 @@ function KindToggle({ kind, week, month }: { kind: "week" | "month"; week: strin
     )
   return (
     <nav aria-label={tr("Report period")} className="inline-flex gap-0.5 rounded-lg bg-muted p-0.5">
-      {item("week", "Week", week)}
-      {item("month", "Month", month)}
+      {item("week", tr("Week"), week)}
+      {item("month", tr("Month"), month)}
     </nav>
   )
 }
 
 function Dials({ vm }: { vm: ReportVM }) {
-  const word = vm.kind === "week" ? "last week" : "last month"
+  const word = vm.kind === "week" ? "last week" : tr("last month")
   return (
     <div className="flex w-full items-start justify-center gap-5 sm:gap-8">
       {vm.dials.map((dl) => {
@@ -159,15 +159,15 @@ export default async function ReportPage({ params }: PageProps<"/reports/[period
         title={title}
         hero={
           <EmptyState
-            body={tr("No data for this {0}.", [isWeek ? "week" : "month"])}
-            action={latest ? { label: tr("Latest {0}", [isWeek ? "week" : "month"]), href: `/reports/${latest.period}` } : undefined}
+            body={tr("No data for this {0}.", [isWeek ? tr("week") : tr("month")])}
+            action={latest ? { label: tr("Latest {0}", [isWeek ? tr("week") : tr("month")]), href: `/reports/${latest.period}` } : undefined}
           />
         }
       />
     )
   }
 
-  const word = vm.kind === "week" ? "last week" : "last month"
+  const word = vm.kind === "week" ? "last week" : tr("last month")
   return (
     <DetailShell
       title={title}

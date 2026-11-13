@@ -22,7 +22,7 @@ export function BehaviorInsights({ chips, href }: { chips: BehaviorChip[]; href:
           <li key={c.key}>
             <StatusChip tone={TONE[c.effect]} delta={DIR[c.effect]} className="min-h-8 rounded-lg px-3 text-[13px]">
               {c.label}
-              <span className="sr-only">{c.effect === "up" ? ", went with higher Recovery" : c.effect === "down" ? ", went with lower Recovery" : ", no clear effect"}</span>
+              <span className="sr-only">{c.effect === "up" ? tr(", went with higher Recovery") : c.effect === "down" ? ", went with lower Recovery" : tr(", no clear effect")}</span>
             </StatusChip>
           </li>
         ))}

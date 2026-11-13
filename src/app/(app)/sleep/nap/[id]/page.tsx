@@ -21,7 +21,7 @@ export default async function NapPage({ params }: PageProps<"/sleep/nap/[id]">) 
   return (
     <DetailShell
       title={tr("Nap")}
-      subtitle={`${dayLabel(vm.day, todayOf(ctx))} ${clock(vm.start, timeZone, profile.timeFormat)} to ${clock(vm.end, timeZone, profile.timeFormat)}`}
+      subtitle={tr("{0} {1} to {2}", [dayLabel(vm.day, todayOf(ctx)), clock(vm.start, timeZone, profile.timeFormat), clock(vm.end, timeZone, profile.timeFormat)])}
       align="start"
       backHref={dayHref("/sleep", vm.day, todayOf(ctx))}
       primary={

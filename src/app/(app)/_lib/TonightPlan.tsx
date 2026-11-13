@@ -31,7 +31,7 @@ export function TonightPlan({ plan, timeZone, alarm }: { plan: SleepPlanVM; time
   const chosen = plan.plans.find((p) => p.key === key) ?? plan.plans[0]
   const bed = formatClock(chosen.bedtimeAt, timeZone)
   return (
-    <div role="group" aria-label={tr("Bed by {0} for {1}", [bed, chosen.label.toLowerCase()])} className="@container flex flex-1 flex-col gap-4">
+    <div role="group" aria-label={tr("Bed by {0} for {1}", [bed, tr(chosen.label).toLowerCase()])} className="@container flex flex-1 flex-col gap-4">
       {/* the reference app's "(sunset) 11:20 - - - - (alarm) 8:30" [latest-home-top-1]: two time blocks joined by a dashed rule. */}
       {/* Stretched, the times centre in the space above the toggle rather than leaving it all under them (SYM4). */}
       <div className="my-auto grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1.5">
@@ -72,10 +72,10 @@ export function TonightPlan({ plan, timeZone, alarm }: { plan: SleepPlanVM; time
           <ToggleGroupItem
             key={p.key}
             value={p.key}
-            aria-label={tr("{0}, {1} percent of need", [p.label, Math.round(p.share * 100)])}
+            aria-label={tr("{0}, {1} percent of need", [tr(p.label), Math.round(p.share * 100)])}
             className="h-10 rounded-md! px-2 text-[13px] font-bold tracking-[0.1em] text-muted-foreground uppercase transition-[background-color,color] duration-150 ease-standard hover:bg-transparent hover:text-foreground data-[state=on]:bg-secondary data-[state=on]:text-foreground"
           >
-            {p.label}
+            {tr(p.label)}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>

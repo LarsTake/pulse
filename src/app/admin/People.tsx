@@ -77,7 +77,7 @@ export function People({ people, me, now, chosen, canReset }: { people: Person[]
       </div>
 
       {shown.length === 0 ? (
-        <p className="px-5 py-10 text-center text-[14px] text-muted-foreground">{needle ? `No one matches “${q.trim()}”.` : "No one here."}</p>
+        <p className="px-5 py-10 text-center text-[14px] text-muted-foreground">{needle ? tr("No one matches “{0}”.", [q.trim()]) : "No one here."}</p>
       ) : (
         // Below 1280 px each row is a compact list item that opens the person's panel; the table returns at 1280 px.
         <table role="table" className="block w-full border-collapse xl:table">

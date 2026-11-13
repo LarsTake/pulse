@@ -33,7 +33,7 @@ export type ActivityCardProps = {
 /** "5.21 km at 5:32 /km", "18.40 km", or null with no distance. */
 export function distanceText(km: number | null | undefined, paceS?: number | null) {
   if (km == null) return null
-  return paceS == null ? `${formatValue("decimal2", km)} km` : `${formatValue("decimal2", km)} km at ${formatValue("pace", paceS)} /km`
+  return paceS == null ? `${formatValue("decimal2", km)} km` : tr("{0} km at {1} /km", [formatValue("decimal2", km), formatValue("pace", paceS)])
 }
 
 // Rows are 10 px inside a 16 px card with a 6 px inset; the chip is 8 px inside the row (concentric, spec §2.4).
@@ -93,8 +93,8 @@ export function ActivityCard({ name, kind, strain, start, end, href, timeZone, d
   const distance = distanceText(distanceKm, paceS)
   const noStrain = strain.value === null
   // The full reason when it is the only caption; beside a distance, the short form keeps the row on one line.
-  const caption = distance ? (noStrain ? `${distance} · No strain` : distance) : noStrain ? "No strain: not enough heart-rate data" : undefined
-  const spokenDistance = distanceKm == null ? "" : `, ${spoken(formatValue("decimal2", distanceKm), "km")}${paceS == null ? "" : ` at ${spoken(formatValue("pace", paceS), "/km")}`}`
+  const caption = distance ? (noStrain ? tr("{0} · No strain", [distance]) : distance) : noStrain ? "No strain: not enough heart-rate data" : undefined
+  const spokenDistance = distanceKm == null ? "" : `, ${spoken(formatValue("decimal2", distanceKm), "km")}${paceS == null ? "" : tr(" at {0}", [spoken(formatValue("pace", paceS), "/km")])}`
   return (
     <TimelineRow
       href={href}
@@ -110,7 +110,7 @@ export function ActivityCard({ name, kind, strain, start, end, href, timeZone, d
       caption={caption}
       start={s}
       end={e}
-      label={tr("{0}{1}, {2}, {3} to {4}", [name, spokenDistance, noStrain ? "no strain" : `strain ${value}`, s, e])}
+      label={tr("{0}{1}, {2}, {3} to {4}", [name, spokenDistance, noStrain ? tr("no strain") : `strain ${value}`, s, e])}
     />
   )
 }

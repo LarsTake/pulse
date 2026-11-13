@@ -98,7 +98,7 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
   const toggleAdmin = (v: boolean) => {
     setAdmin(v)
     start(async () => {
-      if (await run(setRoleAction(p.id, v ? "admin" : "user"))) toast.success(v ? `${p.name} is now an admin.` : `${p.name} is no longer an admin.`)
+      if (await run(setRoleAction(p.id, v ? "admin" : "user"))) toast.success(v ? tr("{0} is now an admin.", [p.name]) : tr("{0} is no longer an admin.", [p.name]))
       else setAdmin(!v)
     })
   }
@@ -108,7 +108,7 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
       const r = await run(signOutEverywhereAction(p.id))
       if (!r) return
       setConfirm(null)
-      toast.success(r.data ? `${p.name} is signed out on ${r.data === 1 ? "1 device" : `${r.data} devices`}.` : `${p.name} wasn’t signed in anywhere.`)
+      toast.success(r.data ? tr("{0} is signed out on {1}.", [p.name, r.data === 1 ? "1 device" : `${r.data} devices`]) : tr("{0} wasn’t signed in anywhere.", [p.name]))
     })
   const reset = () =>
     act(async () => {
@@ -120,7 +120,7 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
       if (await run(deleteAccountAction(p.id))) {
         setConfirm(null)
         setOpen(false)
-        toast.success(`${p.name}’s account was deleted.`)
+        toast.success(tr("{0}’s account was deleted.", [p.name]))
       }
     })
   const copy = async () => {
@@ -165,7 +165,7 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
                   <Pill tone={admin || p.role === "owner" ? "coach" : "neutral"}>{admin ? "Admin" : ROLE[p.role]}</Pill>
                 </dd>
                 <dt className="text-muted-foreground">{tr("Username")}</dt>
-                <dd className="min-w-0 truncate text-right">{p.username ? `@${p.username}` : "Not set"}</dd>
+                <dd className="min-w-0 truncate text-right">{p.username ? `@${p.username}` : tr("Not set")}</dd>
                 <dt className="text-muted-foreground">{tr("Joined")}</dt>
                 <dd className="text-right">{shortDate(p.createdAt)}</dd>
                 <dt className="text-muted-foreground">{tr("Last active")}</dt>

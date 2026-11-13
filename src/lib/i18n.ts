@@ -18,10 +18,12 @@ export const UI_LOCALE: Locale = detect();
 /** BCP 47 tag for Intl formatters. */
 export const INTL_LOCALE = UI_LOCALE === "de" ? "de-DE" : "en-US";
 
-const DICT: Record<Locale, Record<string, string> | null> = { en: null, de };
+// Keys are matched with non-breaking spaces read as plain spaces, so "8\u00a0hours" in the source finds "8 hours".
+const plain = (s: string) => (s.includes("\u00a0") ? s.replace(/\u00a0/g, " ") : s);
+const DICT: Record<Locale, Map<string, string> | null> = { en: null, de: new Map(Object.entries(de).map(([k, v]) => [plain(k), v])) };
 
 /** Translates `en` (its own key) and fills `{0}`, `{1}`… from `args`. */
 export function t(en: string, args?: readonly unknown[]): string {
-  const s = DICT[UI_LOCALE]?.[en] ?? en;
+  const s = DICT[UI_LOCALE]?.get(plain(en)) ?? en;
   return args?.length ? s.replace(/\{(\d+)\}/g, (m, i) => (Number(i) < args.length ? String(args[Number(i)]) : m)) : s;
 }

@@ -1,7 +1,7 @@
-
-import { t as tr } from "@/lib/i18n"// Lab results the user enters from a blood test. Pure: no I/O.
+// Lab results the user enters from a blood test. Pure: no I/O.
 // Default ranges are common adult reference ranges; every lab prints its own, and a range typed in with the result
 // wins over these. Pulse only says "below / within / above range", never what it means medically.
+import { t as tr } from "@/lib/i18n";
 
 export type LabSex = "male" | "female" | null;
 
@@ -40,7 +40,7 @@ export const LAB_MARKERS: LabMarker[] = [
   { key: "folate", label: tr("Folate"), unit: "ng/mL", group: "vitamins", range: same(4, null), dp: 1 },
   { key: "magnesium", label: tr("Magnesium"), unit: "mmol/L", group: "vitamins", range: same(0.75, 1.05), dp: 2 },
   { key: "crp", label: tr("hs-CRP"), unit: "mg/L", group: "inflammation", range: same(null, 3), dp: 1 },
-  { key: "tsh", label: "TSH", unit: "mU/L", group: "hormones", range: same(0.4, 4), dp: 2 },
+  { key: "tsh", label: tr("TSH"), unit: "mU/L", group: "hormones", range: same(0.4, 4), dp: 2 },
   { key: "testosterone", label: tr("Testosterone"), unit: "ng/dL", group: "hormones", range: bySex([264, 916], [15, 70]), dp: 0 },
   { key: "cortisol", label: tr("Cortisol (morning)"), unit: "µg/dL", group: "hormones", range: same(6, 23), dp: 1 },
   { key: "creatinine", label: tr("Creatinine"), unit: "mg/dL", group: "kidney_liver", range: bySex([0.7, 1.3], [0.5, 1.1]), dp: 2 },
@@ -51,14 +51,14 @@ export const LAB_MARKERS: LabMarker[] = [
 ];
 
 export const LAB_GROUP_LABEL: Record<LabMarker["group"], string> = {
-  lipids: "Lipids",
-  metabolic: "Metabolic",
-  blood: "Blood count",
-  iron: "Iron",
-  vitamins: "Vitamins & minerals",
-  inflammation: "Inflammation",
-  hormones: "Hormones",
-  kidney_liver: "Kidney & liver",
+  lipids: tr("Lipids"),
+  metabolic: tr("Metabolic"),
+  blood: tr("Blood count"),
+  iron: tr("Iron"),
+  vitamins: tr("Vitamins & minerals"),
+  inflammation: tr("Inflammation"),
+  hormones: tr("Hormones"),
+  kidney_liver: tr("Kidney & liver"),
 };
 
 const BY_KEY = new Map(LAB_MARKERS.map((m) => [m.key, m]));

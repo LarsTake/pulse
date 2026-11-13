@@ -29,7 +29,7 @@ export default function Loading() {
           <div aria-hidden>
             <TickScaleSkeleton variant="marker" />
             <div className={`${CAPTION} mt-2 grid grid-cols-5 text-center`}>
-              {["Poor", "Fair", "Good", "Excellent", "Superior"].map((c) => (
+              {[tr("Poor"), tr("Fair"), tr("Good"), tr("Excellent"), tr("Superior")].map((c) => (
                 <span key={c} className="truncate">
                   {c}
                 </span>

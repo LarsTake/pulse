@@ -63,7 +63,7 @@ export default async function BloodPressurePage() {
               {head.diastolic}
             </p>
             <p className="flex items-center gap-3">
-              <span className={LABEL}>{vm.week ? "7-day average" : "Latest"} {" "}{tr("· mmHg")}</span>
+              <span className={LABEL}>{vm.week ? tr("7-day average") : tr("Latest")} {" "}{tr("· mmHg")}</span>
             </p>
             <StatusChip tone={BP_TONE[head.category]}>{BP_CATEGORY_LABEL[head.category]}</StatusChip>
             {vm.weekDelta && (
@@ -97,7 +97,7 @@ export default async function BloodPressurePage() {
               <StatusChip tone={BP_TONE[vm.month.category]}>{BP_CATEGORY_LABEL[vm.month.category]}</StatusChip>
             </div>
             <p className={cn(CAPTION, "mt-2")}>
-              {vm.month.count} readings{vm.month.pulse ? ` · pulse ${vm.month.pulse} bpm` : ""}
+              {vm.month.count} readings{vm.month.pulse ? tr(" · pulse {0} bpm", [vm.month.pulse]) : ""}
             </p>
           </SectionShell>
         ),

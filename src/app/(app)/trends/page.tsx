@@ -52,7 +52,7 @@ export default async function TrendsPage({ searchParams }: PageProps<"/trends">)
                     key={p.range}
                     variant="row"
                     label={PERIOD[p.range].label}
-                    caption={`vs. ${PERIOD[p.range].prior}`}
+                    caption={tr("vs. {0}", [PERIOD[p.range].prior])}
                     metric={p.average}
                     unit={m.unit}
                     format={m.format}

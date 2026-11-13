@@ -1,5 +1,6 @@
 "use client"
 
+import { t as tr } from "@/lib/i18n";
 import * as React from "react"
 import Link from "next/link"
 import { ChevronUp } from "lucide-react"
@@ -52,7 +53,7 @@ export function CoachGlance({ id, question }: { id: string; question: string }) 
     <div className="sticky bottom-[max(calc(env(safe-area-inset-bottom)+12px),24px)] z-20 mr-[68px] md:mr-0">
       <Link
         href={`/coach?q=${encodeURIComponent(question)}`}
-        aria-label={s.text ? `Coach: ${s.text} Ask the coach about this workout.` : "Coach is analyzing this workout. Ask the coach about it."}
+        aria-label={s.text ? tr("Coach: {0} Ask the coach about this workout.", [s.text]) : "Coach is analyzing this workout. Ask the coach about it."}
         className={cn(GLASS, "flex min-h-14 items-center gap-3 rounded-[28px] py-2 pr-3 pl-2 outline-none transition-[scale] duration-150 ease-standard focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.98]")}
       >
         <CoachGlyph />

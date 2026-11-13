@@ -45,7 +45,7 @@ export default async function ActivityPage({ params }: PageProps<"/activity/[id]
   return (
     <DetailShell
       title={vm.name}
-      subtitle={`${dayLabel(vm.day, today)} ${clock(vm.start, timeZone, profile.timeFormat)} to ${clock(vm.end, timeZone, profile.timeFormat)}`}
+      subtitle={tr("{0} {1} to {2}", [dayLabel(vm.day, today), clock(vm.start, timeZone, profile.timeFormat), clock(vm.end, timeZone, profile.timeFormat)])}
       align="start"
       titleIcon={<Icon />}
       backHref={strainHref}
@@ -102,7 +102,7 @@ export default async function ActivityPage({ params }: PageProps<"/activity/[id]
         ),
       ].filter(Boolean)}
       // With the coach set up, its pill takes the insight's place (activity-weightlifting-detail-top, spec §11 R44); without it, the templated insight.
-      footer={coach ? <CoachGlance id={vm.id} question={`Tell me about my ${vm.name.toLowerCase()} on ${dayLabel(vm.day, today).toLowerCase()}.`} /> : vm.insight && <InsightCard body={vm.insight} />}
+      footer={coach ? <CoachGlance id={vm.id} question={tr("Tell me about my {0} on {1}.", [vm.name.toLowerCase(), dayLabel(vm.day, today).toLowerCase()])} /> : vm.insight && <InsightCard body={vm.insight} />}
     />
   )
 }
@@ -175,7 +175,7 @@ function CardioMuscular({ split }: { split: NonNullable<ActivityVM["split"]> }) 
 /** The one band-off notice: what is missing and why. */
 function noHrCopy(reason: string | null | undefined) {
   const what = "heart rate, zones or strain for this activity"
-  return reason === "band_not_worn" ? `Band not worn, so there's no ${what}.` : `Too little heart-rate data to show ${what}.`
+  return reason === "band_not_worn" ? tr("Band not worn, so there's no {0}.", [what]) : `Too little heart-rate data to show ${what}.`
 }
 
 function HeartRateRecovery({ hrr }: { hrr: ActivityVM["hrr"] }) {

@@ -25,8 +25,8 @@ import { t as tr } from "@/lib/i18n"
 const rows = (n: number, Row: (i: number) => React.ReactNode) => Array.from({ length: n }, (_, i) => <Fragment key={i}>{Row(i)}</Fragment>)
 
 const SUMMARY: Record<string, string[]> = {
-  Strain: ["Strain Target", "Heart rate zones 1-3", "Heart rate zones 4-5", "Strength activity time", "Steps"],
-  Sleep: ["Hours vs. needed", "Sleep consistency", "Sleep efficiency"],
+  Strain: [tr("Strain Target"), "Heart rate zones 1-3", "Heart rate zones 4-5", "Strength activity time", "Steps"],
+  Sleep: [tr("Hours vs. needed"), tr("Sleep consistency"), tr("Sleep efficiency")],
 }
 
 function CardSkeleton({ title, className, children }: { title: string; className?: string; children: React.ReactNode }) {
@@ -226,12 +226,12 @@ export function RecoverySkeleton() {
       action
       summary={
         <>
-          {statRows(["Heart rate variability", "Resting heart rate", "Respiratory rate", "Sleep performance"])}
+          {statRows([tr("Heart rate variability"), tr("Resting heart rate"), tr("Respiratory rate"), tr("Sleep performance")])}
           <p className={LEGEND}>{tr("Today vs. last 30 days")}</p>
         </>
       }
       primary={null}
-      footer={<WeeklyTrendsSkeleton titles={["Recovery", "Heart Rate Variability", "Resting Heart Rate", "Respiratory Rate", "Sleep Performance"]} />}
+      footer={<WeeklyTrendsSkeleton titles={[tr("Recovery"), "Heart Rate Variability", "Resting Heart Rate", "Respiratory Rate", tr("Sleep Performance")]} />}
       secondary={[]}
     />
   )
@@ -265,7 +265,7 @@ export function StrainSkeleton() {
           <TimelineSkeleton rows={1} />
         </CardSkeleton>,
       ]}
-      footer={<WeeklyTrendsSkeleton titles={["Strain", "HR Zones 1-3", "HR Zones 4-5", "Steps", "Calories", "Strength Activity Time"]} />}
+      footer={<WeeklyTrendsSkeleton titles={[tr("Strain"), "HR Zones 1-3", "HR Zones 4-5", "Steps", "Calories", "Strength Activity Time"]} />}
     />
   )
 }
@@ -342,7 +342,7 @@ export function SleepSkeleton() {
           </div>
         </SectionShell>,
       ]}
-      footer={<WeeklyTrendsSkeleton titles={["Sleep Performance", "Hours vs. Needed (hours)", "Hours vs. Needed (%)", "Restorative Sleep", "Sleep Consistency", "Time in Bed", "Sleep Efficiency"]} />}
+      footer={<WeeklyTrendsSkeleton titles={[tr("Sleep Performance"), tr("Hours vs. Needed (hours)"), tr("Hours vs. Needed (%)"), "Restorative Sleep", "Sleep Consistency", "Time in Bed", "Sleep Efficiency"]} />}
     />
   )
 }
@@ -379,7 +379,7 @@ export function ActivitySkeleton() {
           <div aria-hidden className="grid flex-1 grid-cols-2 gap-3 md:grid-cols-3 xl:gap-4">
             {[
               ["avgHr", "Average heart rate"],
-              ["maxHr", "Max heart rate"],
+              ["maxHr", tr("Max heart rate")],
               ["calories", "Calories"],
             ].map(([k, l]) => (
               <KeyStatRowSkeleton key={k} variant="tile" label={l} icon={STAT_ICON[k]} />

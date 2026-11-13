@@ -10,8 +10,8 @@ import { t as tr } from "@/lib/i18n"
 
 export const metadata = { title: tr("Behaviour insights") }
 
-const WORD: Record<ImpactMetricKey, string> = { recovery: "Recovery", hrv: "HRV", sleep: "sleep performance" }
-const TITLE: Record<ImpactMetricKey, string> = { recovery: "Recovery", hrv: "HRV", sleep: "Sleep" }
+const WORD: Record<ImpactMetricKey, string> = { recovery: tr("Recovery"), hrv: tr("HRV"), sleep: "sleep performance" }
+const TITLE: Record<ImpactMetricKey, string> = { recovery: tr("Recovery"), hrv: tr("HRV"), sleep: tr("Sleep") }
 const parseMetric = (raw: string | string[] | undefined): ImpactMetricKey => {
   const v = Array.isArray(raw) ? raw[0] : raw
   return v === "hrv" || v === "sleep" ? v : "recovery"

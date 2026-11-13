@@ -15,7 +15,7 @@ const ICON: Record<VitalKey, ReactNode> = {
 }
 const FORMAT: Record<VitalKey, FormatKey> = { resp: "decimal1", spo2: "int", restingHr: "int", hrv: "int", skinTempDev: "signed1" }
 const GRID = "grid grid-cols-2 gap-3 *:last:col-span-2 xl:grid-cols-5 xl:gap-4 xl:*:last:col-span-1"
-const NOTE = "Resting heart rate, HRV and skin temperature use Google’s personal ranges when it has them; otherwise your range is your baseline ± 2 SD over 60 nights."
+const NOTE = tr("Resting heart rate, HRV and skin temperature use Google’s personal ranges when it has them; otherwise your range is your baseline ± 2 SD over 60 nights.")
 
 const DETAIL_KEY: Record<VitalKey, string> = { resp: "resp", spo2: "spo2", restingHr: "rhr", hrv: "hrv", skinTempDev: "skin" }
 
@@ -46,11 +46,11 @@ export function VitalTiles({ vitals, day, today }: { vitals: Vital[]; day: strin
 }
 
 const SKELETON_LABEL: [VitalKey, string][] = [
-  ["resp", "Respiratory rate"],
-  ["spo2", "Blood oxygen"],
-  ["restingHr", "RHR"],
-  ["hrv", "HRV"],
-  ["skinTempDev", "Skin temperature"],
+  ["resp", tr("Respiratory rate")],
+  ["spo2", tr("Blood oxygen")],
+  ["restingHr", tr("RHR")],
+  ["hrv", tr("HRV")],
+  ["skinTempDev", tr("Skin temperature")],
 ]
 
 export function VitalTilesSkeleton() {

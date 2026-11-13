@@ -56,7 +56,7 @@ export default async function MorePage() {
           title={tr("Journal")}
           rows={[{ icon: ListChecks, label: tr("Behaviours"), aside: tr("{0} of {1} shown", [vm.behaviours.shown, vm.behaviours.total]), href: "/more/behaviours" }]}
         />
-        <LinkList title={tr("Help")} rows={[{ icon: BookOpen, label: tr("How Pulse works"), aside: `${SCORE_DOCS.length} scores`, href: "/more/how-it-works" }]} />
+        <LinkList title={tr("Help")} rows={[{ icon: BookOpen, label: tr("How Pulse works"), aside: tr("{0} scores", [SCORE_DOCS.length]), href: "/more/how-it-works" }]} />
         <LinkList title={tr("Your data")} rows={[{ icon: Database, label: tr("Export"), aside: tr("CSV, JSON"), href: "/more/data" }]} />
         <About version={vm.version} scoringVersion={vm.scoringVersion} />
       </div>

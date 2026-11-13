@@ -30,7 +30,7 @@ export function MetricSection({ s, ...c }: Ctx & { s: Section }) {
             <>
               <KeyStatRow variant="row" label={tr("Current streak")} metric={ok(s.streak)} unit={s.streak === 1 ? "day" : "days"} format="int" direction="none" />
               <KeyStatRow variant="row" label={tr("Longest streak")} caption={tr("In the past year")} metric={ok(s.longest)} unit={s.longest === 1 ? "day" : "days"} format="int" direction="none" />
-              <KeyStatRow variant="row" label={tr("Days reached")} caption={tr("In the last {0} days", [s.days])} metric={ok(s.met)} unit={`of ${s.days}`} format="int" direction="none" />
+              <KeyStatRow variant="row" label={tr("Days reached")} caption={tr("In the last {0} days", [s.days])} metric={ok(s.met)} unit={tr("of {0}", [s.days])} format="int" direction="none" />
             </>,
           )}
           <p className={LEGEND}>{tr("About 7,000 steps a day goes with markedly lower health risks in a 2025 review of 57 studies. It is a reference, not a goal you set.")}</p>

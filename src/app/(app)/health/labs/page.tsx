@@ -34,8 +34,8 @@ const fmt = (v: number, dp: number) => v.toLocaleString(LOCALE, { minimumFractio
 function rangeText(it: Item) {
   const [lo, hi] = it.range
   if (lo !== null && hi !== null) return `${fmt(lo, it.dp)}–${fmt(hi, it.dp)}`
-  if (lo !== null) return `over ${fmt(lo, it.dp)}`
-  if (hi !== null) return `under ${fmt(hi, it.dp)}`
+  if (lo !== null) return tr("over {0}", [fmt(lo, it.dp)])
+  if (hi !== null) return tr("under {0}", [fmt(hi, it.dp)])
   return "no range"
 }
 
@@ -94,7 +94,7 @@ function LabRow({ it, history }: { it: Item; history: LabsVM["history"][string] 
               <span className={CAPTION}>{formatDay(h.day, DAY.full)}</span>
               <span className="flex items-center gap-2">
                 <span className="font-numeric text-[15px] tabular-nums">{fmt(h.value, it.dp)}</span>
-                <DeleteEntry kind="lab" id={h.id} label={`${it.label} on ${formatDay(h.day, DAY.full)}`} />
+                <DeleteEntry kind="lab" id={h.id} label={tr("{0} on {1}", [it.label, formatDay(h.day, DAY.full)])} />
               </span>
             </li>
           ))}
@@ -117,7 +117,7 @@ export default async function LabsPage() {
         vm.lastTest ? (
           <div className="flex flex-col items-center gap-2 py-4 text-center">
             <p className="font-numeric text-[64px] leading-none font-bold tabular-nums">{vm.outOfRange}</p>
-            <p className={LABEL}>{vm.outOfRange === 1 ? "Marker out of range" : "Markers out of range"}</p>
+            <p className={LABEL}>{vm.outOfRange === 1 ? tr("Marker out of range") : "Markers out of range"}</p>
             <p className={CAPTION}>{tr("Last test")}{" "}{formatDay(vm.lastTest, DAY.full)}</p>
           </div>
         ) : (

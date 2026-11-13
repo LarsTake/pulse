@@ -2,6 +2,7 @@
 // and each parameter's description. Defaults live here, in code; an edit is a new version row in coach_prompts and
 // the newest version wins. Only words are editable: what a tool reads, its parameter types and the user it is bound
 // to stay in tools.ts, so an admin can change how the coach talks, never what it can reach.
+import { UI_LOCALE } from "@/lib/i18n";
 import { desc, eq, sql } from "drizzle-orm";
 import type { Db } from "../db";
 import { coachPrompts, user } from "../db/schema";
@@ -187,3 +188,7 @@ export async function textHistory(db: Db): Promise<TextVersion[]> {
 /** The instructions with their placeholders filled. */
 export const fillInstructions = (template: string, vars: Record<keyof typeof PLACEHOLDERS, string>) =>
   template.replace(/\{\{(\w+)\}\}/g, (m, k: string) => (k in vars ? vars[k as keyof typeof PLACEHOLDERS] : m));
+
+/** With PULSE_LOCALE=de the coach writes German; the editable wording itself stays as saved. */
+export const inUiLanguage = (body: string) =>
+  UI_LOCALE === "de" ? `${body}\n\nAlways answer in German (Deutsch) and address the user informally with "du". Keep Pulse's score names Recovery and Strain as they are.` : body;

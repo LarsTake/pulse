@@ -44,14 +44,14 @@ const DESCRIPTION =
   "Recovery, strain and sleep from your Fitbit Air: Healthspan, Energy Bank, stress and a journal, all on your own server.";
 
 export const metadata: Metadata = {
-  title: { default: "Pulse", template: "%s · Pulse" },
+  title: { default: tr("Pulse"), template: "%s · Pulse" },
   description: DESCRIPTION,
-  applicationName: "Pulse",
+  applicationName: tr("Pulse"),
   appleWebApp: { capable: true, title: tr("Pulse"), statusBarStyle: "black-translucent", startupImage: LAUNCH_SCREENS },
   formatDetection: { telephone: false, email: false, address: false },
   // Private, single-user app behind its own sign-in: keep it out of search indexes.
   robots: { index: false, follow: false, nocache: true },
-  openGraph: { title: tr("Pulse"), description: DESCRIPTION, siteName: "Pulse", type: "website" },
+  openGraph: { title: tr("Pulse"), description: DESCRIPTION, siteName: tr("Pulse"), type: "website" },
 };
 
 // width=device-width, initial-scale=1, viewport-fit=cover for the safe-area insets; zoom is never disabled (spec §9).

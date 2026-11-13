@@ -37,7 +37,7 @@ const STATUS: Record<NonNullable<FitnessVM["trainingLoad"]["value"]>["status"], 
   pushing: { word: tr("Pushing"), body: tr("Pushing: load is rising faster than usual. Watch your Recovery.") },
   high_risk: { word: tr("High risk"), body: tr("High risk: load jumped well above your usual. Injury and illness risk rise.") },
 }
-const CATEGORIES = ["Poor", "Fair", "Good", "Excellent", "Superior"]
+const CATEGORIES = [tr("Poor"), tr("Fair"), tr("Good"), tr("Excellent"), tr("Superior")]
 
 function Hero({ vo2 }: { vo2: FitnessVM["vo2"] }) {
   const v = vo2.value
@@ -49,7 +49,7 @@ function Hero({ vo2 }: { vo2: FitnessVM["vo2"] }) {
         <span className={LABEL}>{tr("VO2 max")}</span>
         <span className={cn(LABEL, categoryTone(v.category))}>{categoryWord(v.category)}</span>
       </p>
-      <p className={CAPTION}>{v.source === "run" ? `From a run on ${formatDay(v.sourceDay, DAY.monthDay)}` : "Daily estimate from Fitbit"}</p>
+      <p className={CAPTION}>{v.source === "run" ? tr("From a run on {0}", [formatDay(v.sourceDay, DAY.monthDay)]) : "Daily estimate from Fitbit"}</p>
       {vo2.provisional && <MetricTags extra={["estimate"]} />}
     </div>
   )
@@ -77,7 +77,7 @@ export default async function FitnessPage() {
               min={0}
               max={100}
               format="int"
-              describe={`${categoryWord(v.category)} for ${v.sex === "male" ? "men" : "women"} ${v.ageBand}`}
+              describe={tr("{0} for {1} {2}", [categoryWord(v.category), v.sex === "male" ? tr("men") : tr("women"), v.ageBand])}
               bands={[
                 { from: 0, to: 39.9, tone: "warning" },
                 { from: 60, to: 100, tone: "optimal" },

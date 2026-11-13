@@ -32,7 +32,7 @@ export function HomeInsight({ items }: { items: HomeInsightItem[] }) {
               aria-hidden={k !== i}
               inert={k !== i}
               aria-roledescription={several ? "slide" : undefined}
-              aria-label={several ? `${k + 1} of ${n}` : undefined}
+              aria-label={several ? tr("{0} of {1}", [k + 1, n]) : undefined}
               className={cn(
                 "col-start-1 row-start-1 space-y-0.5 transition-opacity duration-150 ease-standard",
                 k === i ? "opacity-100" : "pointer-events-none opacity-0"

@@ -344,8 +344,8 @@ const wholeMonths = (segs: MonthSegment[]) => {
   return out.map((s, i) => (i === 0 ? { ...s, change: null } : s));
 };
 
-const PRIOR_WORD: Record<TrendViewRange, string> = { w: "week", m: "month", "6m": "6 months" };
-export const priorLabel = (r: TrendViewRange) => `vs. prior ${PRIOR_WORD[r]}`;
+const PRIOR_LABEL: Record<TrendViewRange, string> = { w: "vs. prior week", m: "vs. prior month", "6m": "vs. prior 6 months" };
+export const priorLabel = (r: TrendViewRange) => tr(PRIOR_LABEL[r]);
 
 const typeName = (e: ExerciseRow) => e.name ?? e.type.toLowerCase().replace(/(^|_)(\w)/g, (_, s: string, c: string) => `${s ? " " : ""}${c.toUpperCase()}`);
 
@@ -428,13 +428,13 @@ export async function getTrendView(key: TrendViewKey, end: string, range: TrendV
     ? { title: b.title, unit: "days", items: bandCounts(values, b.list).map((c) => ({ key: c.key, label: c.label, detail: c.detail, value: c.count })) }
     : m.partBreakdown === "series" && m.series
       ? {
-          title: tr("HR zones breakdown ({0})", [range === "w" ? "weekly total" : "avg. weekly total"]),
+          title: tr("HR zones breakdown ({0})", [range === "w" ? tr("weekly total") : tr("avg. weekly total")]),
           unit: "duration",
           items: [...m.series].reverse().map((s) => ({ key: s.key, label: s.label, value: perWeek(settled(cur).reduce((a, p) => a + (p.parts?.[s.key] ?? 0), 0)) })),
         }
       : m.partBreakdown === "strength"
         ? {
-            title: tr("Strength activity breakdown ({0})", [range === "w" ? "weekly total" : "avg. weekly total"]),
+            title: tr("Strength activity breakdown ({0})", [range === "w" ? tr("weekly total") : tr("avg. weekly total")]),
             unit: "duration",
             items: Object.entries(
               cur.reduce<Record<string, number>>((acc, p) => {
@@ -447,7 +447,7 @@ export async function getTrendView(key: TrendViewKey, end: string, range: TrendV
           }
         : null;
 
-  const todayNote = m.partialToday && m.agg === "daily" && win.to >= today && win.from <= today ? `Average does not include today (${formatDay(today, { month: "short", day: "numeric" })}).` : null;
+  const todayNote = m.partialToday && m.agg === "daily" && win.to >= today && win.from <= today ? tr("Average does not include today ({0}).", [formatDay(today, { month: "short", day: "numeric" })]) : null;
 
   return {
     key,
@@ -468,7 +468,7 @@ export async function getTrendView(key: TrendViewKey, end: string, range: TrendV
     to: win.to,
     period: periodLabel(win.from, win.to),
     canPrev: first !== null && first < win.from,
-    caption: m.agg === "weekly" ? (range === "w" ? "Weekly total" : "Avg. weekly total") : "Average",
+    caption: m.agg === "weekly" ? (range === "w" ? "Weekly total" : "Avg. weekly total") : tr("Average"),
     value,
     prior: priorValue,
     change,

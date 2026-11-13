@@ -47,7 +47,7 @@ function Chart({ s, variant }: { s: StressSeries; variant: "full" | "spark" }) {
   const latest = [...s.points].reverse().find((p) => p.value !== null)
   const full = variant === "full"
   const summary = latest?.value != null
-    ? `Stress through the day, latest ${formatValue("decimal1", latest.value)}, ${STRESS_WORD[stressLevel(latest.value)].toLowerCase()}, at ${at(latest.t, tz)}.`
+    ? tr("Stress through the day, latest {0}, {1}, at {2}.", [formatValue("decimal1", latest.value), STRESS_WORD[stressLevel(latest.value)].toLowerCase(), at(latest.t, tz)])
     : "Stress through the day."
 
   return (

@@ -32,7 +32,7 @@ export default async function HeartRatePage({ searchParams }: PageProps<"/health
         info={INFO}
         hero={<HeartRateHero />}
         primary={
-          <SectionShell variant="card" level={2} title={vm.isToday ? "Today" : dayLabel(d, today)} info={{ title: tr("Daily heart rate"), body: tr("Heartbeats per minute across the selected day. Gaps mean no heart rate reading was available.") }}>
+          <SectionShell variant="card" level={2} title={vm.isToday ? tr("Today") : dayLabel(d, today)} info={{ title: tr("Daily heart rate"), body: tr("Heartbeats per minute across the selected day. Gaps mean no heart rate reading was available.") }}>
             <HeartRateChart />
           </SectionShell>
         }

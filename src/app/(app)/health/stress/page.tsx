@@ -70,7 +70,7 @@ function TotalDay({ l, day }: { l: NonNullable<StressVM["levels"]["value"]>; day
       </div>
       <ul className="grid grid-cols-3 gap-3">
         {LEVEL_KEYS.map((k) => (
-          <li key={k.key} aria-label={`${k.word}: ${durationWords(Math.round(l[k.key]))}${l.typical ? `, typical ${durationWords(Math.round(l.typical[k.key]))}` : ""}`}>
+          <li key={k.key} aria-label={`${k.word}: ${durationWords(Math.round(l[k.key]))}${l.typical ? tr(", typical {0}", [durationWords(Math.round(l.typical[k.key]))]) : ""}`}>
             <p aria-hidden className={cn("font-numeric text-xl leading-6 font-bold tabular-nums", k.text)}>
               {hmm(l[k.key])}
             </p>
@@ -93,8 +93,8 @@ function TotalDay({ l, day }: { l: NonNullable<StressVM["levels"]["value"]>; day
 function typicalLine(l: NonNullable<StressVM["levels"]["value"]>) {
   if (l.typicalDeltaMin === null) return null
   const m = Math.round(l.typicalDeltaMin)
-  const delta = Math.abs(m) < 1 ? "about the same high stress" : `${durationWords(Math.abs(m))} ${m > 0 ? "more" : "less"} high stress`
-  return `vs. your typical ${l.weekday}: ${delta}`
+  const delta = Math.abs(m) < 1 ? "about the same high stress" : tr("{0} {1} high stress", [durationWords(Math.abs(m)), m > 0 ? tr("more") : tr("less")])
+  return tr("vs. your typical {0}: {1}", [l.weekday, delta])
 }
 
 export default async function StressPage({ searchParams }: PageProps<"/health/stress">) {
@@ -115,21 +115,21 @@ export default async function StressPage({ searchParams }: PageProps<"/health/st
           value={g.value?.value ?? null}
           reason={g.reason}
           provisional={g.provisional}
-          caption={g.value ? (g.value.dayAverage || !vm.isToday ? "Day average" : g.value.at ? `Last updated ${clock(g.value.at, timeZone, timeFormat)}` : undefined) : undefined}
+          caption={g.value ? (g.value.dayAverage || !vm.isToday ? tr("Day average") : g.value.at ? tr("Last updated {0}", [clock(g.value.at, timeZone, timeFormat)]) : undefined) : undefined}
         />
         {g.reason === "no_data" && <p className="max-w-[36ch] text-center text-xs leading-4 font-medium text-muted-foreground">{EMPTY}</p>}
         </div>
       }
       insight={vm.insight && <InsightCard body={vm.insight} />}
       primary={
-        <SectionShell variant="card" title={vm.isToday ? "Today" : dayLabel(d, today)} info={{ title: tr("Stress throughout the day"), body: tr("Body activation during still minutes, from 0 to 3. Movement, workouts and sleep appear as excluded periods rather than stress scores.") }}>
+        <SectionShell variant="card" title={vm.isToday ? tr("Today") : dayLabel(d, today)} info={{ title: tr("Stress throughout the day"), body: tr("Body activation during still minutes, from 0 to 3. Movement, workouts and sleep appear as excluded periods rather than stress scores.") }}>
           <StressChart variant="full" data={stressSeries(vm.chart)} />
         </SectionShell>
       }
       secondary={[
         <SectionShell key="levels" variant="card" title={tr("Total day")} info={{ title: tr("Time at each stress level"), body: tr("Scored still minutes split into low, medium and high activation. When available, the faded bar compares the same weekday in your recent history.") }}>
           <MetricState metric={vm.levels} skeleton={<Skeleton className="h-24 w-full" />} renderReason={() => <EmptyState body={EMPTY} />}>
-            {(l) => <TotalDay l={l} day={vm.isToday ? "Today" : dayLabel(d, today)} />}
+            {(l) => <TotalDay l={l} day={vm.isToday ? tr("Today") : dayLabel(d, today)} />}
           </MetricState>
         </SectionShell>,
         <SectionShell key="trend" variant="card" title={tr("30-day trend")} info={{ title: tr("Daily stress trend"), body: tr("Average activation across each day's scored still minutes over the last 30 days. Days without enough data remain gaps.") }}>

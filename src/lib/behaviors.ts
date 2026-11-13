@@ -1,7 +1,7 @@
-
-import { t as tr } from "@/lib/i18n"// The journal's behaviour catalogue (journal-behavior-picker-*): every behaviour a person can add to the daily journal, with the
+// The journal's behaviour catalogue (journal-behavior-picker-*): every behaviour a person can add to the daily journal, with the
 // sentence the journal asks, its Select Behaviors category and the journal section it sits in. Keys are stored in
 // journal_tags and journal_entries; never rename one. The nine defaults keep their original keys.
+import { t as tr } from "@/lib/i18n";
 
 export const BEHAVIOR_CATEGORIES = [
   { key: "drugs", label: tr("Drugs & medication") },

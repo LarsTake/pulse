@@ -62,7 +62,7 @@ export function NewInvite({ signup }: { signup: "invite" | "open" | "closed" }) 
       {link && (
         <div role="status" className="mt-4 rounded-xl bg-coach/10 p-3 ring-1 ring-coach/25">
           <p className="text-[13px] leading-[18px] font-medium">
-            {tr("Invite link")}{link.label ? ` for ${link.label}` : ""} {" "}{tr("created. Send it now: it won’t be shown again.")}</p>
+            {tr("Invite link")}{link.label ? tr(" for {0}", [link.label]) : ""} {" "}{tr("created. Send it now: it won’t be shown again.")}</p>
           <div className="mt-2 flex items-center gap-2">
             <input
               ref={field}
@@ -138,7 +138,7 @@ export function InviteList({ invites, now }: { invites: InviteRow[]; now: number
             <tbody role="rowgroup" className="block divide-y divide-border md:table-row-group">
               {shown.map((i) => {
                 const left = Math.ceil((i.expiresAt * 1000 - now) / 86_400_000)
-                const when = i.usedAt !== null ? relative(i.usedAt * 1000, now) : tab === "expired" ? shortDate(i.expiresAt * 1000) : left === 1 ? "In 1 day" : `In ${left} days`
+                const when = i.usedAt !== null ? relative(i.usedAt * 1000, now) : tab === "expired" ? shortDate(i.expiresAt * 1000) : left === 1 ? "In 1 day" : tr("In {0} days", [left])
                 return (
                   <tr role="row" key={i.id} className="flex min-h-16 items-center gap-3 px-4 py-2.5 md:table-row md:min-h-0">
                     <td role="cell" className={cn(TD, "min-w-0 flex-1 font-medium md:table-cell md:px-4 md:py-3")}>
@@ -151,7 +151,7 @@ export function InviteList({ invites, now }: { invites: InviteRow[]; now: number
                     <td role="cell" className={cn(TD, "hidden whitespace-nowrap text-muted-foreground md:table-cell md:px-4 md:py-3")}>{relative(i.createdAt * 1000, now)}</td>
                     <td role="cell" className={cn(TD, "hidden whitespace-nowrap text-muted-foreground md:table-cell md:px-4 md:py-3")}>{when}</td>
                     <td role="cell" className={cn(TD, "max-w-40 shrink-0 md:table-cell md:max-w-none md:px-4 md:py-3", tab !== "used" && "max-md:hidden")}>
-                      {tab === "used" ? <Pill tone="good">{i.usedBy ? `Used by ${i.usedBy}` : "Used"}</Pill> : tab === "expired" ? <Pill>{tr("Expired")}</Pill> : <Pill tone="coach">{tr("Waiting")}</Pill>}
+                      {tab === "used" ? <Pill tone="good">{i.usedBy ? tr("Used by {0}", [i.usedBy]) : "Used"}</Pill> : tab === "expired" ? <Pill>{tr("Expired")}</Pill> : <Pill tone="coach">{tr("Waiting")}</Pill>}
                     </td>
                     <td role="cell" className={cn(TD, "shrink-0 max-md:empty:hidden md:table-cell md:px-4 md:py-3 md:text-right")}>
                       {i.usedAt === null && <RevokeInvite id={i.id} label={i.label ?? "this invite"} expired={tab === "expired"} />}

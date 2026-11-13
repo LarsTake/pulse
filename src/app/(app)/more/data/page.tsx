@@ -32,7 +32,7 @@ export default async function YourDataPage() {
   await connection()
   const ctx = await userCtx()
   const [vm, coach] = await Promise.all([getYourData(ctx), listChats(ctx.db, ctx.userId).then((r) => r.chats.length > 0)])
-  const since = vm.first ? ` since ${formatDay(vm.first, DAY.full)}` : ""
+  const since = vm.first ? tr(" since {0}", [formatDay(vm.first, DAY.full)]) : ""
 
   return (
     <DetailShell
@@ -43,16 +43,16 @@ export default async function YourDataPage() {
             <p className={BODY}>
               {tr("One row per day")}{since}{tr(": Recovery, Strain, sleep performance, hours and consistency, heart rate variability, resting heart rate, respiratory rate, stress and steps.")}</p>
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <DownloadLink href="/export/daily?format=csv" label="CSV" />
-              <DownloadLink href="/export/daily?format=json" label="JSON" />
+              <DownloadLink href="/export/daily?format=csv" label={tr("CSV")} />
+              <DownloadLink href="/export/daily?format=json" label={tr("JSON")} />
             </div>
           </SectionShell>
 
           <SectionShell variant="card" level={2} title={tr("Journal")} aside={<span className={`${CAPTION} tabular-nums`}>{grouped.format(vm.answers)}{tr("\u00a0answers")}</span>}>
             <p className={BODY}>{tr("Every check-in answer, hidden behaviours included. The JSON also lists your behaviours.")}</p>
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <DownloadLink href="/export/journal?format=csv" label="CSV" />
-              <DownloadLink href="/export/journal?format=json" label="JSON" />
+              <DownloadLink href="/export/journal?format=csv" label={tr("CSV")} />
+              <DownloadLink href="/export/journal?format=json" label={tr("JSON")} />
             </div>
           </SectionShell>
 
@@ -60,7 +60,7 @@ export default async function YourDataPage() {
             <SectionShell variant="card" level={2} title={tr("Coach")}>
               <p className={BODY}>{tr("Every saved coach chat, with the data cards it showed.")}</p>
               <div className="mt-4">
-                <DownloadLink href="/export/coach" label="JSON" />
+                <DownloadLink href="/export/coach" label={tr("JSON")} />
               </div>
             </SectionShell>
           )}

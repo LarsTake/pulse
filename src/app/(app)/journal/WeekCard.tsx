@@ -26,7 +26,7 @@ export function WeekCard({ week, day }: { week: WeekDay[]; day: string }) {
           <section key={r.key} aria-label={tr("{0}, last 7 days", [r.title])} className="flex flex-col gap-1">
             <div className="flex items-baseline justify-between gap-3">
               <h3 className={LABEL}>{r.title}</h3>
-              <span className={cn(CAPTION, "tabular-nums")}>{a === null ? "No data" : `avg ${a.toLocaleString(LOCALE)} ${r.unit}`}</span>
+              <span className={cn(CAPTION, "tabular-nums")}>{a === null ? tr("No data") : tr("avg {0} {1}", [a.toLocaleString(LOCALE), r.unit])}</span>
             </div>
             <ColumnChart
               summary={tr("{0} per day for the 7 days to {1}", [r.title, formatDay(day, { month: "short", day: "numeric" })])}

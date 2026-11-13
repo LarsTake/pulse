@@ -21,12 +21,12 @@ import {
   vitalReason,
 } from "./common";
 import type { KeyStat, Metric, SleepStatus, SleepVM, TimePoint } from "./types";
-import { t as tr } from "@/lib/i18n"
+import { t as tr, UI_LOCALE } from "@/lib/i18n"
 
 type Stage = "awake" | "rem" | "light" | "deep";
 const STAGE_ROWS: { stage: Stage; label: string; typical: [number, number] }[] = [
   { stage: "awake", label: tr("Awake"), typical: [5, 10] },
-  { stage: "rem", label: "REM", typical: [20, 25] },
+  { stage: "rem", label: tr("REM"), typical: [20, 25] },
   { stage: "light", label: tr("Light"), typical: [45, 55] },
   { stage: "deep", label: tr("Deep"), typical: [13, 23] },
 ];
@@ -59,9 +59,9 @@ export async function getSleep(day: string, ctx: QueryCtx): Promise<SleepVM> {
   };
   // The reference app's four rows, each opening its Trend View; restorative sleep sits under the stages instead.
   const summary = [
-    { ...stat("hours", "Hours vs. needed", hoursPct, "%", (v) => status(v, 85, 70)), href: trendHref("hours_need") },
-    { ...stat("consistency", "Sleep consistency", (r) => r.sleep?.consistency, "%", (v) => status(v, 80, 70), main ? "calibrating" : reason), href: trendHref("consistency") },
-    { ...stat("efficiency", "Sleep efficiency", efficiencyPct, "%", (v) => status(v, 85, 75)), href: trendHref("efficiency") },
+    { ...stat("hours", tr("Hours vs. needed"), hoursPct, "%", (v) => status(v, 85, 70)), href: trendHref("hours_need") },
+    { ...stat("consistency", tr("Sleep consistency"), (r) => r.sleep?.consistency, "%", (v) => status(v, 80, 70), main ? "calibrating" : reason), href: trendHref("consistency") },
+    { ...stat("efficiency", tr("Sleep efficiency"), efficiencyPct, "%", (v) => status(v, 85, 75)), href: trendHref("efficiency") },
     // Built, off until Pulse scores stress during sleep (the stress model leaves sleep minutes out).
     ...(FEATURES.sleepStress ? [{ ...stat("sleepStress", "High sleep stress", () => null, "%", undefined, "no_data"), href: trendHref("sleep_stress") }] : []),
   ];
@@ -85,7 +85,7 @@ export async function getSleep(day: string, ctx: QueryCtx): Promise<SleepVM> {
   const details = [
     { ...stat("timeInBed", "Time in bed", (r) => r.sleep?.main?.inBedMin, "min"), direction: "neutral" as const },
     { ...stat("wakeEvents", "Wake events", (r) => r.sleep?.main?.wakeEvents, undefined), direction: "down" as const },
-    { ...stat("resp", "Respiratory rate", (r) => r.metrics?.respBpm, "rpm", undefined, vitalReason(row, isToday)), direction: "down" as const, href: metricHref("resp") },
+    { ...stat("resp", tr("Respiratory rate"), (r) => r.metrics?.respBpm, "rpm", undefined, vitalReason(row, isToday)), direction: "down" as const, href: metricHref("resp") },
     { ...stat("debt", "Sleep debt", (r) => (r.sleep?.main ? r.sleep.debtMin : null), "min"), direction: "down" as const },
   ];
 
@@ -240,11 +240,19 @@ export function insightOf(rows: Map<string, DayRow>, day: string, tz: string): s
   const usual = prior.length ? prior[Math.floor(prior.length / 2)] : null;
   const shift = usual == null ? 0 : bedMin(main.start, tz) - usual;
   const consistency = row?.sleep?.consistency;
-  if (Math.abs(shift) >= 45) {
-    return `Your sleep was ${word}. Consistency is the easiest win: you went to bed ${Math.abs(Math.round(shift))} minutes ${shift > 0 ? "later" : "earlier"} than usual.`;
+  if (UI_LOCALE === "de") {
+    const wort = perf >= 85 ? "optimal" : perf >= 70 ? "ausreichend" : "schwach";
+    if (Math.abs(shift) >= 45) return `Dein Schlaf war ${wort}. Am leichtesten gewinnst du über Regelmäßigkeit: Du bist ${Math.abs(Math.round(shift))} Minuten ${shift > 0 ? "später" : "früher"} als sonst ins Bett gegangen.`;
+    if (finite(consistency) && consistency < 70) return `Dein Schlaf war ${wort}. Gleichmäßigere Schlafens- und Aufstehzeiten würden deine Regelmäßigkeit verbessern.`;
+    const needDe = row?.sleep ? row.sleep.needHours * 60 : null;
+    if (needDe && main.asleepMin < needDe * 0.85) return `Dein Schlaf war ${wort}. Du hast ${Math.round(needDe - main.asleepMin)} Minuten weniger geschlafen als nötig; ein früherer Abend hilft.`;
+    return `Dein Schlaf war ${wort}. Du hast deinen üblichen Rhythmus gehalten und fast deinen Bedarf geschlafen.`;
   }
-  if (finite(consistency) && consistency < 70) return `Your sleep was ${word}. Keeping a steadier bedtime and wake time would lift your consistency.`;
+  if (Math.abs(shift) >= 45) {
+    return tr("Your sleep was {0}. Consistency is the easiest win: you went to bed {1} minutes {2} than usual.", [word, Math.abs(Math.round(shift)), shift > 0 ? tr("later") : tr("earlier")]);
+  }
+  if (finite(consistency) && consistency < 70) return tr("Your sleep was {0}. Keeping a steadier bedtime and wake time would lift your consistency.", [word]);
   const need = row?.sleep ? row.sleep.needHours * 60 : null;
   if (need && main.asleepMin < need * 0.85) return `Your sleep was ${word}. You slept ${Math.round(need - main.asleepMin)} minutes less than you needed; an earlier night helps.`;
-  return `Your sleep was ${word}. You kept to your usual schedule and slept close to your need.`;
+  return tr("Your sleep was {0}. You kept to your usual schedule and slept close to your need.", [word]);
 }

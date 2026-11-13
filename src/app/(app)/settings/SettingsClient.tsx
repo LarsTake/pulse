@@ -100,7 +100,7 @@ export function SwitchGoogleButton({ current }: { current: string | null }) {
           <DialogHeader>
             <DialogTitle>{tr("Switch Google account?")}</DialogTitle>
             <DialogDescription>
-              {current ? `Pulse removes what it synced from ${current}` : "Pulse removes the data synced so far"} {" "}{tr("and imports the new account’s history. Your journal, profile and dashboard stay.")}</DialogDescription>
+              {current ? tr("Pulse removes what it synced from {0}", [current]) : "Pulse removes the data synced so far"} {" "}{tr("and imports the new account’s history. Your journal, profile and dashboard stay.")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="secondary" size="touch" onClick={() => setOpen(false)}>

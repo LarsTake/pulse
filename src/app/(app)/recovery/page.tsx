@@ -38,7 +38,7 @@ export default async function RecoveryPage({ searchParams }: PageProps<"/recover
               <KeyStatRow key={k.key} variant="row" {...statProps(k, { d, today })} />
             ))}
           </div>
-          <TodayVsLegend period="last 30 days" />
+          <TodayVsLegend period={tr("last 30 days")} />
         </Card>
       }
       insight={vm.insight && <InsightCard body={vm.insight} action={{ label: tr("Explore your recovery insights"), href: trendHref("recovery", { d, today }) }} />}

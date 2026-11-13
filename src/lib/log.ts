@@ -28,11 +28,11 @@ export const scopeUrl = (type: LogType) => `https://www.googleapis.com/auth/goog
 export const READABLE: ReadonlySet<LogType> = new Set(["hydration-log", "nutrition-log", "weight", "body-fat"])
 
 /** Google's `dataSource.platform` values as people know them; anything else is shown title-cased. */
-const APPS: Record<string, string> = { FITBIT: "Fitbit", HEALTH_CONNECT: "Health Connect", GOOGLE_WEB_API: "Another app" }
+const APPS: Record<string, string> = { FITBIT: tr("Fitbit"), HEALTH_CONNECT: "Health Connect", GOOGLE_WEB_API: "Another app" }
 
 /** Where an entry was logged: Pulse, or the app Google names for it. */
 export function appLabel(source: string, app: string | null): string {
-  if (source === "pulse") return "Pulse"
+  if (source === "pulse") return tr("Pulse")
   if (!app) return "Another app"
   return APPS[app] ?? app.charAt(0) + app.slice(1).toLowerCase().replaceAll("_", " ")
 }
@@ -56,11 +56,11 @@ export const KIND_TYPES: Record<LogKind, LogType[]> = {
   ovulation: ["ovulation-test"],
 }
 export const KIND_LABEL: Record<LogKind, string> = {
-  water: "Water",
-  food: "Food",
-  weight: "Weight",
-  mood: "Mood",
-  symptoms: "Symptoms",
+  water: tr("Water"),
+  food: tr("Food"),
+  weight: tr("Weight"),
+  mood: tr("Mood"),
+  symptoms: tr("Symptoms"),
   period: "Period",
   ovulation: "Ovulation test",
 }
@@ -170,14 +170,14 @@ export function describeEntry(type: LogType, data: unknown): { title: string; de
   const n = (v: number) => v.toLocaleString(LOCALE)
   switch (type) {
     case "hydration-log":
-      return { title: tr("Water"), detail: `${n((data as LogData[typeof type]).ml)} ml` }
+      return { title: tr("Water"), detail: tr("{0} ml", [n((data as LogData[typeof type]).ml)]) }
     case "nutrition-log": {
       const f = data as LogData[typeof type]
       const macros = [f.protein != null && `${f.protein} g protein`, f.carbs != null && `${f.carbs} g carbs`, f.fat != null && `${f.fat} g fat`]
       return { title: f.name ?? labelOf(MEALS, f.meal), detail: [`${n(f.kcal)} kcal`, ...macros].filter(Boolean).join(", ") }
     }
     case "weight":
-      return { title: tr("Weight"), detail: `${(data as LogData[typeof type]).kg} kg` }
+      return { title: tr("Weight"), detail: tr("{0} kg", [(data as LogData[typeof type]).kg]) }
     case "body-fat":
       return { title: tr("Body fat"), detail: `${(data as LogData[typeof type]).pct}%` }
     case "moods": {

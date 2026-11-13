@@ -57,7 +57,7 @@ export async function getJournal(day: string, ctx: QueryCtx): Promise<JournalVM>
     latestImpact(ctx),
     ctx.db.select({ text: n.text }).from(n).where(and(eq(n.userId, ctx.userId), eq(n.day, day))),
   ]);
-  const label = new Map(tags.map((t) => [t.tag, t.label]));
+  const label = new Map(tags.map((t) => [t.tag, tr(t.label)]));
   const byDay = new Map<string, typeof entries>();
   for (const e of entries) byDay.set(e.day, [...(byDay.get(e.day) ?? []), e]);
 
@@ -70,7 +70,7 @@ export async function getJournal(day: string, ctx: QueryCtx): Promise<JournalVM>
   const teaser = strongest
     ? {
         ready: true,
-        text: tr("Your strongest effect so far: {0} {1} next-day Recovery by {2}%.", [(label.get(strongest.tag) ?? strongest.tag).toLowerCase(), strongest.effects.recovery.delta! < 0 ? "lowers" : "raises", Math.abs(Math.round(strongest.effects.recovery.delta!))]),
+        text: tr("Your strongest effect so far: {0} {1} next-day Recovery by {2}%.", [(label.get(strongest.tag) ?? strongest.tag).toLowerCase(), strongest.effects.recovery.delta! < 0 ? tr("lowers") : tr("raises"), Math.abs(Math.round(strongest.effects.recovery.delta!))]),
       }
     : { ready: false, text: tr("Insights appear after 5 days with and 5 without a behaviour.") };
 
@@ -108,7 +108,7 @@ export async function getJournalInsights(metric: ImpactMetricKey = "recovery", c
   if (!impact) return { metric, unit, items: [], needsMore: [] };
   const from = addDays(impact.asOf, -90);
   const [tags, entries, rows] = await Promise.all([tagsOf(ctx), entriesBetween(ctx, from, addDays(impact.asOf, -1)), loadDays(ctx, addDays(from, 1), impact.asOf)]);
-  const label = new Map(tags.map((t) => [t.tag, t.label]));
+  const label = new Map(tags.map((t) => [t.tag, tr(t.label)]));
   const outcome = (day: string) => {
     const r = rows.get(day);
     return key === "recovery" ? r?.recovery?.value : key === "hrvZ" ? r?.recovery?.hrvZ : r?.sleep?.performance;

@@ -407,7 +407,7 @@ const BUILD: Record<Exclude<SectionKind, "outliers">, (s: SectionCtx, key: Detai
     const r = s.rows.get(s.day);
     const g = { protein: r?.extra.protein, carbs: r?.extra.carbs, fat: r?.extra.fat };
     const kcal = (finite(g.protein) ? g.protein * 4 : 0) + (finite(g.carbs) ? g.carbs * 4 : 0) + (finite(g.fat) ? g.fat * 9 : 0);
-    const share = (v: number | undefined, per: number) => (finite(v) && kcal > 0 ? `${Math.round(((v * per) / kcal) * 100)}% of macro calories` : undefined);
+    const share = (v: number | undefined, per: number) => (finite(v) && kcal > 0 ? tr("{0}% of macro calories", [Math.round(((v * per) / kcal) * 100)]) : undefined);
     const row = (key: "protein" | "carbs" | "fat", label: string, per: number): KeyStat => ({
       ...stat(s, key, label, (x) => x.extra[key], "none", { unit: "g", format: "int" }),
       ...(share(g[key], per) && { caption: share(g[key], per) }),

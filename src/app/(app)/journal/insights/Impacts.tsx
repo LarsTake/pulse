@@ -14,7 +14,7 @@ import { t as tr } from "@/lib/i18n"
 
 const METRICS: { key: ImpactMetricKey; label: string; word: string }[] = [
   { key: "recovery", label: tr("Recovery"), word: tr("Recovery") },
-  { key: "hrv", label: "HRV", word: "HRV" },
+  { key: "hrv", label: tr("HRV"), word: tr("HRV") },
   { key: "sleep", label: tr("Sleep"), word: tr("sleep performance") },
 ]
 const metricWord = (m: ImpactMetricKey) => METRICS.find((x) => x.key === m)!.word
@@ -55,8 +55,8 @@ export function ImpactList({ vm }: { vm: JournalInsightsVM }) {
   const current = vm.items.find((i) => i.key === open)
   const item = current ?? last
   const sd = vm.unit === "SD"
-  const fx = (v: number, signed = true) => (sd ? `${formatValue(signed ? "signed1" : "decimal1", v)} SD` : `${formatValue(signed ? "signedInt" : "int", v)}%`)
-  const avg = (v: number | null) => (v === null ? "--" : sd ? `${formatValue("signed1", v)} SD` : `${formatValue("int", v)}%`)
+  const fx = (v: number, signed = true) => (sd ? tr("{0} SD", [formatValue(signed ? "signed1" : "decimal1", v)]) : `${formatValue(signed ? "signedInt" : "int", v)}%`)
+  const avg = (v: number | null) => (v === null ? "--" : sd ? tr("{0} SD", [formatValue("signed1", v)]) : `${formatValue("int", v)}%`)
   const tone = item?.effect === "positive" ? "text-optimal-text" : item?.effect === "negative" ? "text-warning-text" : "text-foreground-secondary"
 
   return (
@@ -72,7 +72,7 @@ export function ImpactList({ vm }: { vm: JournalInsightsVM }) {
         }}
         outcome={metricWord(vm.metric)}
       />
-      <ResponsiveSheet open={!!current} onOpenChange={(o) => !o && setOpen(null)} title={item?.label ?? "Behaviour"}>
+      <ResponsiveSheet open={!!current} onOpenChange={(o) => !o && setOpen(null)} title={item?.label ?? tr("Behaviour")}>
         {item && (
           <div className="space-y-4">
             <div>
@@ -83,7 +83,7 @@ export function ImpactList({ vm }: { vm: JournalInsightsVM }) {
               {[
                 ["Days with", String(item.yes ?? "--")],
                 ["Days without", String(item.no ?? "--")],
-                ["90% confidence", item.ci ? `${fx(item.ci[0], false)} to ${fx(item.ci[1], false)}` : "--"],
+                ["90% confidence", item.ci ? tr("{0} to {1}", [fx(item.ci[0], false), fx(item.ci[1], false)]) : "--"],
                 ["Average with", avg(item.avgWith)],
                 ["Average without", avg(item.avgWithout)],
               ].map(([k, v]) => (

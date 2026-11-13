@@ -33,7 +33,7 @@ const INFO = {
 }
 
 const BAR: Record<VolumeStatus, string> = { none: "bg-transparent", low: "bg-sleep", optimal: "bg-optimal", high: "bg-warning" }
-const WORD: Record<VolumeStatus, string> = { none: "—", low: "Low", optimal: "In range", high: "High" }
+const WORD: Record<VolumeStatus, string> = { none: "—", low: tr("Low"), optimal: tr("In range"), high: tr("High") }
 
 function LogButton({ label = "Log session" }: { label?: string }) {
   return (
@@ -52,7 +52,7 @@ function Hero({ vm }: { vm: StrengthVM }) {
   const last = vm.sessions[0]
   const today = vm.todayLoad !== null
   const value = today ? vm.todayLoad : (last?.load ?? null)
-  const label = today ? "Muscular load today" : last ? `Last session · ${formatDay(last.day, DAY.monthDay)}` : "Muscular load"
+  const label = today ? "Muscular load today" : last ? tr("Last session · {0}", [formatDay(last.day, DAY.monthDay)]) : "Muscular load"
   return (
     <div className="flex flex-col items-center gap-3 py-2">
       <ScoreDial variant="stat" size="lg" label={label} value={value} color="strain" max={21} format="decimal1" reason={value === null ? "no_data" : null} extraTags={["estimate"]} />
@@ -112,7 +112,7 @@ function Sessions({ vm }: { vm: StrengthVM }) {
               <div>
                 <p className={LABEL}>{formatDay(s.day, DAY.short)}</p>
                 <p className={cn(CAPTION, "mt-1")}>
-                  {s.sets} {" "}{tr("sets ·")}{" "}{s.tonnage.toLocaleString(LOCALE)} kg{s.durationMin ? ` · ${s.durationMin} min` : ""}
+                  {s.sets} {" "}{tr("sets ·")}{" "}{s.tonnage.toLocaleString(LOCALE)} kg{s.durationMin ? tr(" · {0} min", [s.durationMin]) : ""}
                 </p>
               </div>
               <div className="flex items-center gap-2">

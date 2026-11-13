@@ -18,7 +18,7 @@ export function LoadChart({ load }: { load: FitnessVM["load"] }) {
   const anim = useSeriesAnimation()
   const last = [...load].reverse().find((p) => p.ctl !== null)
   const summary = last
-    ? `Training load over 90 days: fitness ${formatValue("int", last.ctl)}, fatigue ${formatValue("int", last.atl)}, form ${formatValue("signedInt", last.tsb)} today.`
+    ? tr("Training load over 90 days: fitness {0}, fatigue {1}, form {2} today.", [formatValue("int", last.ctl), formatValue("int", last.atl), formatValue("signedInt", last.tsb)])
     : "No training load data yet."
   const ticks = load.filter((p, i) => i > 0 && p.day.slice(0, 7) !== load[i - 1].day.slice(0, 7)).map((p) => p.day)
 

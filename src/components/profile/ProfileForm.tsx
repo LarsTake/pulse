@@ -88,7 +88,7 @@ export function ProfileForm({
                   "peer-checked:bg-foreground peer-checked:text-background peer-focus-visible:ring-2 peer-focus-visible:ring-foreground/70",
                 )}
               >
-                {v === "male" ? "Male" : "Female"}
+                {v === "male" ? tr("Male") : "Female"}
               </span>
             </label>
           ))}
@@ -136,7 +136,7 @@ export function ProfileForm({
                     "peer-checked:bg-foreground peer-checked:text-background peer-focus-visible:ring-2 peer-focus-visible:ring-foreground/70",
                   )}
                 >
-                  {v === "24" ? "24-hour" : "12-hour"}
+                  {v === "24" ? tr("24-hour") : tr("12-hour")}
                 </span>
               </label>
             ))}

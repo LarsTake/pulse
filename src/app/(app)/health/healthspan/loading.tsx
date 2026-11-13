@@ -53,7 +53,7 @@ export default function Loading() {
       }
       insight={<InsightCardSkeleton title />}
       primary={
-        <SectionShell variant="card" title={`${AGE_LABEL} history`}>
+        <SectionShell variant="card" title={tr("{0} history", [AGE_LABEL])}>
           <TrendChartSkeleton />
         </SectionShell>
       }

@@ -110,13 +110,13 @@ export async function getReport(period: string, ctx: QueryCtx): Promise<ReportVM
     insight: insightOf(r, word, inTarget, withTarget),
     bands: scored ? ok(bands) : none("no_data"),
     averages: [
-      stat("recovery", "Recovery", a.recovery, pa?.recovery, "%", "up"),
+      stat("recovery", tr("Recovery"), a.recovery, pa?.recovery, "%", "up"),
       stat("strain", "Day strain", a.strain, pa?.strain, undefined, "neutral"),
-      stat("sleepPerf", "Sleep performance", a.sleepPerf, pa?.sleepPerf, "%", "up"),
+      stat("sleepPerf", tr("Sleep performance"), a.sleepPerf, pa?.sleepPerf, "%", "up"),
       stat("sleepHours", "Hours of sleep", a.sleepHours, pa?.sleepHours, "h", "up"),
-      stat("consistency", "Sleep consistency", r.sleepConsistency, prevReport?.sleepConsistency, "%", "up"),
-      stat("hrv", "Heart rate variability", a.hrv, pa?.hrv, "ms", "up"),
-      stat("rhr", "Resting heart rate", a.rhr, pa?.rhr, "bpm", "down"),
+      stat("consistency", tr("Sleep consistency"), r.sleepConsistency, prevReport?.sleepConsistency, "%", "up"),
+      stat("hrv", tr("Heart rate variability"), a.hrv, pa?.hrv, "ms", "up"),
+      stat("rhr", tr("Resting heart rate"), a.rhr, pa?.rhr, "bpm", "down"),
     ],
     trainingBalance: r.trainingBalance && tb ? ok({ status: tb.status, word: tb.word, acwr: r.trainingBalance.acwr, line: tb.line }) : none("no_data"),
     topImpacts: impacts,
@@ -139,8 +139,8 @@ function insightOf(r: Report, word: string, inTarget: number, withTarget: number
   if (r.averages.recovery == null) return null;
   const scored = r.bands.green + r.bands.yellow + r.bands.red;
   const mood = r.bands.red > r.bands.green ? "A demanding" : r.bands.green * 2 >= scored ? "A strong" : "A balanced";
-  const parts = [`${mood} ${word}: ${r.bands.green} green ${r.bands.green === 1 ? "day" : "days"}`];
-  if (withTarget) parts[0] += ` and strain inside your target on ${inTarget} of ${withTarget} days`;
+  const parts = [tr("{0} {1}: {2} green {3}", [mood, word, r.bands.green, r.bands.green === 1 ? tr("day") : tr("days")])];
+  if (withTarget) parts[0] += tr(" and strain inside your target on {0} of {1} days", [inTarget, withTarget]);
   parts[0] += ".";
   if (r.deltas.sleepPerf != null && Math.abs(r.deltas.sleepPerf) >= 3) {
     parts.push(`Sleep performance ${r.deltas.sleepPerf > 0 ? "rose" : "dipped"} ${Math.abs(Math.round(r.deltas.sleepPerf))} points from last ${word}.`);

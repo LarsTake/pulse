@@ -19,7 +19,7 @@ export default function Loading() {
           <SkeletonText className="w-[3ch] font-numeric text-[64px] leading-[64px] font-bold" />
           <SkeletonText className="w-28 text-xs leading-4" />
           <ul className="mt-4 grid w-full grid-cols-3 gap-3">
-            {["Range", "Average", "Resting"].map((w) => (
+            {["Range", tr("Average"), tr("Resting")].map((w) => (
               <li key={w}>
                 <SkeletonText className="mx-auto w-[4ch] font-numeric text-xl leading-6 font-bold" />
                 <p className={`${LABEL} mt-1 text-muted-foreground`}>{w}</p>

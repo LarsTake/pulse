@@ -241,7 +241,7 @@ export function LiveHr({ vm }: { vm: LiveHrVM }) {
       <div className="flex flex-col items-center gap-3 py-2">
         <div
           role="img"
-          aria-label={bpm === null ? "No heart rate" : `${bpm} beats per minute, ${zone ? ZONE_NAMES[zone - 1] : "below zone 1"}`}
+          aria-label={bpm === null ? "No heart rate" : tr("{0} beats per minute, {1}", [bpm, zone ? ZONE_NAMES[zone - 1] : tr("below zone 1")])}
           className="relative grid size-64 place-items-center rounded-full md:size-70"
           style={{ background: `radial-gradient(circle at 50% 45%, color-mix(in srgb, ${color} 28%, transparent), transparent 70%)` }}
         >
@@ -249,7 +249,7 @@ export function LiveHr({ vm }: { vm: LiveHrVM }) {
           <div className="text-center">
             <Heart aria-hidden fill="currentColor" strokeWidth={0} className={cn("mx-auto size-8 text-recovery-red", status === "live" && "animate-pulse motion-reduce:animate-none")} />
             <p className="font-numeric text-[88px] leading-none font-bold tabular-nums">{bpm ?? "--"}</p>
-            <p className={cn(LABEL, "mt-1")}>{bpm === null ? "bpm" : zone ? `${ZONE_NAMES[zone - 1]} · ${pct}%` : `Below zone 1 · ${pct}%`}</p>
+            <p className={cn(LABEL, "mt-1")}>{bpm === null ? "bpm" : zone ? `${ZONE_NAMES[zone - 1]} · ${pct}%` : tr("Below zone 1 · {0}%", [pct])}</p>
           </div>
         </div>
         <p className={cn(CAPTION, "flex items-center gap-1.5")} aria-live="polite">
@@ -294,7 +294,7 @@ export function LiveHr({ vm }: { vm: LiveHrVM }) {
         </div>
         <dl className="mt-3 grid grid-cols-3 gap-3 text-center">
           {[
-            ["Strain", stats ? formatValue("decimal1", stats.strain) : "--", "text-strain-text"],
+            [tr("Strain"), stats ? formatValue("decimal1", stats.strain) : "--", "text-strain-text"],
             ["Avg bpm", stats ? String(stats.avg) : "--", ""],
             ["Max bpm", stats ? String(stats.max) : "--", ""],
           ].map(([k, v, c]) => (

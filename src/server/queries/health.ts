@@ -52,7 +52,7 @@ import type {
   Vital,
   VitalKey,
 } from "./types";
-import { t as tr } from "@/lib/i18n"
+import { t as tr, UI_LOCALE } from "@/lib/i18n"
 
 const lastStored = async (ctx: QueryCtx, today: string) => {
   const [r] = await ctx.db
@@ -243,7 +243,7 @@ export async function getHealthspan(day: string, ctx: QueryCtx): Promise<Healths
           ? "From runs"
           : "Estimated: counts half"
         : key === "leanMass" && !c
-          ? "No lean body mass: add weight and body fat in Fitbit. Left out of Pulse Age."
+          ? tr("No lean body mass: add weight and body fat in Fitbit. Left out of Pulse Age.")
           : undefined;
     const domain: [number, number] = key === "leanMass" && c ? [target * 0.75, target * 1.25] : meta.domain;
     return {
@@ -282,13 +282,13 @@ export async function getHealthspan(day: string, ctx: QueryCtx): Promise<Healths
 }
 
 function healthspanInsight(pace: number, cs: HealthspanContribution[]) {
-  const title = pace < 0.9 ? "Aging slower" : pace > 1.1 ? "Aging faster" : "Steady and healthy";
+  const title = pace < 0.9 ? tr("Aging slower") : pace > 1.1 ? tr("Aging faster") : tr("Steady and healthy");
   const best = [...cs].sort((a, b) => a.years - b.years)[0];
   const worst = [...cs].sort((a, b) => b.years - a.years)[0];
-  const label = (c: HealthspanContribution) => HS_META[c.key].label.toLowerCase();
-  const parts = [`Your Pace of Aging is ${pace.toFixed(1)}x against your 6-month average.`];
-  if (best && best.years < 0) parts.push(`Your biggest boost is ${label(best)}, worth ${Math.abs(best.years).toFixed(1)} years.`);
-  if (worst && worst.years > 0) parts.push(`${HS_META[worst.key].label} adds the most, ${worst.years.toFixed(1)} years.`);
+  const label = (c: HealthspanContribution) => (UI_LOCALE === "de" ? HS_META[c.key].label : HS_META[c.key].label.toLowerCase());
+  const parts = [tr("Your Pace of Aging is {0}x against your 6-month average.", [pace.toFixed(1)])];
+  if (best && best.years < 0) parts.push(tr("Your biggest boost is {0}, worth {1} years.", [label(best), Math.abs(best.years).toFixed(1)]));
+  if (worst && worst.years > 0) parts.push(tr("{0} adds the most, {1} years.", [HS_META[worst.key].label, worst.years.toFixed(1)]));
   return { title, body: parts.join(" ") };
 }
 
@@ -297,8 +297,8 @@ function healthspanInsight(pace: number, cs: HealthspanContribution[]) {
 const VITALS: { key: VitalKey; short: string; unit: string; signed?: boolean; pick: (r: DayRow) => number | null | undefined }[] = [
   { key: "resp", short: tr("Resp"), unit: "rpm", pick: (r) => r.metrics?.respBpm },
   { key: "spo2", short: tr("SpO2"), unit: "%", pick: (r) => r.metrics?.spo2Pct },
-  { key: "restingHr", short: "RHR", unit: "bpm", pick: (r) => r.metrics?.rhrBpm ?? r.sessionRhr },
-  { key: "hrv", short: "HRV", unit: "ms", pick: (r) => r.metrics?.hrvMs },
+  { key: "restingHr", short: tr("RHR"), unit: "bpm", pick: (r) => r.metrics?.rhrBpm ?? r.sessionRhr },
+  { key: "hrv", short: tr("HRV"), unit: "ms", pick: (r) => r.metrics?.hrvMs },
   { key: "skinTempDev", short: tr("Temp"), unit: "°C", signed: true, pick: (r) => r.recovery?.inputs.skinTempDev },
 ];
 
@@ -329,7 +329,7 @@ export async function getMonitor(day: string, ctx: QueryCtx, preloaded?: Map<str
       const lo = num(range.low, 1, v.signed);
       const hi = num(range.high, 1, v.signed);
       if (v.key === "spo2" && status === "low" && value < 95) chip = { tone: "warning", text: tr("Below 95%") };
-      else if (status === "in_range") chip = { tone: "optimal", text: v.key === "spo2" ? `Within ${lo} - 100` : `Within ${lo} - ${hi}` };
+      else if (status === "in_range") chip = { tone: "optimal", text: v.key === "spo2" ? tr("Within {0} - 100", [lo]) : tr("Within {0} - {1}", [lo, hi]) };
       else if (status === "high") chip = { tone: "warning", text: tr("Elevated, above {0}", [hi]) };
       else if (status === "low") chip = { tone: "warning", text: tr("Low, below {0}", [lo]) };
     }
@@ -507,13 +507,13 @@ export async function getStress(day: string, ctx: QueryCtx): Promise<StressVM> {
 function stressInsight(st: NonNullable<DayRow["stress"]>, tz: string) {
   const total = st.lowMin + st.mediumMin + st.highMin;
   const top = st.lowMin >= st.mediumMin && st.lowMin >= st.highMin ? "low" : st.mediumMin >= st.highMin ? "medium" : "high";
-  const lead = `Most of your time was in ${top} stress.`;
+  const lead = tr("Most of your time was in {0} stress.", [top]);
   if (!total) return null;
   if (st.longestHigh && st.longestHigh.minutes >= 10) {
     const at = wall(st.longestHigh.start, tz).time.slice(0, 5);
-    return `${lead} Your longest high-stress stretch started at ${at} and lasted ${st.longestHigh.minutes} minutes.`;
+    return tr("{0} Your longest high-stress stretch started at {1} and lasted {2} minutes.", [lead, at, st.longestHigh.minutes]);
   }
-  return `${lead} You had no long stretch of high stress.`;
+  return tr("{0} You had no long stretch of high stress.", [lead]);
 }
 
 // ── Fitness ─────────────────────────────────────────────────────────────────

@@ -20,8 +20,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
     // Short on purpose: Android draws the name under the icon on its launch screen, in the system font.
-    name: "Pulse",
-    short_name: "Pulse",
+    name: tr("Pulse"),
+    short_name: tr("Pulse"),
     description: tr("Recovery, strain and sleep from your Fitbit Air."),
     lang: "en",
     dir: "ltr",
@@ -47,13 +47,13 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     shortcuts: [
       { name: "Check in", short_name: "Check in", url: "/journal?checkin=1", icons: shortcutIcons("checkin") },
-      { name: "Recovery", url: "/recovery", icons: shortcutIcons("recovery") },
-      { name: "Sleep", url: "/sleep", icons: shortcutIcons("sleep") },
+      { name: tr("Recovery"), url: "/recovery", icons: shortcutIcons("recovery") },
+      { name: tr("Sleep"), url: "/sleep", icons: shortcutIcons("sleep") },
     ],
     screenshots: [
       shot("phone-home", "720x1309", "narrow", "Home: recovery, strain and sleep"),
-      shot("phone-recovery", "720x1332", "narrow", "Recovery"),
-      shot("phone-sleep", "720x1391", "narrow", "Sleep"),
+      shot("phone-recovery", "720x1332", "narrow", tr("Recovery")),
+      shot("phone-sleep", "720x1391", "narrow", tr("Sleep")),
       shot("laptop-home", "1600x1074", "wide", "Home on a laptop"),
     ],
   };

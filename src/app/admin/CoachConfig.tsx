@@ -46,7 +46,7 @@ export function TextEditor({ field, versions, now, rows = 3, mono, hint }: { fie
           {field.label}
         </label>
         <span className="flex min-w-0 items-center gap-1">
-          {isDefault ? <Pill>{tr("Default")}</Pill> : <Pill tone="coach">{tr("Edited")}{latest ? ` ${relative(latest.createdAt * 1000, now).toLowerCase()}${latest.by ? ` by ${latest.by}` : ""}` : ""}</Pill>}
+          {isDefault ? <Pill>{tr("Default")}</Pill> : <Pill tone="coach">{tr("Edited")}{latest ? ` ${relative(latest.createdAt * 1000, now).toLowerCase()}${latest.by ? tr(" by {0}", [latest.by]) : ""}` : ""}</Pill>}
           {versions.length > 0 && (
             <Button type="button" variant="ghost" onClick={() => setHistory(true)} className="h-8 gap-1.5 rounded-lg px-2 text-[13px] font-medium text-muted-foreground hover:text-foreground pointer-coarse:h-10">
               <History aria-hidden className="size-4" />

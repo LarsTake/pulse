@@ -216,7 +216,7 @@ function CheckInAction({ variant }: { variant: "float" | "rail" | "sidebar" }) {
   const { coach } = useShellStatus()
   const params = useSearchParams()
   const { d } = parseDay(params.get("d") ?? undefined, today)
-  const label = `Check in for ${dayLabel(d, today)}`
+  const label = tr("Check in for {0}", [dayLabel(d, today)])
   // With coach access the same button opens the coach (spec §11 V6), as the reference app's opens its assistant;
   // the check-in moves to the coach's first chip and the Journal tab.
   if (coach) {

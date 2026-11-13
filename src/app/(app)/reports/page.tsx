@@ -43,7 +43,7 @@ function groupRows(items: ReportListItem[], key: (r: ReportListItem) => string, 
   return groups
 }
 
-const weekRow = (r: ReportListItem): LinkListRow => ({ label: rangeLabel(r.start, r.end), href: `/reports/${r.period}`, aside: <Aside r={r} />, description: r.partial ? "Partial week" : undefined })
+const weekRow = (r: ReportListItem): LinkListRow => ({ label: rangeLabel(r.start, r.end), href: `/reports/${r.period}`, aside: <Aside r={r} />, description: r.partial ? tr("Partial week") : undefined })
 const monthRow = (r: ReportListItem): LinkListRow => ({ label: formatDay(r.start, { month: "long" }), href: `/reports/${r.period}`, aside: <Aside r={r} />, description: r.partial ? "Partial month" : undefined })
 
 /** Weekly / Monthly as links: the view lives in the URL, so Back and a shared link keep it. */
@@ -64,8 +64,8 @@ function ViewSwitch({ view }: { view: View }) {
   )
   return (
     <nav aria-label={tr("Report period")} className="flex gap-0.5 rounded-lg bg-muted p-0.5">
-      {item("weeks", "Weekly")}
-      {item("months", "Monthly")}
+      {item("weeks", tr("Weekly"))}
+      {item("months", tr("Monthly"))}
     </nav>
   )
 }

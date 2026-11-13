@@ -289,10 +289,10 @@ export function activityKind(type: string): ActivityKind {
 }
 
 export const ACTIVITY_NAME: Record<ActivityKind, string> = {
-  run: "Running",
-  ride: "Cycling",
-  walk: "Walking",
-  strength: "Strength training",
+  run: tr("Running"),
+  ride: tr("Cycling"),
+  walk: tr("Walking"),
+  strength: tr("Strength training"),
   workout: "Workout",
 };
 
@@ -336,7 +336,7 @@ export function timelineOf(row: DayRow | undefined, day: string, exs: ExerciseRo
   return items.sort((a, b) => b.start - a.start); // newest first, like the Activities page
 }
 
-const SPAN_LABEL: Record<ActivityKind, string> = { run: "Run", ride: "Ride", walk: "Walk", strength: "Strength", workout: "Workout" };
+const SPAN_LABEL: Record<ActivityKind, string> = { run: tr("Run"), ride: tr("Ride"), walk: tr("Walk"), strength: tr("Strength"), workout: "Workout" };
 
 /** Chart spans for the day: main sleep (clipped to `dayStart`), naps and workouts. */
 export async function daySpans(ctx: QueryCtx, row: DayRow | undefined, day: string, dayStart: number): Promise<Span[]> {

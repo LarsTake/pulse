@@ -1,6 +1,6 @@
-
-import { t as tr } from "@/lib/i18n"// "How Pulse works" (More): one explainer per score, written from src/core and docs/algorithms. Every number here
+// "How Pulse works" (More): one explainer per score, written from src/core and docs/algorithms. Every number here
 // is the code's; when the code changes, change this file.
+import { t as tr } from "@/lib/i18n";
 export type HowRow = { term: string; detail: string }
 export type HowSection = { title: string; paragraphs?: string[]; rows?: HowRow[] }
 export type ScoreDoc = {
@@ -18,40 +18,40 @@ export type ScoreDoc = {
 export const SCORE_DOCS: ScoreDoc[] = [
   {
     slug: "recovery",
-    name: "Recovery",
+    name: tr("Recovery"),
     summary: tr("How ready your body is to take on strain today, from 0 to 100%."),
     href: "/recovery",
     sections: [
       {
         title: tr("What goes in"),
         paragraphs: [
-          "Pulse scores Recovery each morning from last night’s main sleep, comparing each vital with your own baseline: a running average of recent nights that leans on the last two weeks and clips extreme nights.",
+          tr("Pulse scores Recovery each morning from last night’s main sleep, comparing each vital with your own baseline: a running average of recent nights that leans on the last two weeks and clips extreme nights."),
         ],
         rows: [
-          { term: "Heart rate variability", detail: tr("Fitbit’s nightly HRV, in ms. Higher is better.") },
-          { term: "Resting heart rate", detail: tr("Fitbit’s daily resting heart rate from Google, in bpm; the lowest 5-minute average during sleep only on a day Google has none. Lower is better.") },
-          { term: "Sleep performance", detail: tr("Last night’s Sleep Performance. 85% is neutral.") },
-          { term: "Respiratory rate", detail: tr("Breaths per minute asleep, in rpm. Higher counts against you.") },
-          { term: "Skin temperature", detail: tr("Distance from Google’s skin-temperature baseline (your 30-night median), in °C; Pulse’s own baseline only when Google gives none. Either direction counts against you.") },
+          { term: tr("Heart rate variability"), detail: tr("Fitbit’s nightly HRV, in ms. Higher is better.") },
+          { term: tr("Resting heart rate"), detail: tr("Fitbit’s daily resting heart rate from Google, in bpm; the lowest 5-minute average during sleep only on a day Google has none. Lower is better.") },
+          { term: tr("Sleep performance"), detail: tr("Last night’s Sleep Performance. 85% is neutral.") },
+          { term: tr("Respiratory rate"), detail: tr("Breaths per minute asleep, in rpm. Higher counts against you.") },
+          { term: tr("Skin temperature"), detail: tr("Distance from Google’s skin-temperature baseline (your 30-night median), in °C; Pulse’s own baseline only when Google gives none. Either direction counts against you.") },
         ],
       },
       {
         title: tr("How it is weighted"),
         paragraphs: [
-          "Each input is measured in units of your usual night-to-night swing from baseline. Sleep moves one unit per 12\u00a0points away from 85%, skin temperature one unit per 1\u00a0°C. A missing input’s weight is shared among the rest.",
+          tr("Each input is measured in units of your usual night-to-night swing from baseline. Sleep moves one unit per 12 points away from 85%, skin temperature one unit per 1 °C. A missing input’s weight is shared among the rest."),
         ],
         rows: [
-          { term: "HRV", detail: "55%" },
-          { term: "Resting heart rate", detail: "20%" },
-          { term: "Sleep performance", detail: "15%" },
-          { term: "Respiratory rate", detail: "5%" },
-          { term: "Skin temperature", detail: "5%" },
+          { term: tr("HRV"), detail: "55%" },
+          { term: tr("Resting heart rate"), detail: "20%" },
+          { term: tr("Sleep performance"), detail: "15%" },
+          { term: tr("Respiratory rate"), detail: "5%" },
+          { term: tr("Skin temperature"), detail: "5%" },
         ],
       },
       {
         title: tr("What the bands mean"),
         paragraphs: [
-          "The weighted average goes through an S-shaped curve (slope 1.6). Every input at baseline lands at about 58%; a quarter of a swing above reaches green, 0.6 below drops into red.",
+          tr("The weighted average goes through an S-shaped curve (slope 1.6). Every input at baseline lands at about 58%; a quarter of a swing above reaches green, 0.6 below drops into red."),
         ],
         rows: [
           { term: "67-100%", detail: tr("Green: your body is primed for strain.") },
@@ -62,43 +62,43 @@ export const SCORE_DOCS: ScoreDoc[] = [
       {
         title: tr("Limits"),
         paragraphs: [
-          "Recovery needs 7\u00a0nights of HRV before the first score and is Provisional until 14. The other vitals join once each has 4\u00a0nights of baseline. A night Fitbit could not stage has no HRV, so it gets no score rather than a guess, and after more than 14\u00a0nights without HRV the first night back is not scored. Recovery is an estimate from a wrist sensor: it reads your body, not your plans or how you feel.",
+          tr("Recovery needs 7 nights of HRV before the first score and is Provisional until 14. The other vitals join once each has 4 nights of baseline. A night Fitbit could not stage has no HRV, so it gets no score rather than a guess, and after more than 14 nights without HRV the first night back is not scored. Recovery is an estimate from a wrist sensor: it reads your body, not your plans or how you feel."),
         ],
       },
     ],
   },
   {
     slug: "strain",
-    name: "Strain",
+    name: tr("Strain"),
     summary: tr("The cardiovascular load of your day, on a scale from 0 to 21."),
     href: "/strain",
     sections: [
       {
         title: tr("What goes in"),
         rows: [
-          { term: "Heart rate", detail: tr("Every reading from local midnight to midnight, sleep included. Each reading covers the gap to the next one, up to 2 minutes.") },
-          { term: "Resting heart rate", detail: tr("Fitbit’s daily value from Google, else last night’s sleeping resting heart rate, else 60 bpm.") },
-          { term: "Max heart rate", detail: tr("The value in Settings; else 208 − 0.7 × your age.") },
+          { term: tr("Heart rate"), detail: tr("Every reading from local midnight to midnight, sleep included. Each reading covers the gap to the next one, up to 2 minutes.") },
+          { term: tr("Resting heart rate"), detail: tr("Fitbit’s daily value from Google, else last night’s sleeping resting heart rate, else 60 bpm.") },
+          { term: tr("Max heart rate"), detail: tr("The value in Settings; else 208 − 0.7 × your age.") },
         ],
       },
       {
         title: tr("How it is weighted"),
         paragraphs: [
-          "Each minute earns points by how hard your heart works, as a share of your heart-rate reserve: the gap between your resting and max heart rate.",
+          tr("Each minute earns points by how hard your heart works, as a share of your heart-rate reserve: the gap between your resting and max heart rate."),
         ],
         rows: [
-          { term: "Below 50%", detail: tr("0 points a minute") },
+          { term: tr("Below 50%"), detail: tr("0 points a minute") },
           { term: "50-59%", detail: tr("1 point a minute") },
           { term: "60-69%", detail: tr("2 points a minute") },
           { term: "70-79%", detail: tr("3 points a minute") },
           { term: "80-89%", detail: tr("4 points a minute") },
-          { term: "90% and up", detail: tr("5 points a minute") },
+          { term: tr("90% and up"), detail: tr("5 points a minute") },
         ],
       },
       {
         title: tr("What the bands mean"),
         paragraphs: [
-          "The day’s points go on a log scale: Strain = 21 × ln(points + 1) ÷ ln(7,201), where 7,201 is a whole day at 5\u00a0points a minute, plus one. An hour at 70-79% with nothing else gives about 12.3. Doubling your points adds only about 1.6, so each point of Strain is harder to earn than the last.",
+          tr("The day’s points go on a log scale: Strain = 21 × ln(points + 1) ÷ ln(7,201), where 7,201 is a whole day at 5 points a minute, plus one. An hour at 70-79% with nothing else gives about 12.3. Doubling your points adds only about 1.6, so each point of Strain is harder to earn than the last."),
         ],
         rows: [
           { term: "0-9.9", detail: tr("Light") },
@@ -110,15 +110,15 @@ export const SCORE_DOCS: ScoreDoc[] = [
       {
         title: tr("Limits"),
         paragraphs: [
-          "Strain needs at least 600 heart-rate readings, or 20 spread over at least 10\u00a0minutes; otherwise the day shows Not enough data. Today’s Strain is a running total until midnight. Each activity also gets its own Strain from the heart rate during it.",
-          "Heart rate misses effort that barely raises it, such as heavy lifting with long rests. The zone chart and Strain use the same five zones on your heart-rate reserve (max minus resting heart rate): Zone 1 starts at resting + 50% of the reserve, then 60, 70, 80 and 90%. Below Zone 1 is not counted as a zone.",
+          tr("Strain needs at least 600 heart-rate readings, or 20 spread over at least 10 minutes; otherwise the day shows Not enough data. Today’s Strain is a running total until midnight. Each activity also gets its own Strain from the heart rate during it."),
+          tr("Heart rate misses effort that barely raises it, such as heavy lifting with long rests. The zone chart and Strain use the same five zones on your heart-rate reserve (max minus resting heart rate): Zone 1 starts at resting + 50% of the reserve, then 60, 70, 80 and 90%. Below Zone 1 is not counted as a zone."),
         ],
       },
     ],
   },
   {
     slug: "strain-target",
-    name: "Strain Target",
+    name: tr("Strain Target"),
     summary: tr("A Strain range for today, set by your Recovery and recent load."),
     href: "/strain",
     sections: [
@@ -168,29 +168,29 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "sleep",
-    name: "Sleep Performance",
+    name: tr("Sleep Performance"),
     summary: tr("How well last night’s sleep met your need, from 0 to 100%."),
     href: "/sleep",
     sections: [
       {
         title: tr("What goes in"),
         rows: [
-          { term: "Hours asleep", detail: tr("Your main sleep against your sleep need. Naps are not counted here.") },
-          { term: "Sleep efficiency", detail: tr("Time asleep as a share of time in bed.") },
-          { term: "Restorative sleep", detail: tr("Deep and REM sleep as a share of time asleep.") },
-          { term: "Sleep consistency", detail: tr("Your Sleep Regularity over the last 7 days.") },
+          { term: tr("Hours asleep"), detail: tr("Your main sleep against your sleep need. Naps are not counted here.") },
+          { term: tr("Sleep efficiency"), detail: tr("Time asleep as a share of time in bed.") },
+          { term: tr("Restorative sleep"), detail: tr("Deep and REM sleep as a share of time asleep.") },
+          { term: tr("Sleep consistency"), detail: tr("Your Sleep Regularity over the last 7 days.") },
         ],
         paragraphs: [
-          "Your sleep need is the upper quartile of your last 28\u00a0nights, at least 8\u00a0hours (9 under 18) and at most 9.5. Until you have 7\u00a0nights, it is 8\u00a0hours.",
+          tr("Your sleep need is the upper quartile of your last 28 nights, at least 8 hours (9 under 18) and at most 9.5. Until you have 7 nights, it is 8 hours."),
         ],
       },
       {
         title: tr("How it is weighted"),
         rows: [
-          { term: "Hours vs. need, 50%", detail: tr("Full marks at 100% of your need.") },
-          { term: "Efficiency, 20%", detail: tr("Scored as the percentage itself.") },
-          { term: "Restorative, 20%", detail: tr("Full marks when deep plus REM reach 50% of your sleep and deep alone reaches 13%. Less deep sleep scales this part down, to half at none.") },
-          { term: "Consistency, 10%", detail: tr("Scored as the consistency percentage.") },
+          { term: tr("Hours vs. need, 50%"), detail: tr("Full marks at 100% of your need.") },
+          { term: tr("Efficiency, 20%"), detail: tr("Scored as the percentage itself.") },
+          { term: tr("Restorative, 20%"), detail: tr("Full marks when deep plus REM reach 50% of your sleep and deep alone reaches 13%. Less deep sleep scales this part down, to half at none.") },
+          { term: tr("Consistency, 10%"), detail: tr("Scored as the consistency percentage.") },
         ],
       },
       {
@@ -201,36 +201,36 @@ export const SCORE_DOCS: ScoreDoc[] = [
           { term: "0-69%", detail: tr("Poor") },
         ],
         paragraphs: [
-          "The key statistics use their own marks for optimal and sufficient: hours vs. needed 85% and 70%, efficiency 85% and 75%, restorative 40% and 30%, consistency 80% and 70%.",
+          tr("The key statistics use their own marks for optimal and sufficient: hours vs. needed 85% and 70%, efficiency 85% and 75%, restorative 40% and 30%, consistency 80% and 70%."),
         ],
       },
       {
         title: tr("A worked example"),
         paragraphs: [
-          "Take someone whose last 28 nights run from 6.8 to 8.8 hours. The upper quartile of those nights is 8.2 hours, above the 8-hour floor, so their sleep need is 8.2 hours. Last night they slept 6 hours 45 minutes, spent 88% of their time in bed asleep, got 55 minutes of deep and 85 minutes of REM sleep, and their Sleep Regularity over the last 7 days is 88.9%.",
-          "Hours come first: 6.75 against 8.2 is 82.3% of need, worth 50% of the score, so 41.2 points. Efficiency is scored as the percentage itself, 88, and counts 20%, so 17.6 points. Restorative sleep is deep plus REM, 140 minutes out of 405, or 34.6% of the night. Against the 50% target that is 69.1, and since deep sleep is 13.6% of the night, above the 13% mark, nothing is scaled down. At 20% weight, that is 13.8 points. Consistency counts 10%, so 88.9 gives 8.9 points.",
-          "Add them up: 41.2 + 17.6 + 13.8 + 8.9 comes to 81.5, shown as 81%. That sits in the Sufficient band (70-84%), just short of Optimal. The weakest part is hours: another 30 minutes in bed would have added about 3 points. The figures come from running Pulse's own scoring code on these inputs.",
+          tr("Take someone whose last 28 nights run from 6.8 to 8.8 hours. The upper quartile of those nights is 8.2 hours, above the 8-hour floor, so their sleep need is 8.2 hours. Last night they slept 6 hours 45 minutes, spent 88% of their time in bed asleep, got 55 minutes of deep and 85 minutes of REM sleep, and their Sleep Regularity over the last 7 days is 88.9%."),
+          tr("Hours come first: 6.75 against 8.2 is 82.3% of need, worth 50% of the score, so 41.2 points. Efficiency is scored as the percentage itself, 88, and counts 20%, so 17.6 points. Restorative sleep is deep plus REM, 140 minutes out of 405, or 34.6% of the night. Against the 50% target that is 69.1, and since deep sleep is 13.6% of the night, above the 13% mark, nothing is scaled down. At 20% weight, that is 13.8 points. Consistency counts 10%, so 88.9 gives 8.9 points."),
+          tr("Add them up: 41.2 + 17.6 + 13.8 + 8.9 comes to 81.5, shown as 81%. That sits in the Sufficient band (70-84%), just short of Optimal. The weakest part is hours: another 30 minutes in bed would have added about 3 points. The figures come from running Pulse's own scoring code on these inputs."),
         ],
       },
       {
         title: tr("Limits"),
         paragraphs: [
-          "Sleep Performance scores the main sleep only, once Fitbit has processed it. A night without deep and REM totals scores its restorative part as zero, so it reads lower. Without a consistency reading, that part counts as 50%. Sleep stages come from a wrist sensor and are an estimate.",
+          tr("Sleep Performance scores the main sleep only, once Fitbit has processed it. A night without deep and REM totals scores its restorative part as zero, so it reads lower. Without a consistency reading, that part counts as 50%. Sleep stages come from a wrist sensor and are an estimate."),
         ],
       },
     ],
   },
   {
     slug: "sleep-planner",
-    name: "Sleep Planner",
+    name: tr("Sleep Planner"),
     summary: tr("Tonight’s sleep need, and the bedtimes that meet it."),
     href: "/sleep",
     sections: [
       {
         title: tr("What goes in"),
         rows: [
-          { term: "Your sleep need", detail: tr("The upper quartile of your last 28 nights, between 8 and 9.5 hours.") },
-          { term: "Today’s Strain", detail: tr("Strain above your 28-day average adds to the need.") },
+          { term: tr("Your sleep need"), detail: tr("The upper quartile of your last 28 nights, between 8 and 9.5 hours.") },
+          { term: tr("Today’s Strain"), detail: tr("Strain above your 28-day average adds to the need.") },
           { term: "Sleep debt", detail: tr("What you owe from recent nights.") },
           { term: "Naps", detail: tr("Today’s naps take time off tonight’s need.") },
           { term: "Your last 14 main sleeps", detail: tr("Your usual wake time and sleep efficiency.") },
@@ -247,9 +247,9 @@ export const SCORE_DOCS: ScoreDoc[] = [
       {
         title: tr("What the bands mean"),
         rows: [
-          { term: "Peak", detail: tr("100% of tonight’s need.") },
-          { term: "Perform", detail: tr("85% of tonight’s need.") },
-          { term: "Get by", detail: tr("70% of tonight’s need.") },
+          { term: tr("Peak"), detail: tr("100% of tonight’s need.") },
+          { term: tr("Perform"), detail: tr("85% of tonight’s need.") },
+          { term: tr("Get by"), detail: tr("70% of tonight’s need.") },
         ],
       },
       {
@@ -270,7 +270,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "pulse-age",
-    name: "Pulse Age",
+    name: tr("Pulse Age"),
     summary: tr("How old your body behaves, and how fast that is changing."),
     href: "/health/healthspan",
     sections: [
@@ -279,10 +279,10 @@ export const SCORE_DOCS: ScoreDoc[] = [
         paragraphs: ["Nine habits and vitals, averaged over 6\u00a0months, each against a reference: a fit person of your age and sex."],
         rows: [
           { term: "VO2 max", detail: tr("From runs in the last 90 days, else Fitbit’s daily estimate at half weight. Reference: your age’s 75th percentile.") },
-          { term: "Resting heart rate", detail: tr("Fitbit’s daily value from Google. Reference 60 bpm.") },
+          { term: tr("Resting heart rate"), detail: tr("Fitbit’s daily value from Google. Reference 60 bpm.") },
           { term: "Steps", detail: tr("Reference and cap: 10,000 a day under 60, 8,000 from 60.") },
           { term: "Sleep hours", detail: tr("Reference 7.5 hours; 7 to 8 scores the same.") },
-          { term: "Sleep consistency", detail: tr("Reference 86.3.") },
+          { term: tr("Sleep consistency"), detail: tr("Reference 86.3.") },
           { term: "Heart rate zones 1-3", detail: tr("Daily time at 50-80% of your heart-rate reserve. Reference 150 minutes a week.") },
           { term: "Heart rate zones 4-5", detail: tr("Daily time at 80% of your heart-rate reserve and above. Reference 75 minutes a week.") },
           { term: "Strength activity", detail: tr("Reference 40 minutes a week.") },
@@ -315,7 +315,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "stress",
-    name: "Stress Monitor",
+    name: tr("Stress Monitor"),
     summary: tr("How far your heart rate sits above your calm level, from 0 to 3."),
     href: "/health/stress",
     sections: [
@@ -355,7 +355,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "energy-bank",
-    name: "Energy Bank",
+    name: tr("Energy Bank"),
     summary: tr("An estimate of how much energy you have left today, 0 to 100%."),
     href: "/",
     sections: [
@@ -364,7 +364,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
         rows: [
           { term: "Recovery and Sleep Performance", detail: tr("Set the starting level when you wake.") },
           { term: "Heart-rate load", detail: tr("Each minute’s heart-rate points, as in Strain.") },
-          { term: "Stress", detail: tr("High-stress minutes drain; calm, still minutes recharge.") },
+          { term: tr("Stress"), detail: tr("High-stress minutes drain; calm, still minutes recharge.") },
           { term: "Naps", detail: tr("Recharge.") },
         ],
       },
@@ -372,7 +372,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
         title: tr("How it is weighted"),
         paragraphs: ["At wake you start at 60% of Recovery plus 40% of Sleep Performance: Recovery 70% and sleep 80% start you at 74%. Then, minute by minute until bedtime:"],
         rows: [
-          { term: "Awake", detail: tr("−0.04 a minute, about 38 over 16 hours.") },
+          { term: tr("Awake"), detail: tr("−0.04 a minute, about 38 over 16 hours.") },
           { term: "Heart-rate load", detail: tr("−0.08 a minute for each heart-rate point, 1 to 5. An hour at 70-79% of your reserve costs 14.4.") },
           { term: "High stress", detail: tr("−0.08 a minute.") },
           { term: "Low stress, still", detail: tr("+0.01 a minute.") },
@@ -398,18 +398,18 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "health-monitor",
-    name: "Health Monitor",
+    name: tr("Health Monitor"),
     summary: tr("Last night’s five vitals against your own normal ranges."),
     href: "/health/monitor",
     sections: [
       {
         title: tr("What goes in"),
         rows: [
-          { term: "Resting heart rate", detail: tr("Fitbit’s daily resting heart rate from Google, in bpm.") },
-          { term: "Heart rate variability", detail: tr("Fitbit’s nightly HRV, in ms.") },
-          { term: "Respiratory rate", detail: tr("Breaths per minute asleep, in rpm.") },
-          { term: "SpO2", detail: tr("Blood oxygen overnight, in %.") },
-          { term: "Skin temperature", detail: tr("Last night against Google’s skin-temperature baseline, in °C.") },
+          { term: tr("Resting heart rate"), detail: tr("Fitbit’s daily resting heart rate from Google, in bpm.") },
+          { term: tr("Heart rate variability"), detail: tr("Fitbit’s nightly HRV, in ms.") },
+          { term: tr("Respiratory rate"), detail: tr("Breaths per minute asleep, in rpm.") },
+          { term: tr("SpO2"), detail: tr("Blood oxygen overnight, in %.") },
+          { term: tr("Skin temperature"), detail: tr("Last night against Google’s skin-temperature baseline, in °C.") },
         ],
       },
       {
@@ -422,7 +422,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
       {
         title: tr("What the bands mean"),
         rows: [
-          { term: "Within range", detail: tr("Inside your normal range.") },
+          { term: tr("Within range"), detail: tr("Inside your normal range.") },
           { term: "Elevated or Low", detail: tr("Outside it; the chip names the bound you crossed.") },
           { term: "Below 95%", detail: tr("SpO2 under 95%, whatever your range.") },
           { term: "Illness signal", detail: tr("Several vitals moved together, a pattern often seen early in illness.") },
@@ -438,7 +438,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "fitness",
-    name: "Fitness level",
+    name: tr("Fitness level"),
     summary: tr("Your VO2 max compared with people of your age and sex."),
     href: "/health/fitness",
     sections: [
@@ -484,7 +484,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "training-balance",
-    name: "Training balance",
+    name: tr("Training balance"),
     summary: tr("Whether your recent strain is above or below what you are used to."),
     href: "/health/fitness",
     sections: [
@@ -528,7 +528,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "journal-impact",
-    name: "Behaviour insights",
+    name: tr("Behaviour insights"),
     summary: tr("How each behaviour you log goes with your next day’s scores."),
     href: "/journal/insights",
     sections: [
@@ -572,7 +572,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "sleep-consistency",
-    name: "Sleep consistency",
+    name: tr("Sleep consistency"),
     summary: tr("How closely your sleep and wake times repeat from day to day."),
     href: "/sleep",
     sections: [
@@ -616,7 +616,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "training-load",
-    name: "Fitness, fatigue and form",
+    name: tr("Fitness, fatigue and form"),
     summary: tr("Your long-term and short-term training load, and the gap between them."),
     href: "/health/fitness",
     sections: [
@@ -629,9 +629,9 @@ export const SCORE_DOCS: ScoreDoc[] = [
       {
         title: tr("How it is weighted"),
         rows: [
-          { term: "Fitness", detail: tr("A rolling average of daily load that fades with a 42-day time constant.") },
+          { term: tr("Fitness"), detail: tr("A rolling average of daily load that fades with a 42-day time constant.") },
           { term: "Fatigue", detail: tr("The same with a 7-day time constant, so it reacts faster.") },
-          { term: "Form", detail: tr("Fitness minus Fatigue.") },
+          { term: tr("Form"), detail: tr("Fitness minus Fatigue.") },
         ],
         paragraphs: ["Both averages start from your mean load over the first 7\u00a0days."],
       },
@@ -661,7 +661,7 @@ export const SCORE_DOCS: ScoreDoc[] = [
   },
   {
     slug: "hr-recovery",
-    name: "Heart rate recovery",
+    name: tr("Heart rate recovery"),
     summary: tr("How far your heart rate drops in the minute after a workout."),
     href: null,
     sections: [

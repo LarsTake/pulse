@@ -1,11 +1,11 @@
 import type { DeltaDir, Tone } from "./bands";
-import { INTL_LOCALE, t, UI_LOCALE } from "./i18n";
+import { INTL_LOCALE, t, t as tr, UI_LOCALE } from "./i18n";
 
 // Number, date and spoken-label formatting (spec §3.3, §6). Formatters are referenced by key so a
 // server component can hand them to a client component (functions do not cross that boundary).
 
 /** The product name for the Healthspan age. Swap to "Pulse Age" here if preferred (spec §11). */
-export const AGE_LABEL = "Pulse Age";
+export const AGE_LABEL = tr("Pulse Age");
 export const MISSING = "--";
 const MINUS = "−";
 
@@ -140,7 +140,9 @@ export function durationWords(minutes: number) {
   const m = Math.max(0, Math.round(minutes));
   const h = Math.floor(m / 60);
   const r = m % 60;
-  const part = (n: number, w: string) => `${n}${NBSP}${w}${n === 1 ? "" : "s"}`;
+  const de = UI_LOCALE === "de";
+  const part = (n: number, w: "minute" | "hour") =>
+    de ? `${n}${NBSP}${w === "minute" ? (n === 1 ? "Minute" : "Minuten") : n === 1 ? "Stunde" : "Stunden"}` : `${n}${NBSP}${w}${n === 1 ? "" : "s"}`;
   if (!h) return part(r, "minute");
   return r ? `${part(h, "hour")} ${part(r, "minute")}` : part(h, "hour");
 }
@@ -148,43 +150,43 @@ export function durationWords(minutes: number) {
 /** Relative age of a timestamp: "12 minutes ago", "3 hours ago". */
 export function ago(ms: number, now: number) {
   const min = Math.max(0, Math.round((now - ms) / 60000));
-  if (min < 1) return "just now";
-  if (min < 60) return `${min}${NBSP}${min === 1 ? "minute" : "minutes"} ago`;
+  if (min < 1) return tr("just now");
+  if (min < 60) return tr("{0}{1}{2} ago", [min, NBSP, min === 1 ? tr("minute") : tr("minutes")]);
   const h = Math.round(min / 60);
-  if (h < 48) return `${h}${NBSP}${h === 1 ? "hour" : "hours"} ago`;
+  if (h < 48) return tr("{0}{1}{2} ago", [h, NBSP, h === 1 ? tr("hour") : tr("hours")]);
   const d = Math.round(h / 24);
-  return `${d}${NBSP}days ago`;
+  return tr("{0}{1}days ago", [d, NBSP]);
 }
 
 /** Header sync age, the reference app's battery slot (spec §4.3.2): "Now", "12m", "3h", "2d". */
 export function agoShort(ms: number, now: number) {
   const min = Math.max(0, Math.floor((now - ms) / 60000));
-  if (min < 1) return "Now";
-  if (min < 60) return `${min}m`;
+  if (min < 1) return tr("Now");
+  if (min < 60) return `${min}${UI_LOCALE === "de" ? " Min." : "m"}`;
   const h = Math.floor(min / 60);
-  return h < 48 ? `${h}h` : `${Math.floor(h / 24)}d`;
+  return h < 48 ? `${h}${UI_LOCALE === "de" ? " Std." : "h"}` : `${Math.floor(h / 24)}${UI_LOCALE === "de" ? " T." : "d"}`;
 }
 
 // --- Spoken labels (aria) ---
 
 const UNIT_WORDS: Record<string, string> = {
-  "%": "percent",
-  ms: "milliseconds",
-  bpm: "beats per minute",
-  rpm: "breaths per minute",
-  "°C": "degrees",
-  kcal: "calories",
-  "ml/kg/min": "millilitres per kilo per minute",
-  x: "times",
-  min: "minutes",
-  h: "hours",
-  km: "kilometres",
-  "/km": "per kilometre",
+  "%": tr("percent"),
+  ms: tr("milliseconds"),
+  bpm: tr("beats per minute"),
+  rpm: tr("breaths per minute"),
+  "°C": tr("degrees"),
+  kcal: tr("calories"),
+  "ml/kg/min": tr("millilitres per kilo per minute"),
+  x: tr("times"),
+  min: tr("minutes"),
+  h: tr("hours"),
+  km: tr("kilometres"),
+  "/km": tr("per kilometre"),
 };
 
 /** "124 milliseconds", "−0.4 degrees" → reads the minus sign as "minus". */
 export function spoken(value: string, unit?: string) {
-  const v = value.replace(MINUS, "minus ");
+  const v = value.replace(MINUS, tr("minus") + " ");
   if (!unit) return v;
   return `${v} ${UNIT_WORDS[unit] ?? unit}`;
 }
@@ -206,20 +208,20 @@ export type DialAria = {
 /** "Recovery 72 percent, green", "Strain 9.4 of 21 so far, target 12.0 to 15.0", "Recovery unavailable: calibrating, 4 nights left". */
 export function dialAriaLabel(a: DialAria) {
   if (a.value === null || a.value === undefined) {
-    const why = (a.reasonText ?? "no data").replace(/^(\w)/, (c) => c.toLowerCase()).replace(": ", ", ");
-    return `${a.label} unavailable: ${why}`;
+    const why = (a.reasonText ?? tr("no data")).replace(/^(\w)/, (c) => c.toLowerCase()).replace(": ", ", ");
+    return tr("{0} unavailable: {1}", [a.label, why]);
   }
   const v = spoken(a.valueText ?? String(a.value), a.unit);
-  const prov = a.provisional ? " provisional," : "";
+  const prov = a.provisional ? tr(" provisional,") : "";
   if (a.variant === "strain") {
-    const t = a.target ? `, target ${a.target[0].toFixed(1)} to ${a.target[1].toFixed(1)}` : "";
-    return `${a.label}${prov} ${v} of 21${a.soFar ? " so far" : ""}${t}`;
+    const t = a.target ? tr(", target {0} to {1}", [a.target[0].toFixed(1), a.target[1].toFixed(1)]) : "";
+    return tr("{0}{1} {2} of 21{3}{4}", [a.label, prov, v, a.soFar ? tr(" so far") : "", t]);
   }
   const word = a.bandWord ? `, ${a.bandWord.toLowerCase()}` : "";
   return `${a.label}${prov} ${v}${word}`;
 }
 
-const TONE_WORD: Record<Tone, string> = { good: ", good", bad: ", worse than usual", neutral: "" };
+const TONE_WORD: Record<Tone, string> = { good: tr(", good"), bad: tr(", worse than usual"), neutral: "" };
 
 /** "Heart rate variability 124 milliseconds, above your 30-day average of 98, good". */
 export function statSentence(o: {
@@ -233,8 +235,8 @@ export function statSentence(o: {
 }) {
   let s = `${o.label} ${spoken(o.valueText, o.unit)}`;
   if (o.averageText && o.averageText !== MISSING) {
-    const rel = o.dir === "up" ? "above" : o.dir === "down" ? "below" : "in line with";
-    s += `, ${rel} your ${o.averageLabel ?? "30-day average"} of ${o.averageText}`;
+    const rel = o.dir === "up" ? tr("above") : o.dir === "down" ? tr("below") : tr("in line with");
+    s += tr(", {0} your {1} of {2}", [rel, o.averageLabel ?? tr("30-day average"), o.averageText]);
     if (o.tone) s += TONE_WORD[o.tone];
   }
   return s;

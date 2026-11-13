@@ -101,13 +101,13 @@ export function coach(strain: Metric<number>, target: { low: number; high: numbe
   if (strain.value == null || !target) return null;
   const { low, high } = target;
   const range = `${fmt1(low)} - ${fmt1(high)}`;
-  if (row?.recovery?.value != null && row.recovery.value < 34) return `Your body needs rest today. Keep strain between ${range.replace(" - ", " and ")}.`;
+  if (row?.recovery?.value != null && row.recovery.value < 34) return tr("Your body needs rest today. Keep strain between {0}.", [range.replace(" - ", " and ")]);
   if (strain.value < low) {
     // ponytail: about 8 minutes of moderate activity per strain point near the target; a rough guide, not a model.
     const minutes = Math.max(10, Math.round(((low - strain.value) * 8) / 5) * 5);
-    return `Your target today is ${range}. You are at ${fmt1(strain.value)}, so about ${minutes} minutes of moderate activity would put you in range.`;
+    return tr("Your target today is {0}. You are at {1}, so about {2} minutes of moderate activity would put you in range.", [range, fmt1(strain.value), minutes]);
   }
-  if (strain.value <= high) return `You are inside today’s target of ${range}. More strain from here adds load faster than benefit.`;
+  if (strain.value <= high) return tr("You are inside today’s target of {0}. More strain from here adds load faster than benefit.", [range]);
   return "You are past today’s target. Prioritise sleep tonight to recover.";
 }
 
@@ -116,7 +116,7 @@ export const zoneBounds = (lower: number[]): ZoneRow[] =>
 
 /** How the day's zones are set, under the zone rows. */
 export const zoneNote = (row: DayRow | undefined, ctx: QueryCtx) =>
-  `Zones on your heart-rate reserve: resting ${Math.round(row?.s1?.restingHr ?? 0)} to max ${row?.s1?.maxHr ?? ctx.profile.maxHr} bpm.`;
+  tr("Zones on your heart-rate reserve: resting {0} to max {1} bpm.", [Math.round(row?.s1?.restingHr ?? 0), row?.s1?.maxHr ?? ctx.profile.maxHr]);
 
 export function zoneRows(row: DayRow | undefined, seconds = row?.s1?.zoneSeconds, below = row?.s1?.zoneBelowSeconds): Metric<ZoneRow[]> {
   const s1 = row?.s1;

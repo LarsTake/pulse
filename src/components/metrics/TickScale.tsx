@@ -1,3 +1,4 @@
+import { t as tr } from "@/lib/i18n";
 import { cn } from "@/lib/utils"
 import { DATA_COLORS, recoveryColor } from "@/lib/bands"
 import { formatValue, spoken, type FormatKey } from "@/lib/format"
@@ -46,7 +47,7 @@ function Scale({ p, value, provisional }: { p: TickScaleProps; value: number | n
   const near = frac === null ? -9 : Math.round(frac * (COUNT - 1))
   const text = formatValue(p.format, value)
   const fill = value === null ? null : DATA_COLORS[recoveryColor(value)].bg
-  const valueText = value === null ? `${p.label}: no data` : `${p.label} ${spoken(text, p.unit)}${p.describe ? `: ${p.describe}` : ""}`
+  const valueText = value === null ? tr("{0}: no data", [p.label]) : `${p.label} ${spoken(text, p.unit)}${p.describe ? `: ${p.describe}` : ""}`
 
   const tickClass = (i: number) => {
     if (p.variant === "meter") return cn("h-5 w-0.5 rounded-full", fill && i <= near ? fill : "bg-dial-track")

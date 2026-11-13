@@ -135,7 +135,7 @@ function Chart({ hr, variant }: { hr: HrSeries; variant: "day" | "activity" }) {
   const domain = paddedDomain(hr.points.map((p) => p.bpm))
   const bpms = hr.points.map((p) => p.bpm).filter((b): b is number => b !== null)
   const zoneOf = (bpm: number) => hr.zones?.find((z) => bpm >= z.min && bpm <= z.max)?.label
-  const summary = `Heart rate from ${at(first, tz)} to ${at(last, tz)}: low ${Math.min(...bpms)}, high ${Math.max(...bpms)} beats per minute.`
+  const summary = tr("Heart rate from {0} to {1}: low {2}, high {3} beats per minute.", [at(first, tz), at(last, tz), Math.min(...bpms), Math.max(...bpms)])
   // The day chart draws heart rate grey and colours it by zone only inside workouts (WHOOP's day view); an activity is all workout.
   const workouts = (hr.spans ?? []).filter((s) => s.kind === "workout")
   const inWorkout = (t: number) => variant === "activity" || workouts.some((s) => t >= s.start && t <= s.end)

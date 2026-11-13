@@ -15,7 +15,7 @@ const DIALS = [
   ["recovery", "Avg recovery"],
   ["strain", "Avg strain"],
 ] as const
-const AVERAGES = ["Recovery", "Day strain", "Sleep performance", "Hours of sleep", "Sleep consistency", "Heart rate variability", "Resting heart rate"]
+const AVERAGES = [tr("Recovery"), "Day strain", tr("Sleep performance"), "Hours of sleep", tr("Sleep consistency"), tr("Heart rate variability"), tr("Resting heart rate")]
 
 /**
  * Report loading (spec §7.13, §5.19): the period switcher, kind toggle and three dials, the insight beside them on
@@ -31,7 +31,7 @@ export default function Loading() {
           <div className="flex flex-col items-center gap-3">
             <Skeleton className="h-9 w-[168px] rounded-full bg-secondary" />
             <div className="inline-flex gap-0.5 rounded-lg bg-muted p-0.5">
-              {["Week", "Month"].map((l) => (
+              {[tr("Week"), tr("Month")].map((l) => (
                 <span key={l} className="inline-flex h-10 min-w-11 items-center px-3 text-[13px] font-bold tracking-[0.1em] text-muted-foreground uppercase">
                   {l}
                 </span>

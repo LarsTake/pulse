@@ -166,13 +166,13 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
             title={tr("My Day")}
             className="xl:flex xl:h-full xl:flex-col"
             // The action menu for the day on screen: add an activity, complete the journal (the reference app, home-plus-menu-open).
-            action={<PlusMenu label={vm.isToday ? "Add to today" : `Add to ${formatDay(d, DAY.short)}`} />}
+            action={<PlusMenu label={vm.isToday ? tr("Add to today") : tr("Add to {0}", [formatDay(d, DAY.short)])} />}
           >
             <div className="flex flex-col gap-3 xl:flex-1 xl:gap-4">
               {vm.outlook && <DayBanner outlook={vm.outlook} />}
               <SectionShell
                 variant="card"
-                title={vm.activities.title}
+                title={tr(vm.activities.title)}
                 action={
                   <Link href="/activities" aria-label={tr("All activities")} className={ICON_LINK}>
                     <Maximize2 aria-hidden className="size-[18px]" strokeWidth={1.75} />
@@ -328,7 +328,7 @@ function JournalWeek({ vm, at, className }: { vm: HomeVM; at: (href: string) => 
             <li key={w.day}>
               <Link
                 href={dayHref("/journal", w.day, vm.today)}
-                aria-label={`${formatDay(w.day, DAY.long)}: ${w.done ? "checked in" : "no check-in"}`}
+                aria-label={`${formatDay(w.day, DAY.long)}: ${w.done ? tr("checked in") : tr("no check-in")}`}
                 aria-current={current ? "date" : undefined}
                 className="flex min-h-16 flex-col items-center justify-center gap-2 rounded-lg transition-[background-color] duration-150 ease-standard outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-accent"
               >
@@ -355,7 +355,7 @@ function JournalWeek({ vm, at, className }: { vm: HomeVM; at: (href: string) => 
 
 function MonitorAlert({ alert, href }: { alert: NonNullable<HomeVM["monitorAlert"]>; href: string }) {
   const illness = alert.kind === "illness"
-  const names = alert.names.length > 1 ? `${alert.names.slice(0, -1).join(", ")} and ${alert.names.at(-1)}` : (alert.names[0] ?? "Some vitals")
+  const names = alert.names.length > 1 ? tr("{0} and {1}", [alert.names.slice(0, -1).join(", "), alert.names.at(-1)]) : (alert.names[0] ?? "Some vitals")
   return (
     <Alert
       className={cn(
@@ -366,13 +366,13 @@ function MonitorAlert({ alert, href }: { alert: NonNullable<HomeVM["monitorAlert
     >
       {illness ? <CircleAlert className="text-recovery-red-text" strokeWidth={1.75} /> : <TriangleAlert className="text-warning-text" strokeWidth={1.75} />}
       <AlertTitle className="text-base leading-[22px] font-semibold text-balance">
-        {illness ? "Your body may be fighting something" : `${alert.count} ${alert.count === 1 ? "vital" : "vitals"} outside your normal range`}
+        {illness ? "Your body may be fighting something" : tr("{0} {1} outside your normal range", [alert.count, alert.count === 1 ? "vital" : "vitals"])}
       </AlertTitle>
       <AlertDescription className="col-start-2 space-y-2 text-[15px] leading-[22px] text-pretty text-foreground-secondary md:text-pretty">
         <p>
           {illness
             ? "Several vitals moved away from your normal range together, a pattern that often comes before feeling unwell. Consider an easier day."
-            : `${names} ${alert.names.length === 1 ? "is" : "are"} outside your usual range. This can be an early sign of illness or heavy strain.`}
+            : tr("{0} {1} outside your usual range. This can be an early sign of illness or heavy strain.", [names, alert.names.length === 1 ? "is" : "are"])}
         </p>
         <Link
           href={href}
@@ -435,9 +435,9 @@ function MonitorCard({ vm, href }: { vm: HomeVM; href: string }) {
         <MonitorLine
           chip={<Check aria-hidden className="size-4" strokeWidth={2.5} />}
           chipClass="bg-optimal/15 text-optimal-text"
-          top="Within range"
+          top={tr("Within range")}
           topClass="text-optimal-text"
-          bottom={`${m.value.inRange}/${m.value.total} Metrics`}
+          bottom={tr("{0}/{1} Metrics", [m.value.inRange, m.value.total])}
         />
       ) : (
         <MonitorLine
@@ -445,7 +445,7 @@ function MonitorCard({ vm, href }: { vm: HomeVM; href: string }) {
           chipClass="bg-warning/15 text-warning-text"
           top="Out of range"
           topClass="text-warning-text"
-          bottom={`${m.value.inRange}/${m.value.total} Metrics`}
+          bottom={tr("{0}/{1} Metrics", [m.value.inRange, m.value.total])}
         />
       )}
     </SectionShell>
@@ -462,7 +462,7 @@ function StressCard({ vm, href, timeZone, timeFormat }: { vm: HomeVM; href: stri
           chipClass="bg-secondary font-numeric text-base font-bold text-muted-foreground"
           top={s.reason === "band_not_worn" ? "Not worn" : "No still minutes yet"}
           topClass="text-foreground-secondary"
-          bottom={vm.isToday ? "Today" : "This day"}
+          bottom={vm.isToday ? tr("Today") : "This day"}
         />
       </SectionShell>
     )
@@ -474,7 +474,7 @@ function StressCard({ vm, href, timeZone, timeFormat }: { vm: HomeVM; href: stri
         chipClass={cn("font-numeric text-lg font-bold tabular-nums", tone.chip)}
         top={tone.word}
         topClass={tone.text}
-        bottom={s.value.at !== null ? clock(s.value.at, timeZone, timeFormat) : "Day average"}
+        bottom={s.value.at !== null ? clock(s.value.at, timeZone, timeFormat) : tr("Day average")}
       />
     </SectionShell>
   )
@@ -540,7 +540,7 @@ function EnergyCard({ vm, timeZone, timeFormat, className }: { vm: HomeVM; timeZ
               <ul className="space-y-1">
                 {eb.drains.slice(0, 3).map((dr) => (
                   <li key={`${dr.label}-${dr.start}`} className={cn(CAPTION, "text-foreground-secondary")}>
-                    {dr.label} at <span className="font-numeric tabular-nums">{clock(dr.start, timeZone, timeFormat)}</span> ·{" "}
+                    {dr.label} {tr("at")} <span className="font-numeric tabular-nums">{clock(dr.start, timeZone, timeFormat)}</span> ·{" "}
                     <span className="font-numeric tabular-nums">{formatValue("signedInt", -Math.abs(dr.amount))}</span>
                   </li>
                 ))}

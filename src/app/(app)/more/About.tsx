@@ -17,8 +17,8 @@ export function About({ version, scoringVersion }: { version: string; scoringVer
       <p className={BODY}>{tr("Scoring is ported from")}{" "}<span translate="no">noop</span>. <span translate="no">{tr("Pulse")}</span> {" "}{tr("is for personal use and is not a medical device.")}</p>
       <dl className="mt-3 divide-y divide-border border-t border-border">
         {[
-          ["Version", version],
-          ["Scoring version", String(scoringVersion)],
+          [tr("Version"), version],
+          [tr("Scoring version"), String(scoringVersion)],
         ].map(([k, v]) => (
           <div key={k} className={ROW}>
             <dt className="text-[15px] leading-[22px]">{k}</dt>

@@ -37,4 +37,4 @@ export const BP_TONE: Record<import("@/core/algorithms/bloodPressure").BpCategor
 
 /** Lab status to chip tone and word. */
 export const LAB_TONE: Record<import("@/core/algorithms/labs").LabStatus, import("@/lib/bands").ChipTone> = { in_range: "optimal", low: "warning", high: "warning", no_range: "neutral" }
-export const LAB_WORD: Record<import("@/core/algorithms/labs").LabStatus, string> = { in_range: "In range", low: "Low", high: "High", no_range: "No range" }
+export const LAB_WORD: Record<import("@/core/algorithms/labs").LabStatus, string> = { in_range: tr("In range"), low: tr("Low"), high: tr("High"), no_range: "No range" }

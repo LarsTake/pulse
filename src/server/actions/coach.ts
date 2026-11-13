@@ -56,7 +56,7 @@ export async function saveProviderAction(input: z.input<typeof Provider>): Promi
   const m = modelFor(provider, usedModel, apiKey);
   if (!m) return { ok: false, error: tr("Pick a provider.") };
   try {
-    await generateText({ model: m, prompt: tr("Reply with OK."), maxOutputTokens: 5, maxRetries: 0, abortSignal: AbortSignal.timeout(20_000) });
+    await generateText({ model: m, prompt: "Reply with OK.", maxOutputTokens: 5, maxRetries: 0, abortSignal: AbortSignal.timeout(20_000) });
   } catch (e) {
     console.warn(`[coach] key test failed for ${provider}: ${e instanceof Error ? e.name : "error"}`);
     return { ok: false, error: tr("That didn’t work: check the key and the model id, and that your account has credit.") };
@@ -76,7 +76,7 @@ export async function removeProviderAction(): Promise<ActionResult> {
 }
 
 const Preferences = z.object({
-  instructions: z.string().max(MAX_NOTES, `Keep it under ${MAX_NOTES} characters.`).nullable().optional(),
+  instructions: z.string().max(MAX_NOTES, tr("Keep it under {0} characters.", [MAX_NOTES])).nullable().optional(),
   briefMinute: z.number().int().min(0).max(1439).nullable().optional(),
 });
 

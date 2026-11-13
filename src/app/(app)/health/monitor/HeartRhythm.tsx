@@ -13,7 +13,7 @@ import { t as tr } from "@/lib/i18n"
 
 /** Fitbit's and the reference app's notes both say "not a diagnosis" and name what ECG can't detect (docs/research/heart-rhythm-ui.md). */
 export const RHYTHM_DISCLAIMER =
-  "Not a diagnosis. ECG and irregular rhythm notifications can’t detect a heart attack, blood clots or stroke. Talk to your doctor about any result."
+  tr("Not a diagnosis. ECG and irregular rhythm notifications can’t detect a heart attack, blood clots or stroke. Talk to your doctor about any result.")
 
 const ROW = "flex min-h-14 items-center gap-3 px-4 py-2"
 const ICON = "size-5 shrink-0 text-muted-foreground"
@@ -64,7 +64,7 @@ export function HeartRhythm({ rhythm }: { rhythm: HeartRhythmVM }) {
             <span aria-hidden className="flex flex-col items-start gap-2">
               <ValueUnit
                 value={bpm(latest)}
-                unit="bpm avg"
+                unit={tr("bpm avg")}
                 className="font-numeric text-[30px] leading-9 font-bold tracking-[-0.01em]"
                 unitClassName="text-sm leading-5 font-medium text-foreground"
               />
@@ -102,7 +102,7 @@ export function HeartRhythm({ rhythm }: { rhythm: HeartRhythmVM }) {
           <span className={cn(LABEL, "block text-balance")}>{tr("Irregular rhythm notifications")}</span>
           <span className={cn(CAPTION, "mt-0.5 block text-pretty")}>
             {irn.latestDay
-              ? `Latest ${formatDay(irn.latestDay, DAY.short)}`
+              ? tr("Latest {0}", [formatDay(irn.latestDay, DAY.short)])
               : "None. The check runs from time to time while you’re still, so no alert doesn’t rule out AFib."}
           </span>
         </p>
@@ -115,7 +115,7 @@ export function HeartRhythm({ rhythm }: { rhythm: HeartRhythmVM }) {
         {shown && (
           <div className="space-y-4">
             <div className="space-y-2">
-              <ValueUnit value={bpm(shown)} unit="bpm avg" className="block font-numeric text-4xl leading-10 font-bold tracking-[-0.01em]" />
+              <ValueUnit value={bpm(shown)} unit={tr("bpm avg")} className="block font-numeric text-4xl leading-10 font-bold tracking-[-0.01em]" />
               <StatusChip tone={shown.tone}>{shown.label}</StatusChip>
             </div>
             <p className="text-[15px] leading-[22px] text-pretty text-foreground-secondary tabular-nums">{formatDay(shown.day, DAY.long)} at {shown.time}</p>

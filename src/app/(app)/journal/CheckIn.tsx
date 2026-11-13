@@ -108,8 +108,8 @@ const quietDismiss = () => {
 
 const heading = (day: string, today: string) =>
   day === today
-    ? `What’s happening today, ${formatDay(day, { month: "long", day: "numeric" })}?`
-    : `What happened on ${formatDay(day, { weekday: "long", month: "long", day: "numeric" })}?`
+    ? tr("What’s happening today, {0}?", [formatDay(day, { month: "long", day: "numeric" })])
+    : tr("What happened on {0}?", [formatDay(day, { weekday: "long", month: "long", day: "numeric" })])
 
 /**
  * The Journal (spec §7.11, journal-*), mounted once in the app layout: `?checkin=1` opens it full screen over
@@ -405,7 +405,7 @@ export function CheckInSheet() {
                             </div>
                             <Slider
                               aria-label={f.question}
-                              aria-valuetext={d === undefined ? "Not set" : followUpText(f, d)}
+                              aria-valuetext={d === undefined ? tr("Not set") : followUpText(f, d)}
                               min={f.min}
                               max={f.max}
                               step={f.step}
@@ -442,8 +442,8 @@ export function CheckInSheet() {
                         className="h-11 min-w-0 flex-1 text-base"
                       />
                       {/* "Add" fits beside the field on a phone; the name says what it adds (label in name). */}
-                      <Button type="submit" variant="secondary" size="touch" disabled={adding || !label.trim()} aria-label={adding ? undefined : "Add behaviour"}>
-                        {adding ? "Adding…" : "Add"}
+                      <Button type="submit" variant="secondary" size="touch" disabled={adding || !label.trim()} aria-label={adding ? undefined : tr("Add behaviour")}>
+                        {adding ? "Adding…" : tr("Add")}
                       </Button>
                     </div>
                     {addError && (

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import { t as tr } from "@/lib/i18n"
 
 /**
  * The Pulse mark, option 4g "Cool pair" (docs/design/brand.md): two staggered beats, lub then dub.
@@ -21,7 +22,7 @@ export function Mark({
   const mono = color === "mono"
   // translate is in viewBox units (the mark is 15 units tall), so the beat scales with the mark.
   return (
-    <svg viewBox="4.5 4.5 15 15" role="img" aria-label={title ?? "Pulse"} className={cn("size-6 shrink-0", animated && "overflow-visible", className)}>
+    <svg viewBox="4.5 4.5 15 15" role="img" aria-label={title ?? tr("Pulse")} className={cn("size-6 shrink-0", animated && "overflow-visible", className)}>
       {title && <title>{title}</title>}
       <rect x={6.9} y={4.5} width={4.2} height={11} rx={2.1} fill={mono ? "currentColor" : "var(--optimal)"} className={animated ? "motion-safe:animate-beat-up" : undefined} />
       <rect

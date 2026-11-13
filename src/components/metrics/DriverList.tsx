@@ -33,24 +33,24 @@ export type DriverListProps = {
 }
 
 const fmt = (v: number, unit: DriverListProps["unit"]) =>
-  unit === "SD" ? `${formatValue("signed1", v)} SD` : `${formatValue("signedInt", v)}${unit === "%" ? "%" : ""}`
+  unit === "SD" ? tr("{0} SD", [formatValue("signed1", v)]) : `${formatValue("signedInt", v)}${unit === "%" ? "%" : ""}`
 const effectOf = (i: DriverItem) => i.effect ?? (i.delta > 0 ? "positive" : i.delta < 0 ? "negative" : "none")
 const unitWord = { pts: "points", "%": "percent", SD: "standard deviations" }
 
-function sentence(i: DriverItem, variant: DriverListProps["variant"], unit: DriverListProps["unit"], outcome = "Recovery") {
+function sentence(i: DriverItem, variant: DriverListProps["variant"], unit: DriverListProps["unit"], outcome = tr("Recovery")) {
   const e = effectOf(i)
   const size = `${formatValue(unit === "SD" ? "decimal1" : "int", Math.abs(i.delta))}\u00a0${unitWord[unit]}`
   if (variant === "recovery")
-    return e === "none" ? `${i.label}: no clear effect` : `${i.label} ${e === "positive" ? "raised" : "lowered"} Recovery by ${size}`
+    return e === "none" ? tr("{0}: no clear effect", [i.label]) : tr("{0} {1} Recovery by {2}", [i.label, e === "positive" ? tr("raised") : tr("lowered"), size])
   const k = unit === "SD" ? "decimal1" : "int"
-  const ci = i.ci ? `, 90 percent confidence ${formatValue(k, Math.min(Math.abs(i.ci[0]), Math.abs(i.ci[1])))} to ${formatValue(k, Math.max(Math.abs(i.ci[0]), Math.abs(i.ci[1])))}` : ""
-  const n = i.yes !== undefined && i.no !== undefined ? `, from ${i.yes} days with and ${i.no} without` : ""
-  const verb = e === "none" ? `had no clear effect on next-day ${outcome}` : `${e === "positive" ? "raised" : "lowered"} next-day ${outcome} by ${size}`
+  const ci = i.ci ? tr(", 90 percent confidence {0} to {1}", [formatValue(k, Math.min(Math.abs(i.ci[0]), Math.abs(i.ci[1]))), formatValue(k, Math.max(Math.abs(i.ci[0]), Math.abs(i.ci[1])))]) : ""
+  const n = i.yes !== undefined && i.no !== undefined ? tr(", from {0} days with and {1} without", [i.yes, i.no]) : ""
+  const verb = e === "none" ? tr("had no clear effect on next-day {0}", [outcome]) : tr("{0} next-day {1} by {2}", [e === "positive" ? tr("raised") : tr("lowered"), outcome, size])
   return `${i.label} ${verb}${ci}${n}`
 }
 
 function Header({ variant, unit, provisional }: { variant: DriverListProps["variant"]; unit: DriverListProps["unit"]; provisional: boolean }) {
-  const [left, mid, right] = variant === "recovery" ? ["Lowered", "Points", "Raised"] : ["Hurts", unit === "SD" ? "Impact (SD)" : "% Impact", "Helps"]
+  const [left, mid, right] = variant === "recovery" ? ["Lowered", "Points", "Raised"] : [tr("Hurts"), unit === "SD" ? "Impact (SD)" : tr("% Impact"), tr("Helps")]
   return (
     <div aria-hidden className="mb-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-xs leading-4 font-bold tracking-[0.1em] uppercase">
       <span className="flex items-center gap-2 text-warning-text">
@@ -121,7 +121,7 @@ function Item({ i, max, p }: { i: DriverItem; max: number; p: DriverListProps })
         {p.variant === "impact" && i.yes !== undefined && i.no !== undefined && (
           <span className="block text-xs leading-4 font-medium text-muted-foreground tabular-nums">
             {i.yes} {" "}{tr("days with,")}{" "}{i.no} without.
-            {i.ci && ` 90% CI ${fmt(i.ci[0], p.unit).replace(/^\+/, "")} to ${fmt(i.ci[1], p.unit).replace(/^\+/, "")}`}
+            {i.ci && ` ${tr("90% CI {0} to {1}", [fmt(i.ci[0], p.unit).replace(/^\+/, ""), fmt(i.ci[1], p.unit).replace(/^\+/, "")])}`}
           </span>
         )}
       </span>

@@ -5,7 +5,7 @@ import { t as tr } from "@/lib/i18n"
 
 const BODY = "text-[15px] leading-[22px]"
 const ROW = "flex min-h-13 items-center justify-between gap-3 py-2"
-const PROFILE = ["Birth date", "Age", "Sex", "Height", "Max heart rate", "Time zone"]
+const PROFILE = [tr("Birth date"), tr("Age"), tr("Sex"), tr("Height"), tr("Max heart rate"), tr("Time zone")]
 
 /** A name and status line beside a 56 px disc (Account) or 44 px tile (Data source). */
 function Identity({ tile }: { tile: string }) {

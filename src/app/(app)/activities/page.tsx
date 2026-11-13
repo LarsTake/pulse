@@ -15,7 +15,7 @@ import { t as tr } from "@/lib/i18n"
 
 export const metadata = { title: tr("Activities"), description: tr("Every workout, newest first, grouped by day with its Strain.") }
 
-const KIND_LABEL: Record<ActivityKind, string> = { run: "Runs", ride: "Rides", walk: "Walks", strength: "Strength", workout: "Workouts" }
+const KIND_LABEL: Record<ActivityKind, string> = { run: tr("Runs"), ride: tr("Rides"), walk: tr("Walks"), strength: tr("Strength"), workout: "Workouts" }
 const STAT_LABEL = "text-xs leading-4 font-bold tracking-[0.1em] text-foreground-secondary uppercase"
 const PILL =
   "relative grid h-9 shrink-0 place-items-center rounded-full px-4 after:absolute after:-inset-y-1 text-xs font-bold tracking-[0.1em] uppercase outline-none transition-[background-color,color] duration-150 ease-standard focus-visible:ring-3 focus-visible:ring-ring/50"
@@ -64,7 +64,7 @@ export default async function ActivitiesPage({ searchParams }: PageProps<"/activ
                   aria-current={kind === k ? "page" : undefined}
                   className={cn(PILL, kind === k ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground")}
                 >
-                  {k ? KIND_LABEL[k] : "All"}
+                  {k ? KIND_LABEL[k] : tr("All")}
                 </Link>
               ))}
             </nav>
@@ -110,9 +110,9 @@ function Summary({ items, days }: { items: ActivitiesVM["groups"][number]["items
         {tr("Last")}{" "}{days} days
       </h2>
       <dl className={cn(CARD_MATERIAL, "grid grid-cols-3 gap-3 p-4")}>
-        {stat(items.length, items.length === 1 ? "Activity" : "Activities")}
-        {stat(hmm(minutes), "Time")}
-        {stat(<span className={avg === null ? "text-muted-foreground" : "text-strain-text"}>{formatValue("decimal1", avg)}</span>, "Avg strain")}
+        {stat(items.length, items.length === 1 ? tr("Activity") : tr("Activities"))}
+        {stat(hmm(minutes), tr("Time"))}
+        {stat(<span className={avg === null ? "text-muted-foreground" : "text-strain-text"}>{formatValue("decimal1", avg)}</span>, tr("Avg strain"))}
       </dl>
     </section>
   )

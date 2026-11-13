@@ -88,8 +88,8 @@ export function ConnectionBanner({ className }: { className?: string }) {
       body: !s.sync.lastSuccessAt
         ? "Sync is behind. Data may be out of date."
         : now
-          ? `Last successful sync ${ago(s.sync.lastSuccessAt, now)}. Data may be out of date.`
-          : `Last successful sync at ${formatClock(s.sync.lastSuccessAt, s.timeZone)}. Data may be out of date.`,
+          ? tr("Last successful sync {0}. Data may be out of date.", [ago(s.sync.lastSuccessAt, now)])
+          : tr("Last successful sync at {0}. Data may be out of date.", [formatClock(s.sync.lastSuccessAt, s.timeZone)]),
       action: (
         <Button size="touch" variant="secondary" onClick={() => router.refresh()}>
           {tr("Retry")}</Button>

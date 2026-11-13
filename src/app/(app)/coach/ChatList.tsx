@@ -158,8 +158,8 @@ export function ChatList({ groups: first, next: firstNext, current, className, s
         <p className="px-4 py-1 text-[13px] leading-[18px] text-pretty text-muted-foreground">{tr("Your chats appear here. They’re saved on this server, visible only to you.")}</p>
       ) : (
         groups.map((g, i) => (
-          <section key={`${g.label}-${i}`} aria-label={g.label}>
-            <h2 className="px-4 pb-1.5 text-[11px] leading-4 font-bold tracking-[0.1em] text-muted-foreground/80 uppercase">{g.label}</h2>
+          <section key={`${g.label}-${i}`} aria-label={tr(g.label)}>
+            <h2 className="px-4 pb-1.5 text-[11px] leading-4 font-bold tracking-[0.1em] text-muted-foreground/80 uppercase">{tr(g.label)}</h2>
             <ul className="space-y-px">
               {g.chats.map((c) => (
                 <ChatItem key={c.id} chat={c} current={c.id === current} />

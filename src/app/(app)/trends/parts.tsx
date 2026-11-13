@@ -19,6 +19,6 @@ export const PERIOD: Record<TrendRange, { label: string; prior: string }> = {
  * popover of every section from 768 px (MetricSheet). A choice keeps `?r=`.
  */
 export function MetricPicker({ current, r }: { current?: TrendMetricKey; r?: string }) {
-  const groups = TREND_GROUPS.map((g) => ({ group: g, metrics: TREND_METRICS.filter((m) => m.group === g).map(({ key, label }) => ({ key, label })) }))
+  const groups = TREND_GROUPS.map((g) => ({ group: tr(g), metrics: TREND_METRICS.filter((m) => m.group === g).map(({ key, label }) => ({ key, label })) }))
   return <MetricSheet groups={groups} current={current} r={r} />
 }

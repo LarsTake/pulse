@@ -59,9 +59,9 @@ export type TrendChartProps = {
   line?: boolean
 }
 
-const RANGE_ARIA: Record<TrendRange, string> = { w: "1 week", m: "1 month", "6m": "6 months", "1y": "1 year" }
+const RANGE_ARIA: Record<TrendRange, string> = { w: tr("1 week"), m: tr("1 month"), "6m": tr("6 months"), "1y": "1 year" }
 const RANGE_PRIOR: Record<TrendRange, string> = { w: "vs. prior week", m: "vs. prior month", "6m": "vs. prior 6 months", "1y": "vs. prior year" }
-const RANGE_WORD: Record<TrendRange, string> = { w: "week", m: "month", "6m": "6 months", "1y": "year" }
+const RANGE_WORD: Record<TrendRange, string> = { w: "week", m: "month", "6m": tr("6 months"), "1y": "year" }
 const RANGE_LABEL: Record<TrendRange, string> = { w: "W", m: "M", "6m": "6M", "1y": "1Y" }
 const DEFAULT_RANGES: readonly TrendRange[] = ["w", "m", "6m"]
 // An outline distinguishes a missing breakdown from a coloured part or faded running total.
@@ -170,7 +170,7 @@ function Trend({ points, p }: { points: TrendPoint[]; p: TrendChartProps }) {
   // Durations always read h:mm ("3:00"); wholeTick would print a whole number of minutes raw ("180").
   const fmtTick = p.format === "duration" ? (v: number) => formatValue(p.format, v) : wholeTick((v) => formatValue(p.format, v))
   const showAvg = !line && range !== "w" && avg !== null
-  const gutter = labelGutter([p.reference?.label, showAvg && "Avg"])
+  const gutter = labelGutter([p.reference?.label, showAvg && tr("Avg")])
 
   const ticks =
     range === "w"
@@ -185,10 +185,8 @@ function Trend({ points, p }: { points: TrendPoint[]; p: TrendChartProps }) {
     return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null
   }
   const summary = values.length
-    ? `${p.label} over the last ${RANGE_WORD[range]}: average ${spoken(formatValue(p.format, avg), p.unit)}, range ${formatValue(p.format, Math.min(...values))} to ${formatValue(p.format, Math.max(...values))}${rows.length - values.length ? `, ${rows.length - values.length} ${rows.length - values.length === 1 ? "day" : "days"} missing` : ""}.${
-        p.stack ? ` Average split: ${p.stack.map((s) => `${s.label} ${formatValue(p.format, partAvg(s.key))}`).join(", ")}.` : ""
-      }`
-    : `No ${p.label} data in the last ${RANGE_WORD[range]}.`
+    ? tr("{0} over the last {1}: average {2}, range {3} to {4}{5}.{6}", [p.label, RANGE_WORD[range], spoken(formatValue(p.format, avg), p.unit), formatValue(p.format, Math.min(...values)), formatValue(p.format, Math.max(...values)), rows.length - values.length ? `, ${rows.length - values.length} ${rows.length - values.length === 1 ? "day" : "days"} missing` : "", p.stack ? ` Average split: ${p.stack.map((s) => `${s.label} ${formatValue(p.format, partAvg(s.key))}`).join(", ")}.` : ""])
+    : tr("No {0} data in the last {1}.", [p.label, RANGE_WORD[range]])
 
   const changeRange = (v: string) => {
     if (!v) return
@@ -202,7 +200,7 @@ function Trend({ points, p }: { points: TrendPoint[]; p: TrendChartProps }) {
       <div className={headerClass(ranges)}>
         <div className="min-w-0" aria-live="polite">
           <p className="text-xs leading-4 font-bold tracking-[0.1em] text-muted-foreground uppercase tabular-nums">
-            {scrubbed || byDay ? dayLabel(shown?.date ?? today, today) : "Average"}
+            {scrubbed || byDay ? dayLabel(shown?.date ?? today, today) : tr("Average")}
           </p>
           <ValueUnit
             value={formatValue(p.format, scrubbed || byDay ? (shown?.value ?? null) : avg)}
@@ -216,7 +214,7 @@ function Trend({ points, p }: { points: TrendPoint[]; p: TrendChartProps }) {
               format={p.format}
             />
           )}
-          {shown?.provisional && <p className="mt-1 text-xs font-medium text-muted-foreground">{p.stack ? "So far" : "Provisional"}</p>}
+          {shown?.provisional && <p className="mt-1 text-xs font-medium text-muted-foreground">{p.stack ? "So far" : tr("Provisional")}</p>}
           {!scrubbed && !byDay && delta !== null && (
             <StatusChip
               tone={tone === "good" ? "optimal" : tone === "bad" ? "warning" : "neutral"}
@@ -311,7 +309,7 @@ function Trend({ points, p }: { points: TrendPoint[]; p: TrendChartProps }) {
               />
             )}
             {showAvg && (
-              <ReferenceLine y={avg} stroke="var(--chart-cursor)" strokeDasharray="3 3" label={gutterLabel("Avg")} />
+              <ReferenceLine y={avg} stroke="var(--chart-cursor)" strokeDasharray="3 3" label={gutterLabel(tr("Avg"))} />
             )}
             {p.target && <ReferenceArea y1={p.target[0]} y2={p.target[1]} fill="var(--dial-target)" fillOpacity={0.3} ifOverflow="extendDomain" />}
             <ChartTooltip
@@ -374,7 +372,7 @@ function Trend({ points, p }: { points: TrendPoint[]; p: TrendChartProps }) {
       )}
       {(p.baseline || p.target || p.smooth) && values.length > 0 && (
         <p className={cn("mt-2 text-xs leading-4 font-medium text-muted-foreground")}>
-          {p.target ? "Shaded: your Strain Target" : p.baseline ? "Shaded: your normal range" : `Line: ${p.smooth}-day average`}
+          {p.target ? "Shaded: your Strain Target" : p.baseline ? "Shaded: your normal range" : tr("Line: {0}-day average", [p.smooth])}
         </p>
       )}
     </div>

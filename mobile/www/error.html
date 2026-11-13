@@ -27,6 +27,7 @@
     <button id="change" class="quiet" type="button">Change server</button>
   </div>
 </main>
+<script src="i18n.js"></script>
 <script>
   const server = Capacitor.Plugins.PulseServer;
   let current = null;
@@ -34,8 +35,8 @@
   server.get().then(({ url }) => {
     current = url ?? null;
     const detail = document.getElementById("detail");
-    if (webview) detail.textContent = "This phone’s Android System WebView is too old to open your server safely. Update it from the Play Store, then try again.";
-    else if (current) detail.textContent = `${new URL(current).host} didn’t answer. Check your connection, or whether the server is up.`;
+    if (webview) detail.textContent = T("This phone’s Android System WebView is too old to open your server safely. Update it from the Play Store, then try again.");
+    else if (current) detail.textContent = T("{0} didn’t answer. Check your connection, or whether the server is up.", new URL(current).host);
   });
   const retry = () => (current ? server.set({ url: current }) : server.pick());
   document.getElementById("retry").addEventListener("click", retry);

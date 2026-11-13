@@ -50,7 +50,7 @@ export const REASONS: Record<ReasonCode, ReasonEntry> = {
     long: () => "Not enough heart-rate data",
   },
   band_not_worn: { icon: Watch, short: tr("Not worn"), long: () => "No data: band not worn" },
-  no_data: { icon: null, short: "--", long: () => "No data" },
+  no_data: { icon: null, short: "--", long: () => tr("No data") },
 };
 
 /** Any unknown or missing code falls back to `no_data`. */

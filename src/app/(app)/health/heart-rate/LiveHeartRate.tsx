@@ -100,7 +100,7 @@ export function HeartRateHero() {
   const avg = bpms.length ? Math.round(mean(bpms)) : null
   const big = v.isToday ? (v.latest?.bpm ?? null) : avg
   const stats = [
-    { label: tr("Range"), value: bpms.length ? `${Math.min(...bpms)}–${Math.max(...bpms)}` : MISSING, spoken: bpms.length ? `${Math.min(...bpms)} to ${Math.max(...bpms)}` : "no readings" },
+    { label: tr("Range"), value: bpms.length ? `${Math.min(...bpms)}–${Math.max(...bpms)}` : MISSING, spoken: bpms.length ? tr("{0} to {1}", [Math.min(...bpms), Math.max(...bpms)]) : "no readings" },
     ...(v.isToday ? [{ label: tr("Average"), value: avg === null ? MISSING : String(avg), spoken: avg === null ? "no readings" : String(avg) }] : []),
     { label: tr("Resting"), value: v.restingHr === null ? MISSING : String(v.restingHr), spoken: v.restingHr === null ? "not yet" : String(v.restingHr) },
   ]
@@ -119,7 +119,7 @@ export function HeartRateHero() {
       )}
       <ul className={cn("mt-4 grid w-full gap-3", stats.length === 3 ? "grid-cols-3" : "grid-cols-2")}>
         {stats.map((s) => (
-          <li key={s.label} aria-label={`${s.label}: ${s.spoken}${s.spoken.match(/\d/) ? " beats per minute" : ""}`}>
+          <li key={s.label} aria-label={`${s.label}: ${s.spoken}${s.spoken.match(/\d/) ? tr(" beats per minute") : ""}`}>
             <p aria-hidden className="font-numeric text-xl leading-6 font-bold tabular-nums">
               {s.value}
             </p>

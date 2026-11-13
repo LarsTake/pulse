@@ -49,9 +49,9 @@ const REASON: Record<string, string> = {
   calibrating: "Calibrating",
   no_hrv_last_night: "No HRV",
   awaiting_sleep_sync: "Syncing",
-  insufficient_hr_data: "Not enough data",
+  insufficient_hr_data: tr("Not enough data"),
   band_not_worn: "Not worn",
-  no_data: "No data",
+  no_data: tr("No data"),
 }
 
 const MAX: Record<MiniRingVariant, number> = { recovery: 100, sleep: 100, strain: 21 }

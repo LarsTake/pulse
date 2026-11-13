@@ -97,7 +97,7 @@ export function StrengthSheet() {
         const reps = parseNum(s.reps)
         const kg = parseNum(s.kg) ?? 0
         if (reps === null && !s.kg.trim()) continue
-        if (reps === null || Number.isNaN(reps) || Number.isNaN(kg)) return setError(`${exerciseDef(e.key)?.label}: enter reps and weight as numbers.`)
+        if (reps === null || Number.isNaN(reps) || Number.isNaN(kg)) return setError(tr("{0}: enter reps and weight as numbers.", [exerciseDef(e.key)?.label]))
         sets.push({ reps, kg })
       }
       if (sets.length) exercises.push({ key: e.key, sets })

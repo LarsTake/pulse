@@ -6,7 +6,7 @@ import { DATA_COLORS, deltaTone, partColor, recoveryColor, type GoodDirection } 
 import { formatDay, formatValue, hmm, type FormatKey } from "@/lib/format"
 import type { MonthSegment, TrendViewBar, TrendViewRange } from "@/lib/trend"
 import { AXIS, ChartFigure, GRID, LABEL_HALO, Pill, useSeriesAnimation, wholeTick } from "./ChartFrame"
-import { t as tr } from "@/lib/i18n"
+import { t as tr, UI_LOCALE } from "@/lib/i18n"
 
 export type TrendViewChartProps = {
   label: string
@@ -61,7 +61,7 @@ function DayTick({ x, y, payload, range, selected, weekly }: { x?: number | stri
   const d = payload?.value ?? ""
   const on = d === selected
   const [top, bottom] =
-    range === "6m" ? [formatDay(d, { month: "short" }), ""] : range === "w" && !weekly ? [formatDay(d, { weekday: "short" }), formatDay(d, { day: "numeric" })] : [formatDay(d, { month: "short" }), formatDay(d, { day: "numeric" })]
+    range === "6m" ? [formatDay(d, { month: "short" }), ""] : range === "w" && !weekly ? [formatDay(d, { weekday: "short" }), formatDay(d, { day: "numeric" })] : UI_LOCALE === "de" ? [formatDay(d, { day: "numeric" }), formatDay(d, { month: "short" })] : [formatDay(d, { month: "short" }), formatDay(d, { day: "numeric" })]
   return (
     <text x={x} y={y} textAnchor="middle" fontSize={12} fontWeight={on ? 700 : 500} fill={on ? "var(--foreground)" : "var(--muted-foreground)"}>
       <tspan x={x} dy="0.71em">{top}</tspan>
@@ -197,8 +197,8 @@ export function TrendViewChart(p: TrendViewChartProps) {
   const showAvg = p.range === "m" && !weekly && p.chart === "bars" && p.average != null
   const faint = six && p.chart !== "range"
   const summary = values.length
-    ? `${p.label}: ${values.length} ${weekly ? "weeks" : "days"} with data, from ${fmt(Math.min(...values))} to ${fmt(Math.max(...values))}.`
-    : `No ${p.label} data in this period.`
+    ? tr("{0}: {1} {2} with data, from {3} to {4}.", [p.label, values.length, weekly ? tr("weeks") : tr("days"), fmt(Math.min(...values)), fmt(Math.max(...values))])
+    : tr("No {0} data in this period.", [p.label])
   const height = p.compact ? "h-[150px]" : "h-[240px]"
   const last = rows.findLastIndex((r) => r.value !== null)
 

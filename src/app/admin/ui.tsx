@@ -1,6 +1,7 @@
 // The admin dashboard's own small kit: a page header, a panel, a status pill and dates. Sentence case and plain
 // weights throughout: this is a tool page, so it skips the app's caps labels and glass.
 import { cn } from "@/lib/utils"
+import { t as tr } from "@/lib/i18n"
 
 export function PageHeader({ title, description, action }: { title: string; description: string; action?: React.ReactNode }) {
   return (
@@ -55,9 +56,9 @@ export const shortDate = (ms: number) => DATE.format(ms)
 /** "Today", "Yesterday", "5 days ago", then a date. */
 export function relative(ms: number, now: number) {
   const days = Math.floor((now - ms) / 86_400_000)
-  if (days <= 0) return "Today"
+  if (days <= 0) return tr("Today")
   if (days === 1) return "Yesterday"
-  if (days < 30) return `${days} days ago`
+  if (days < 30) return tr("{0} days ago", [days])
   return shortDate(ms)
 }
 

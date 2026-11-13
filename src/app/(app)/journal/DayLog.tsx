@@ -25,7 +25,7 @@ const ROW =
   "-mx-2 flex min-h-13 w-[calc(100%+1rem)] items-center gap-3 rounded-lg px-2 py-2 text-left outline-none transition-[background-color] duration-150 ease-standard hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-accent"
 const TIME = "shrink-0 font-numeric text-[13px] leading-4 font-medium text-muted-foreground tabular-nums"
 const MEAL_LABEL = Object.fromEntries(MEALS) as Record<string, string>
-const NOT_LISTED = `Total from Google Health. Entries from other apps are listed for the last ${LOG_DAYS} days.`
+const NOT_LISTED = tr("Total from Google Health. Entries from other apps are listed for the last {0} days.", [LOG_DAYS])
 
 /** What the entry sheet shows: one entry, or a weigh-in's weight and body fat together. */
 type Open = { title: string; kicker: string; entries: LoggedEntry[] }
@@ -105,8 +105,8 @@ export function DayLog({ vm }: { vm: LogVM }) {
   const food = vm.food.total
   const macros = food && food.protein + food.carbs + food.fat > 0 ? food : null
   const weighin = (w: Weighin, last: boolean) => {
-    const parts = [w.kg !== null && `${w.kg} kg`, w.pct !== null && `${w.pct}% body fat`].filter(Boolean).join(", ")
-    const change = last && vm.body.change ? `${vm.body.change.kg > 0 ? "+" : vm.body.change.kg < 0 ? "−" : "±"}${Math.abs(vm.body.change.kg)} kg since ${dayLabel(vm.body.change.since, vm.today)}` : undefined
+    const parts = [w.kg !== null && tr("{0} kg", [w.kg]), w.pct !== null && tr("{0}% body fat", [w.pct])].filter(Boolean).join(", ")
+    const change = last && vm.body.change ? tr("{0}{1} kg since {2}", [vm.body.change.kg > 0 ? "+" : vm.body.change.kg < 0 ? "−" : "±", Math.abs(vm.body.change.kg), dayLabel(vm.body.change.since, vm.today)]) : undefined
     return <Row key={w.ts} e={w.entries[0]} title={parts} detail={change} time={time(w.ts)} onOpen={() => show({ title: tr("Weigh-in"), kicker: `${day}, ${time(w.ts)}`, entries: w.entries })} />
   }
 
@@ -117,7 +117,7 @@ export function DayLog({ vm }: { vm: LogVM }) {
   return (
     <>
       <Card className="gap-0 px-4 py-1 xl:px-5">
-        <Group icon={ICON.water} title={tr("Water")} total={vm.water.total ? `${n(vm.water.total)} ml` : undefined} kind="water" vm={vm}>
+        <Group icon={ICON.water} title={tr("Water")} total={vm.water.total ? tr("{0} ml", [n(vm.water.total)]) : undefined} kind="water" vm={vm}>
           {vm.water.entries.length ? (
             <ul aria-label={tr("Drinks")} className="flex flex-wrap gap-2 pb-2">
               {vm.water.entries.map((e) => (
@@ -135,7 +135,7 @@ export function DayLog({ vm }: { vm: LogVM }) {
               ))}
             </ul>
           ) : (
-            <Empty>{!vm.water.total ? "No drinks logged." : vm.listed ? "Logged in other apps; the drinks show after the next sync." : NOT_LISTED}</Empty>
+            <Empty>{!vm.water.total ? tr("No drinks logged.") : vm.listed ? "Logged in other apps; the drinks show after the next sync." : NOT_LISTED}</Empty>
           )}
         </Group>
 
@@ -164,7 +164,7 @@ export function DayLog({ vm }: { vm: LogVM }) {
               {m.entries.length ? (
                 m.entries.map((e) => {
                   const f = e.data as LogData["nutrition-log"]
-                  const macro = [f.protein != null && `${f.protein} g protein`, f.carbs != null && `${f.carbs} g carbs`, f.fat != null && `${f.fat} g fat`].filter(Boolean).join(", ")
+                  const macro = [f.protein != null && tr("{0} g protein", [f.protein]), f.carbs != null && tr("{0} g carbs", [f.carbs]), f.fat != null && tr("{0} g fat", [f.fat])].filter(Boolean).join(", ")
                   return (
                     <Row
                       key={e.id}
@@ -187,7 +187,7 @@ export function DayLog({ vm }: { vm: LogVM }) {
           {vm.body.weighins.length ? (
             vm.body.weighins.map((w, i) => weighin(w, i === vm.body.weighins.length - 1))
           ) : (
-            <Empty>{vm.body.latest ? `No weigh-in. Last: ${vm.body.latest.kg} kg, ${dayLabel(vm.body.latest.day, vm.today)}.` : "No weigh-in."}</Empty>
+            <Empty>{vm.body.latest ? tr("No weigh-in. Last: {0} kg, {1}.", [vm.body.latest.kg, dayLabel(vm.body.latest.day, vm.today)]) : tr("No weigh-in.")}</Empty>
           )}
         </Group>
 
@@ -230,7 +230,7 @@ export function DayLog({ vm }: { vm: LogVM }) {
                 <Button variant="secondary" size="sheet" onClick={() => setConfirming(false)} disabled={removing}>
                   {tr("Keep")}</Button>
                 <Button variant="outline" size="sheet" className="text-recovery-red-text" onClick={() => void remove()} disabled={removing}>
-                  {removing ? "Deleting…" : "Delete"}
+                  {removing ? "Deleting…" : tr("Delete")}
                 </Button>
               </div>
             </div>

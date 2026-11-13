@@ -35,11 +35,11 @@ export function RangeStatsCard({ ranges, format, unit, direction, total, range }
   return (
     <SectionShell variant="card" level={2} title={r.label}>
       <div className="divide-y divide-border">
-        <KeyStatRow {...row} label={tr("Daily average")} caption={`vs. ${r.prior}`} metric={metric(s.average)} average={s.prior} averageLabel={r.prior} direction={direction} />
+        <KeyStatRow {...row} label={tr("Daily average")} caption={tr("vs. {0}", [r.prior])} metric={metric(s.average)} average={s.prior} averageLabel={r.prior} direction={direction} />
         {total && <KeyStatRow {...row} label={tr("Total")} metric={metric(s.total)} direction="none" />}
         <KeyStatRow {...row} label={tr("Highest")} caption={s.high ? formatDay(s.high.day, DAY.short) : undefined} metric={metric(s.high?.value ?? null)} direction="none" />
         <KeyStatRow {...row} label={tr("Lowest")} caption={s.low ? formatDay(s.low.day, DAY.short) : undefined} metric={metric(s.low?.value ?? null)} direction="none" />
-        <KeyStatRow variant="row" format="int" unit={`of ${s.days}`} label={tr("Days with data")} metric={metric(s.withData)} direction="none" />
+        <KeyStatRow variant="row" format="int" unit={tr("of {0}", [s.days])} label={tr("Days with data")} metric={metric(s.withData)} direction="none" />
       </div>
     </SectionShell>
   )

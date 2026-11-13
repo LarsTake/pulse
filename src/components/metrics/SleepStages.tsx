@@ -63,7 +63,7 @@ function HoursHero({ h }: { h: SleepHours }) {
 }
 
 /** WHOOP's stage names; Fitbit's "Deep" is slow-wave sleep. */
-const ROW_LABEL: Record<Stage, string> = { awake: "Awake", light: "Light", deep: "SWS (Deep)", rem: "REM" }
+const ROW_LABEL: Record<Stage, string> = { awake: tr("Awake"), light: tr("Light"), deep: tr("SWS (Deep)"), rem: tr("REM") }
 const TABS = [
   ["breakdown", "Breakdown"],
   ["timeline", "Timeline"],
@@ -231,7 +231,7 @@ function StageRowsSkeleton() {
         <span className={cn(LABEL, "text-foreground-secondary")}>{tr("Typical range")}</span>
         <SkeletonText className="w-24 text-[17px] leading-5" />
       </div>
-      {["Awake", "Light", "SWS (Deep)", "REM"].map((l) => (
+      {[tr("Awake"), tr("Light"), tr("SWS (Deep)"), tr("REM")].map((l) => (
         <div key={l} className="space-y-2.5">
           <div className="flex items-center gap-3">
             <span className="size-[26px] rounded-full ring-2 ring-foreground/30 ring-inset" />

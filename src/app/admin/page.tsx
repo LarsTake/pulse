@@ -57,10 +57,10 @@ export default async function AdminOverview() {
       />
 
       <section aria-label={tr("At a glance")} className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-        <StatCard label={tr("People")} value={accounts.length} note={newThisWeek ? `+${newThisWeek} joined this week` : "No one new this week"} icon={Users} />
-        <StatCard label={tr("Active this week")} value={active.week} note={accounts.length ? `${Math.round((active.week / accounts.length) * 100)}% of everyone` : "No one yet"} icon={Activity} />
+        <StatCard label={tr("People")} value={accounts.length} note={newThisWeek ? tr("+{0} joined this week", [newThisWeek]) : "No one new this week"} icon={Users} />
+        <StatCard label={tr("Active this week")} value={active.week} note={accounts.length ? tr("{0}% of everyone", [Math.round((active.week / accounts.length) * 100)]) : "No one yet"} icon={Activity} />
         <StatCard label={tr("Open invites")} value={open.length} note={open.length ? "Waiting to be used" : "None waiting"} icon={MailPlus} />
-        <StatCard label={tr("AI coach set up")} value={coachReady} note={coach === "off" ? "Coach is off" : `of ${plural(accounts.length, "person", "people")}`} icon={Bot} />
+        <StatCard label={tr("AI coach set up")} value={coachReady} note={coach === "off" ? "Coach is off" : tr("of {0}", [plural(accounts.length, "person", "people")])} icon={Bot} />
       </section>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
@@ -139,7 +139,7 @@ export default async function AdminOverview() {
                   return (
                     <li key={i.id} className="flex items-center justify-between gap-3 px-4 py-3 sm:px-5">
                       <span className="min-w-0 truncate text-[14px] font-medium">{i.label ?? "Unnamed invite"}</span>
-                      <Pill tone={left <= 2 ? "warn" : "coach"}>{left === 1 ? "1 day left" : `${left} days left`}</Pill>
+                      <Pill tone={left <= 2 ? "warn" : "coach"}>{left === 1 ? "1 day left" : tr("{0} days left", [left])}</Pill>
                     </li>
                   )
                 })}

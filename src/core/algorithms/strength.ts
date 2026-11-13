@@ -1,5 +1,4 @@
-
-import { t as tr } from "@/lib/i18n"// Strength training the user logs set by set. Pure: no I/O.
+// Strength training the user logs set by set. Pure: no I/O.
 //
 // Three outputs:
 // - Hard sets per muscle per week, against the 10–20 set range that meta-analyses find for hypertrophy
@@ -7,22 +6,23 @@ import { t as tr } from "@/lib/i18n"// Strength training the user logs set by se
 // - Estimated one-rep max per exercise (Epley 1985: kg × (1 + reps / 30)), trusted up to 12 reps, for PRs.
 // - Muscular load on Pulse's 0–21 strain scale: 21 × (1 − e^(−sets / 25)), where sets are hard sets weighted by
 //   relative intensity. A heart-rate band under-reads lifting; this is the part it misses. An estimate, labelled so.
+import { t as tr } from "@/lib/i18n";
 
 export const MUSCLES = ["chest", "back", "shoulders", "biceps", "triceps", "forearms", "core", "glutes", "quads", "hamstrings", "calves"] as const;
 export type Muscle = (typeof MUSCLES)[number];
 
 export const MUSCLE_LABEL: Record<Muscle, string> = {
-  chest: "Chest",
-  back: "Back",
-  shoulders: "Shoulders",
-  biceps: "Biceps",
-  triceps: "Triceps",
-  forearms: "Forearms",
-  core: "Core",
-  glutes: "Glutes",
-  quads: "Quads",
-  hamstrings: "Hamstrings",
-  calves: "Calves",
+  chest: tr("Chest"),
+  back: tr("Back"),
+  shoulders: tr("Shoulders"),
+  biceps: tr("Biceps"),
+  triceps: tr("Triceps"),
+  forearms: tr("Forearms"),
+  core: tr("Core"),
+  glutes: tr("Glutes"),
+  quads: tr("Quads"),
+  hamstrings: tr("Hamstrings"),
+  calves: tr("Calves"),
 };
 
 export type ExerciseDef = { key: string; label: string; primary: Muscle[]; secondary: Muscle[]; bodyweight?: boolean };

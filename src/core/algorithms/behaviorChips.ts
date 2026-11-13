@@ -1,14 +1,15 @@
 // Behavior Insights on Recovery (spec §11 R34): the behaviours of the day before that held for today's Recovery, each
 // toned by the journal-impact comparison of the user's own next-day Recovery after days with it against days without.
 import { journalImpact, type ImpactLabel } from "./journalImpact";
+import { t as tr } from "@/lib/i18n"
 
 export type BehaviorKey = "sleep86" | "strain7" | "earlyWorkout" | "consistentWake";
 
 export const BEHAVIOR_LABEL: Record<BehaviorKey, string> = {
-  sleep86: "86%+ Sleep Performance",
-  strain7: "7+ Strain",
+  sleep86: tr("86%+ Sleep Performance"),
+  strain7: tr("7+ Strain"),
   earlyWorkout: "Early Workout",
-  consistentWake: "Consistent Wake Time",
+  consistentWake: tr("Consistent Wake Time"),
 };
 
 /** A behaviour day D: which behaviours held (D's strain and workouts, and the night that ends on D + 1). */

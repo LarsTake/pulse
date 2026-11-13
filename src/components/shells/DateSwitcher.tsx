@@ -130,7 +130,7 @@ function Switcher({ mode, calendar, placement = "body", narrow = false, steppers
     <Dialog open={open} onOpenChange={setOpen}>
       <div className={cn("inline-flex items-center", bare ? "gap-1" : "h-[30px] rounded-full bg-foreground/[0.04] p-px")}>
         {steppers && (
-          <button type="button" className={bare ? BARE_STEP : cn(STEP, narrow && NARROW_STEP)} aria-label={tr("Previous {0}", [unit])} disabled={atStart} onClick={() => by(-step)}>
+          <button type="button" className={bare ? BARE_STEP : cn(STEP, narrow && NARROW_STEP)} aria-label={tr("Previous {0}", [tr(unit)])} disabled={atStart} onClick={() => by(-step)}>
             <ChevronLeft aria-hidden className={bare ? "size-4" : "size-[18px]"} strokeWidth={2.25} />
           </button>
         )}
@@ -150,7 +150,7 @@ function Switcher({ mode, calendar, placement = "body", narrow = false, steppers
           </button>
         </DialogTrigger>
         {steppers && (
-          <button type="button" className={bare ? BARE_STEP : cn(STEP, narrow && NARROW_STEP)} aria-label={tr("Next {0}", [unit])} disabled={atEnd} onClick={() => by(step)}>
+          <button type="button" className={bare ? BARE_STEP : cn(STEP, narrow && NARROW_STEP)} aria-label={tr("Next {0}", [tr(unit)])} disabled={atEnd} onClick={() => by(step)}>
             <ChevronRight aria-hidden className={bare ? "size-4" : "size-[18px]"} strokeWidth={2.25} />
           </button>
         )}
