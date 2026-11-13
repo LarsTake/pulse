@@ -131,7 +131,8 @@ export async function importEntries(
   const mine = and(eq(loggedEntries.userId, userId), eq(loggedEntries.type, type), gte(loggedEntries.ts, o.from), lt(loggedEntries.ts, o.to));
   const held = await db.select().from(loggedEntries).where(mine);
   const byKey = new Map(held.filter((r) => r.googleName).map((r) => [pointKey(r.googleName!), r]));
-  const unnamed = held.filter((r) => !r.googleName);
+  // Only Pulse's own unfinished writes can be Google's points; Apple Health entries never went to Google.
+  const unnamed = held.filter((r) => !r.googleName && r.source === "pulse");
   const seen = new Set<string>();
   let changed = false;
 
@@ -194,7 +195,7 @@ const toEntry = (r: typeof loggedEntries.$inferSelect): LoggedEntry => ({
   ...describeEntry(r.type as LogType, r.data),
   data: r.data,
   atGoogle: r.googleName !== null,
-  fromApp: r.source === "google",
+  fromApp: r.source !== "pulse",
   app: appLabel(r.source, r.app),
   createdAt: r.createdAt,
 });

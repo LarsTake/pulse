@@ -40,7 +40,7 @@ export function SyncNowButton({ className, size = "touch" }: { className?: strin
       className={cn(size === "sm" && "h-9 gap-2 rounded-full px-4 text-[13px] font-semibold", className)}
     >
       <RefreshCw aria-hidden strokeWidth={2} className={cn("transition-transform", pending && "animate-spin motion-reduce:animate-none")} />
-      {pending ? "Syncing…" : online ? "Sync now" : "Offline"}
+      {pending ? tr("Syncing…") : online ? tr("Sync now") : tr("Offline")}
     </Button>
   )
 }

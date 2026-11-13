@@ -24,6 +24,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         completionHandler(true)
     }
 
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        // Brings new Apple Health readings over each time the app is opened (no-op until connected in Settings).
+        HealthSync.shared.sync()
+    }
+
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         SceneDelegateProxy.shared.scene(scene, openURLContexts: URLContexts)
     }

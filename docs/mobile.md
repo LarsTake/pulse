@@ -138,3 +138,14 @@ taken for your team), then run on a device, or Product › Archive for TestFligh
   network. For a LAN dev server use a tunnel ([pwa.md](pwa.md#test-it)).
 - **Not yet:** native push (FCM/APNs on the server, beside Web Push) and an in-app Connect Google (a one-time handoff
   token so the browser doesn't need its own Pulse session, and a deep link back to the app).
+
+## Apple Health (iOS)
+
+The iOS app can bring blood pressure, weight, body fat and water over from Apple Health, for readings from a cuff or
+a scale that syncs to the iPhone. `mobile/ios/App/App/HealthSync.swift` reads HealthKit with anchored queries and posts
+new and deleted samples to `POST /api/apple-health` (`src/server/appleHealth.ts`), signed in with the WebView's session
+cookie. Blood pressure lands in `bp_readings`; weight, body fat and water in `logged_entries` with `source = 'apple'`.
+None of it is written to Google. Settings › Data source shows an Apple Health card inside the iOS app only: the page
+talks to the app through the `pulseHealth` message handler, which answers only the saved server's pages. The app syncs
+when connected, on "Sync now" and each time it comes to the foreground. The App target carries the HealthKit
+entitlement (`App/App.entitlements`) and the `NSHealthShareUsageDescription` text.
