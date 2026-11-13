@@ -16,6 +16,7 @@ import * as schema from "./db/schema";
 import { DEMO_EMAIL, DEMO_SECRET } from "./demo";
 import { ensureDefaultTags } from "./journalTags";
 import { revokeGrant } from "./sources/google/oauth";
+import { t as tr } from "@/lib/i18n"
 
 export const MIN_PASSWORD = 10;
 export const MAX_PASSWORD = 128;
@@ -57,7 +58,7 @@ function createAuth(db: Db) {
       before: createAuthMiddleware(async (ctx) => {
         if (!DEMO_LOCKED.has(ctx.path)) return;
         if ((await getSessionFromCtx(ctx))?.user.email === DEMO_EMAIL)
-          throw new APIError("FORBIDDEN", { message: "The demo account can't be changed.", code: "DEMO_LOCKED" });
+          throw new APIError("FORBIDDEN", { message: tr("The demo account can't be changed."), code: "DEMO_LOCKED" });
       }),
     },
     databaseHooks: {
@@ -74,14 +75,14 @@ function createAuth(db: Db) {
           before: async (u, ctx) => {
             if (isOwnerEmail(u.email)) {
               if ((await userCount(db)) === 0) return;
-              throw new APIError("FORBIDDEN", { message: "This email is reserved for an admin of this server.", code: "OWNER_EMAIL_RESERVED" });
+              throw new APIError("FORBIDDEN", { message: tr("This email is reserved for an admin of this server."), code: "OWNER_EMAIL_RESERVED" });
             }
             const mode = await signupMode(db);
-            if (mode === "closed") throw new APIError("BAD_REQUEST", { message: "Sign-up is closed on this server.", code: "EMAIL_PASSWORD_SIGN_UP_DISABLED" });
+            if (mode === "closed") throw new APIError("BAD_REQUEST", { message: tr("Sign-up is closed on this server."), code: "EMAIL_PASSWORD_SIGN_UP_DISABLED" });
             if (mode === "open") return;
             const token = ctx?.headers?.get(INVITE_HEADER);
             if (!token || !(await claimInvite(db, token)))
-              throw new APIError("FORBIDDEN", { message: "This invite link is used, expired or revoked.", code: "INVITE_INVALID" });
+              throw new APIError("FORBIDDEN", { message: tr("This invite link is used, expired or revoked."), code: "INVITE_INVALID" });
           },
           // A new account starts with the default journal behaviours; its data rows go with it on delete (FK cascade).
           after: async (u, ctx) => {
@@ -148,7 +149,7 @@ export async function requestUser(req: Request): Promise<SessionUser | null> {
   return toUser(await getAuth().api.getSession({ headers: req.headers }));
 }
 
-export const SIGNED_OUT = { ok: false as const, error: "Signed out. Sign in again." };
+export const SIGNED_OUT = { ok: false as const, error: tr("Signed out. Sign in again.") };
 
 // ── Demo instance ────────────────────────────────────────────────────────────
 // The demo user's credentials live in ./demo (no Next imports), so scripts and the seed can use them.

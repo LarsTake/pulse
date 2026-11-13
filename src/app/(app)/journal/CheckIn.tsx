@@ -28,6 +28,7 @@ import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { SelectBehaviorsSheet } from "../more/behaviours/SelectBehaviors"
+import { t as tr } from "@/lib/i18n"
 
 /** journal-daily-questions-today's answer keys: a grey square each; "no" lights white, "yes" blue. 44 px for touch. */
 const ANSWER =
@@ -64,9 +65,9 @@ export function CheckIn({ dayLabel, checkIn }: CheckInProps) {
         <div className="flex flex-1 flex-col gap-4">
           {/* Status and the day's behaviours on one wrapping line. */}
           <div className="flex flex-wrap items-center gap-2">
-            <StatusChip tone="optimal">Checked in</StatusChip>
+            <StatusChip tone="optimal">{tr("Checked in")}</StatusChip>
             {checkIn.yes.length > 0 && (
-              <ul className="flex flex-wrap gap-2" aria-label="Behaviours logged">
+              <ul className="flex flex-wrap gap-2" aria-label={tr("Behaviours logged")}>
                 {checkIn.yes.map((y) => (
                   <li key={y.tag}>
                     <Badge variant="secondary" className={TAG_CLASS}>
@@ -79,17 +80,14 @@ export function CheckIn({ dayLabel, checkIn }: CheckInProps) {
           </div>
           {/* Full width at the card's foot, as Check in and Home's card buttons are (SYM3). */}
           <Button aria-haspopup="dialog" data-sheet="checkin" variant="secondary" size="touch" className="mt-auto w-full" onClick={start}>
-            Edit check-in
-          </Button>
+            {tr("Edit check-in")}</Button>
         </div>
       ) : (
         <div className="flex flex-1 flex-col gap-4">
           <p className="max-w-[65ch] text-[15px] leading-[22px] text-pretty text-foreground-secondary">
-            Log what you did today. Pulse compares it with tomorrow’s Recovery.
-          </p>
+            {tr("Log what you did today. Pulse compares it with tomorrow’s Recovery.")}</p>
           <Button aria-haspopup="dialog" data-sheet="checkin" size="touch" className="mt-auto w-full" onClick={start}>
-            Check in
-          </Button>
+            {tr("Check in")}</Button>
         </div>
       )}
     </SectionShell>
@@ -278,7 +276,7 @@ export function CheckInSheet() {
       // when the connection is back (PwaRuntime flushes the queue). A note waits for the connection.
       if (userId !== undefined) enqueue(userId, changes.slice(sent).map((c) => ({ day: loaded.day, ...c })))
       finish()
-      toast("Saved on this device", { description: "It sends when you’re back online." })
+      toast("Saved on this device", { description: tr("It sends when you’re back online.") })
     } finally {
       setSaving(false)
     }
@@ -310,21 +308,21 @@ export function CheckInSheet() {
       <ResponsiveSheet
         open={open}
         onOpenChange={close}
-        title="Journal"
+        title={tr("Journal")}
         size="screen"
         glow
         fallbackFocus={fallback}
         action={
-          <Button variant="ghost" size="icon-touch" aria-label="Select behaviours" aria-haspopup="dialog" onClick={() => setPicking(true)} className="text-foreground hover:bg-foreground/8">
+          <Button variant="ghost" size="icon-touch" aria-label={tr("Select behaviours")} aria-haspopup="dialog" onClick={() => setPicking(true)} className="text-foreground hover:bg-foreground/8">
             <Pencil aria-hidden strokeWidth={1.75} className="size-[22px]" />
           </Button>
         }
-        done={done ? { title: "Saved", body: "Have a great day!", onDone: finish } : null}
+        done={done ? { title: tr("Saved"), body: tr("Have a great day!"), onDone: finish } : null}
         footer={
           <>
             {saveError && (
               <Alert role="alert" className="border-0 bg-recovery-red/15 px-3 py-2">
-                <AlertDescription className="text-recovery-red-text">Couldn’t save. Check your connection and try again.</AlertDescription>
+                <AlertDescription className="text-recovery-red-text">{tr("Couldn’t save. Check your connection and try again.")}</AlertDescription>
               </Alert>
             )}
             <Button size="sheet" onClick={save} disabled={saving || !loaded} aria-live="polite">
@@ -334,12 +332,12 @@ export function CheckInSheet() {
         }
       >
         {/* ‹ TODAY ›: a day back or forward; never past today (journal-daily-questions-today). */}
-        <nav aria-label="Journal day" className="flex items-center justify-center gap-2">
-          <Button variant="ghost" size="icon-touch" aria-label={`Previous day, ${formatDay(prev, DAY.long)}`} onClick={() => go(prev)}>
+        <nav aria-label={tr("Journal day")} className="flex items-center justify-center gap-2">
+          <Button variant="ghost" size="icon-touch" aria-label={tr("Previous day, {0}", [formatDay(prev, DAY.long)])} onClick={() => go(prev)}>
             <ChevronLeft aria-hidden strokeWidth={2} className="size-5" />
           </Button>
           <span className="min-w-28 text-center text-xs leading-4 font-bold tracking-[0.1em] uppercase">{dayLabel(day, today)}</span>
-          <Button variant="ghost" size="icon-touch" aria-label={`Next day, ${formatDay(next, DAY.long)}`} disabled={next > today} onClick={() => go(next)}>
+          <Button variant="ghost" size="icon-touch" aria-label={tr("Next day, {0}", [formatDay(next, DAY.long)])} disabled={next > today} onClick={() => go(next)}>
             <ChevronRight aria-hidden strokeWidth={2} className="size-5" />
           </Button>
         </nav>
@@ -354,14 +352,12 @@ export function CheckInSheet() {
           (loadError ? (
             <Alert role="alert" className="mt-6 border-0 bg-recovery-red/15 px-3 py-2">
               <AlertDescription className="flex items-center justify-between gap-3 text-recovery-red-text">
-                Couldn’t load your journal.
-                <Button variant="secondary" size="touch" onClick={() => load(day)}>
-                  Try again
-                </Button>
+                {tr("Couldn’t load your journal.")}<Button variant="secondary" size="touch" onClick={() => load(day)}>
+                  {tr("Try again")}</Button>
               </AlertDescription>
             </Alert>
           ) : (
-            <div role="status" aria-label="Loading" className="grid place-items-center py-16">
+            <div role="status" aria-label={tr("Loading")} className="grid place-items-center py-16">
               <LoaderCircle aria-hidden className="size-5 animate-spin text-muted-foreground motion-reduce:animate-none" strokeWidth={2} />
             </div>
           ))}
@@ -390,10 +386,10 @@ export function CheckInSheet() {
                             value={v === undefined ? "" : v > 0 ? "yes" : "no"}
                             onValueChange={(x) => setValues((s) => ({ ...s, [t.tag]: x === "yes" ? 1 : x === "no" ? 0 : undefined }))}
                           >
-                            <ToggleGroupItem value="no" aria-label="No" className={cn(ANSWER, "data-[state=on]:bg-foreground data-[state=on]:text-background")}>
+                            <ToggleGroupItem value="no" aria-label={tr("No")} className={cn(ANSWER, "data-[state=on]:bg-foreground data-[state=on]:text-background")}>
                               <X aria-hidden strokeWidth={3} />
                             </ToggleGroupItem>
-                            <ToggleGroupItem value="yes" aria-label="Yes" className={cn(ANSWER, "data-[state=on]:bg-answer-yes data-[state=on]:text-on-color")}>
+                            <ToggleGroupItem value="yes" aria-label={tr("Yes")} className={cn(ANSWER, "data-[state=on]:bg-answer-yes data-[state=on]:text-on-color")}>
                               <Check aria-hidden strokeWidth={3} />
                             </ToggleGroupItem>
                           </ToggleGroup>
@@ -426,8 +422,7 @@ export function CheckInSheet() {
                 {g.key === "custom" && (
                   <form onSubmit={add} className="mt-4 space-y-2" noValidate>
                     <Label htmlFor="new-behaviour" className="text-[15px] leading-[22px] font-medium">
-                      Add a behaviour
-                    </Label>
+                      {tr("Add a behaviour")}</Label>
                     <div className="flex gap-2">
                       <Input
                         ref={input}
@@ -439,7 +434,7 @@ export function CheckInSheet() {
                           setLabel(e.target.value)
                           setAddError(null)
                         }}
-                        placeholder="e.g. Cold shower…"
+                        placeholder={tr("e.g. Cold shower…")}
                         autoComplete="off"
                         maxLength={32}
                         aria-invalid={!!addError}
@@ -464,13 +459,13 @@ export function CheckInSheet() {
         {loaded && (
           <section aria-labelledby="journal-notes" className="mt-7">
             <h4 id="journal-notes" className={SHEET_SECTION}>
-              <label htmlFor="journal-note">Notes</label>
+              <label htmlFor="journal-note">{tr("Notes")}</label>
             </h4>
             <textarea
               id="journal-note"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Add a note…"
+              placeholder={tr("Add a note…")}
               maxLength={2000}
               className="mt-3 field-sizing-content min-h-14 w-full resize-none rounded-2xl border border-border bg-transparent px-4 py-3.5 text-base leading-6 outline-none placeholder:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
             />
@@ -484,22 +479,18 @@ export function CheckInSheet() {
       <Dialog open={!!confirm} onOpenChange={(o) => !o && keepEditing()}>
         <DialogContent className="gap-5 bg-linear-to-b from-popover-top to-popover p-6 ring-1 ring-border sm:max-w-sm">
           <DialogHeader className="items-center pt-4 text-center">
-            <DialogTitle className="text-[15px] leading-5 font-bold tracking-[0.1em] uppercase">Dismiss journal?</DialogTitle>
+            <DialogTitle className="text-[15px] leading-5 font-bold tracking-[0.1em] uppercase">{tr("Dismiss journal?")}</DialogTitle>
             <DialogDescription className="text-[15px] leading-[22px] text-pretty text-foreground-secondary">
-              Choosing “Yes” discards what you’ve entered. You can come back and complete this journal later.
-            </DialogDescription>
+              {tr("Choosing “Yes” discards what you’ve entered. You can come back and complete this journal later.")}</DialogDescription>
           </DialogHeader>
           <Label className="flex min-h-11 items-center gap-3 text-xs leading-4 font-bold tracking-[0.1em] uppercase">
             <Checkbox checked={quiet} onCheckedChange={(c) => setQuiet(c === true)} className="size-7 rounded-md" />
-            Don’t show me this message again
-          </Label>
+            {tr("Don’t show me this message again")}</Label>
           <div className="flex flex-col gap-3">
             <Button size="sheet" onClick={keepEditing}>
-              No, complete journal
-            </Button>
+              {tr("No, complete journal")}</Button>
             <Button size="sheet" variant="outline-pill" onClick={dismiss}>
-              Yes, dismiss journal
-            </Button>
+              {tr("Yes, dismiss journal")}</Button>
           </div>
         </DialogContent>
       </Dialog>

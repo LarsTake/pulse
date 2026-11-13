@@ -9,6 +9,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } fr
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "@/components/ui/drawer"
 import { DoneScreen } from "./DoneScreen"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet"
+import { t as tr } from "@/lib/i18n"
 
 export type ResponsiveSheetProps = {
   open: boolean
@@ -55,7 +56,7 @@ export function ResponsiveSheet({ open, onOpenChange, title, description, childr
   const header = (Title: React.ElementType, Description: React.ElementType, Close: React.ElementType, closeAt: "start" | "end") => (
     <div className="grid grid-cols-[44px_minmax(0,1fr)_44px] items-center gap-2 px-2 pt-1 pb-3">
       <Close asChild>
-        <Button variant="ghost" size="icon-touch" aria-label="Close" className={cn(CLOSE, closeAt === "end" && "col-start-3 row-start-1")}>
+        <Button variant="ghost" size="icon-touch" aria-label={tr("Close")} className={cn(CLOSE, closeAt === "end" && "col-start-3 row-start-1")}>
           <X aria-hidden strokeWidth={1.75} className="size-[22px]" />
         </Button>
       </Close>
@@ -106,7 +107,7 @@ export function ResponsiveSheet({ open, onOpenChange, title, description, childr
             <>
               <div className="grid grid-cols-[44px_minmax(0,1fr)_44px] items-center gap-2 px-2 py-2">
                 <DialogClose asChild>
-                  <Button variant="ghost" size="icon-touch" aria-label="Close" className={CLOSE}>
+                  <Button variant="ghost" size="icon-touch" aria-label={tr("Close")} className={CLOSE}>
                     <X aria-hidden strokeWidth={1.75} className="size-[22px]" />
                   </Button>
                 </DialogClose>

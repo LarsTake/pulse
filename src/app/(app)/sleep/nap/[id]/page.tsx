@@ -6,8 +6,9 @@ import { DetailShell } from "@/components/shells/DetailShell"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { todayOf, userCtx } from "@/server/queries/common"
 import { getNap } from "@/server/queries/sleep"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Nap", description: "A nap's time asleep, stages and heart rate." }
+export const metadata = { title: tr("Nap"), description: tr("A nap's time asleep, stages and heart rate.") }
 
 /** Nap `/sleep/nap/[id]`: the nap on its own, as `/sleep` shows the main sleep. Back falls back to that day's Sleep. */
 export default async function NapPage({ params }: PageProps<"/sleep/nap/[id]">) {
@@ -19,12 +20,12 @@ export default async function NapPage({ params }: PageProps<"/sleep/nap/[id]">) 
 
   return (
     <DetailShell
-      title="Nap"
+      title={tr("Nap")}
       subtitle={`${dayLabel(vm.day, todayOf(ctx))} ${clock(vm.start, timeZone, profile.timeFormat)} to ${clock(vm.end, timeZone, profile.timeFormat)}`}
       align="start"
       backHref={dayHref("/sleep", vm.day, todayOf(ctx))}
       primary={
-        <SectionShell variant="card" title="Nap" level={2}>
+        <SectionShell variant="card" title={tr("Nap")} level={2}>
           <SleepStages hours={vm.hours} hr={vm.hr} data={vm.stages} />
         </SectionShell>
       }

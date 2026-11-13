@@ -1,12 +1,13 @@
 import { DetailShell } from "@/components/shells/DetailShell"
 import { Skeleton } from "@/components/ui/skeleton"
+import { t as tr } from "@/lib/i18n"
 
 /** Coach: the header at once, a few message-shaped bars while the chat loads. */
 export default function Loading() {
   return (
     <DetailShell
       loading
-      title="Coach"
+      title={tr("Coach")}
       primary={
         <div aria-hidden className="mx-auto flex w-full max-w-[640px] flex-col gap-3">
           <Skeleton className="h-16 w-4/5 rounded-2xl" />

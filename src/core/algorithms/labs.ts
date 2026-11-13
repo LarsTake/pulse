@@ -1,4 +1,5 @@
-// Lab results the user enters from a blood test. Pure: no I/O.
+
+import { t as tr } from "@/lib/i18n"// Lab results the user enters from a blood test. Pure: no I/O.
 // Default ranges are common adult reference ranges; every lab prints its own, and a range typed in with the result
 // wins over these. Pulse only says "below / within / above range", never what it means medically.
 
@@ -19,34 +20,34 @@ const same = (lo: number | null, hi: number | null) => () => [lo, hi] as [number
 const bySex = (m: [number | null, number | null], f: [number | null, number | null]) => (s: LabSex) => (s === "female" ? f : m);
 
 export const LAB_MARKERS: LabMarker[] = [
-  { key: "ldl", label: "LDL cholesterol", unit: "mg/dL", group: "lipids", range: same(null, 116), dp: 0 },
-  { key: "hdl", label: "HDL cholesterol", unit: "mg/dL", group: "lipids", range: bySex([40, null], [50, null]), dp: 0 },
-  { key: "total_chol", label: "Total cholesterol", unit: "mg/dL", group: "lipids", range: same(null, 200), dp: 0 },
-  { key: "triglycerides", label: "Triglycerides", unit: "mg/dL", group: "lipids", range: same(null, 150), dp: 0 },
-  { key: "apob", label: "ApoB", unit: "mg/dL", group: "lipids", range: same(null, 100), dp: 0 },
-  { key: "lpa", label: "Lipoprotein(a)", unit: "nmol/L", group: "lipids", range: same(null, 75), dp: 0 },
-  { key: "glucose", label: "Fasting glucose", unit: "mg/dL", group: "metabolic", range: same(70, 99), dp: 0 },
-  { key: "hba1c", label: "HbA1c", unit: "%", group: "metabolic", range: same(null, 5.6), dp: 1 },
-  { key: "insulin", label: "Fasting insulin", unit: "µU/mL", group: "metabolic", range: same(2, 25), dp: 1 },
-  { key: "hemoglobin", label: "Hemoglobin", unit: "g/dL", group: "blood", range: bySex([13.5, 17.5], [12, 15.5]), dp: 1 },
-  { key: "hematocrit", label: "Hematocrit", unit: "%", group: "blood", range: bySex([40, 52], [36, 46]), dp: 0 },
-  { key: "wbc", label: "White blood cells", unit: "/nL", group: "blood", range: same(4, 10), dp: 1 },
-  { key: "platelets", label: "Platelets", unit: "/nL", group: "blood", range: same(150, 400), dp: 0 },
-  { key: "ferritin", label: "Ferritin", unit: "ng/mL", group: "iron", range: bySex([30, 400], [15, 150]), dp: 0 },
-  { key: "iron", label: "Iron", unit: "µg/dL", group: "iron", range: same(60, 170), dp: 0 },
-  { key: "vitd", label: "Vitamin D (25-OH)", unit: "ng/mL", group: "vitamins", range: same(30, 100), dp: 0 },
-  { key: "b12", label: "Vitamin B12", unit: "pg/mL", group: "vitamins", range: same(200, 900), dp: 0 },
-  { key: "folate", label: "Folate", unit: "ng/mL", group: "vitamins", range: same(4, null), dp: 1 },
-  { key: "magnesium", label: "Magnesium", unit: "mmol/L", group: "vitamins", range: same(0.75, 1.05), dp: 2 },
-  { key: "crp", label: "hs-CRP", unit: "mg/L", group: "inflammation", range: same(null, 3), dp: 1 },
+  { key: "ldl", label: tr("LDL cholesterol"), unit: "mg/dL", group: "lipids", range: same(null, 116), dp: 0 },
+  { key: "hdl", label: tr("HDL cholesterol"), unit: "mg/dL", group: "lipids", range: bySex([40, null], [50, null]), dp: 0 },
+  { key: "total_chol", label: tr("Total cholesterol"), unit: "mg/dL", group: "lipids", range: same(null, 200), dp: 0 },
+  { key: "triglycerides", label: tr("Triglycerides"), unit: "mg/dL", group: "lipids", range: same(null, 150), dp: 0 },
+  { key: "apob", label: tr("ApoB"), unit: "mg/dL", group: "lipids", range: same(null, 100), dp: 0 },
+  { key: "lpa", label: tr("Lipoprotein(a)"), unit: "nmol/L", group: "lipids", range: same(null, 75), dp: 0 },
+  { key: "glucose", label: tr("Fasting glucose"), unit: "mg/dL", group: "metabolic", range: same(70, 99), dp: 0 },
+  { key: "hba1c", label: tr("HbA1c"), unit: "%", group: "metabolic", range: same(null, 5.6), dp: 1 },
+  { key: "insulin", label: tr("Fasting insulin"), unit: "µU/mL", group: "metabolic", range: same(2, 25), dp: 1 },
+  { key: "hemoglobin", label: tr("Hemoglobin"), unit: "g/dL", group: "blood", range: bySex([13.5, 17.5], [12, 15.5]), dp: 1 },
+  { key: "hematocrit", label: tr("Hematocrit"), unit: "%", group: "blood", range: bySex([40, 52], [36, 46]), dp: 0 },
+  { key: "wbc", label: tr("White blood cells"), unit: "/nL", group: "blood", range: same(4, 10), dp: 1 },
+  { key: "platelets", label: tr("Platelets"), unit: "/nL", group: "blood", range: same(150, 400), dp: 0 },
+  { key: "ferritin", label: tr("Ferritin"), unit: "ng/mL", group: "iron", range: bySex([30, 400], [15, 150]), dp: 0 },
+  { key: "iron", label: tr("Iron"), unit: "µg/dL", group: "iron", range: same(60, 170), dp: 0 },
+  { key: "vitd", label: tr("Vitamin D (25-OH)"), unit: "ng/mL", group: "vitamins", range: same(30, 100), dp: 0 },
+  { key: "b12", label: tr("Vitamin B12"), unit: "pg/mL", group: "vitamins", range: same(200, 900), dp: 0 },
+  { key: "folate", label: tr("Folate"), unit: "ng/mL", group: "vitamins", range: same(4, null), dp: 1 },
+  { key: "magnesium", label: tr("Magnesium"), unit: "mmol/L", group: "vitamins", range: same(0.75, 1.05), dp: 2 },
+  { key: "crp", label: tr("hs-CRP"), unit: "mg/L", group: "inflammation", range: same(null, 3), dp: 1 },
   { key: "tsh", label: "TSH", unit: "mU/L", group: "hormones", range: same(0.4, 4), dp: 2 },
-  { key: "testosterone", label: "Testosterone", unit: "ng/dL", group: "hormones", range: bySex([264, 916], [15, 70]), dp: 0 },
-  { key: "cortisol", label: "Cortisol (morning)", unit: "µg/dL", group: "hormones", range: same(6, 23), dp: 1 },
-  { key: "creatinine", label: "Creatinine", unit: "mg/dL", group: "kidney_liver", range: bySex([0.7, 1.3], [0.5, 1.1]), dp: 2 },
-  { key: "egfr", label: "eGFR", unit: "mL/min/1.73m²", group: "kidney_liver", range: same(90, null), dp: 0 },
-  { key: "alt", label: "ALT (GPT)", unit: "U/L", group: "kidney_liver", range: bySex([null, 50], [null, 35]), dp: 0 },
+  { key: "testosterone", label: tr("Testosterone"), unit: "ng/dL", group: "hormones", range: bySex([264, 916], [15, 70]), dp: 0 },
+  { key: "cortisol", label: tr("Cortisol (morning)"), unit: "µg/dL", group: "hormones", range: same(6, 23), dp: 1 },
+  { key: "creatinine", label: tr("Creatinine"), unit: "mg/dL", group: "kidney_liver", range: bySex([0.7, 1.3], [0.5, 1.1]), dp: 2 },
+  { key: "egfr", label: tr("eGFR"), unit: "mL/min/1.73m²", group: "kidney_liver", range: same(90, null), dp: 0 },
+  { key: "alt", label: tr("ALT (GPT)"), unit: "U/L", group: "kidney_liver", range: bySex([null, 50], [null, 35]), dp: 0 },
   { key: "ggt", label: "GGT", unit: "U/L", group: "kidney_liver", range: bySex([null, 60], [null, 40]), dp: 0 },
-  { key: "uric_acid", label: "Uric acid", unit: "mg/dL", group: "kidney_liver", range: bySex([3.4, 7], [2.4, 6]), dp: 1 },
+  { key: "uric_acid", label: tr("Uric acid"), unit: "mg/dL", group: "kidney_liver", range: bySex([3.4, 7], [2.4, 6]), dp: 1 },
 ];
 
 export const LAB_GROUP_LABEL: Record<LabMarker["group"], string> = {

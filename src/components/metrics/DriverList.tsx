@@ -6,6 +6,7 @@ import { SkeletonText } from "@/components/ui/skeleton"
 import { EmptyState } from "@/components/shells/EmptyState"
 import { MetricState } from "@/components/shells/MetricState"
 import { MetricTags } from "./primitives"
+import { t as tr } from "@/lib/i18n"
 
 export type DriverItem = {
   key: string
@@ -119,7 +120,7 @@ function Item({ i, max, p }: { i: DriverItem; max: number; p: DriverListProps })
         </span>
         {p.variant === "impact" && i.yes !== undefined && i.no !== undefined && (
           <span className="block text-xs leading-4 font-medium text-muted-foreground tabular-nums">
-            {i.yes} days with, {i.no} without.
+            {i.yes} {" "}{tr("days with,")}{" "}{i.no} without.
             {i.ci && ` 90% CI ${fmt(i.ci[0], p.unit).replace(/^\+/, "")} to ${fmt(i.ci[1], p.unit).replace(/^\+/, "")}`}
           </span>
         )}
@@ -155,11 +156,11 @@ function Item({ i, max, p }: { i: DriverItem; max: number; p: DriverListProps })
 export function DriverList(p: DriverListProps) {
   const empty =
     p.variant === "recovery" ? (
-      <EmptyState body="No drivers yet: Recovery needs 7 nights first." />
+      <EmptyState body={tr("No drivers yet: Recovery needs 7 nights first.")} />
     ) : (
       <EmptyState
-        body="Not enough check-ins yet. Insights need 5 days with and 5 without a behaviour in the last 90 days."
-        action={{ label: "Check in", sheet: "checkin" }}
+        body={tr("Not enough check-ins yet. Insights need 5 days with and 5 without a behaviour in the last 90 days.")}
+        action={{ label: tr("Check in"), sheet: "checkin" }}
       />
     )
   return (

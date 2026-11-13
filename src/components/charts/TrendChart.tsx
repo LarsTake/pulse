@@ -16,6 +16,7 @@ import { MetricState } from "@/components/shells/MetricState"
 import { useOptionalShellCalendar } from "@/components/shells/ShellStatus"
 import { SEGMENT_ITEM, SEGMENT_TRACK, StatusChip, ValueUnit } from "@/components/metrics/primitives"
 import { AXIS, BAR_CURSOR, BandGradient, bandPaint, ChartFigure, FadeGradient, GlowDot, GRID, gutterLabel, LABEL_HALO, labelGutter, LINE_CURSOR, useSeriesAnimation, wholeTick, type Band } from "./ChartFrame"
+import { t as tr } from "@/lib/i18n"
 
 export type TrendPoint = {
   date: string
@@ -228,7 +229,7 @@ function Trend({ points, p }: { points: TrendPoint[]; p: TrendChartProps }) {
           )}
         </div>
         {!p.fixedRange && (
-          <ToggleGroup type="single" value={range} onValueChange={changeRange} spacing={0} className={cn(SEGMENT_TRACK, ranges.length > 3 && "w-full")} aria-label="Range">
+          <ToggleGroup type="single" value={range} onValueChange={changeRange} spacing={0} className={cn(SEGMENT_TRACK, ranges.length > 3 && "w-full")} aria-label={tr("Range")}>
             {ranges.map((r) => (
               <ToggleGroupItem
                 key={r}
@@ -245,7 +246,7 @@ function Trend({ points, p }: { points: TrendPoint[]; p: TrendChartProps }) {
 
       {values.length === 0 ? (
         <div className="grid h-[200px] place-items-center">
-          <EmptyState body="No data in this range yet." />
+          <EmptyState body={tr("No data in this range yet.")} />
         </div>
       ) : (
         <ChartFigure summary={summary} config={{ value: { label: p.label, color: colorFor(p.colorBy, avg ?? 0) } }} className="h-[200px]">
@@ -387,8 +388,7 @@ function StackLegend({ series, point, format }: { series: readonly TrendSeries[]
       {point?.value != null && !parts ? (
         <span className="inline-flex items-center gap-1.5">
           <span aria-hidden className="size-2 rounded-[2px] border border-dashed" style={{ borderColor: UNSPLIT }} />
-          No breakdown for this day
-        </span>
+          {tr("No breakdown for this day")}</span>
       ) : (
         [...series].reverse().map((s) => (
           <span key={s.key} className="inline-flex items-center gap-1.5">
@@ -404,7 +404,7 @@ function StackLegend({ series, point, format }: { series: readonly TrendSeries[]
 
 export function TrendChart(p: TrendChartProps) {
   return (
-    <MetricState metric={p.data} skeleton={<TrendChartSkeleton ranges={p.ranges} day={p.headline === "day"} legend={!!p.stack} />} empty={<EmptyState body="No data in this range yet." />}>
+    <MetricState metric={p.data} skeleton={<TrendChartSkeleton ranges={p.ranges} day={p.headline === "day"} legend={!!p.stack} />} empty={<EmptyState body={tr("No data in this range yet.")} />}>
       {(points) => (
         <React.Suspense fallback={<TrendChartSkeleton ranges={p.ranges} day={p.headline === "day"} legend={!!p.stack} />}>
           <Trend points={points} p={p} />
@@ -428,7 +428,7 @@ export function TrendChartSkeleton({
           {day ? (
             <SkeletonText className="w-[6ch] text-xs leading-4" />
           ) : (
-            <p className="text-xs leading-4 font-bold tracking-[0.1em] text-muted-foreground uppercase">Average</p>
+            <p className="text-xs leading-4 font-bold tracking-[0.1em] text-muted-foreground uppercase">{tr("Average")}</p>
           )}
           <SkeletonText className="w-[4ch] font-numeric text-[28px] leading-8 font-bold" />
           {legend && <SkeletonText className="mt-1.5 w-40 text-xs leading-4" />}

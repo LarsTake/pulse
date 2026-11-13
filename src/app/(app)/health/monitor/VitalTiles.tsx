@@ -4,6 +4,7 @@ import type { FormatKey } from "@/lib/format"
 import type { Vital, VitalKey } from "@/server/queries/types"
 import { KeyStatRow, KeyStatRowSkeleton } from "@/components/metrics/KeyStatRow"
 import { dayHref, metricHref } from "@/lib/url"
+import { t as tr } from "@/lib/i18n"
 
 const ICON: Record<VitalKey, ReactNode> = {
   resp: <Wind />,
@@ -27,7 +28,7 @@ export function VitalTiles({ vitals, day, today }: { vitals: Vital[]; day: strin
             key={x.key}
             variant="tile"
             wide={i === vitals.length - 1 && "xl"}
-            spark={{ values: x.trend.points.slice(-30).map((p) => p.value), band: x.range, caption: "Last 30 nights" }}
+            spark={{ values: x.trend.points.slice(-30).map((p) => p.value), band: x.range, caption: tr("Last 30 nights") }}
             icon={ICON[x.key]}
             label={x.key === "restingHr" || x.key === "hrv" ? x.short : x.label}
             metric={x.metric}

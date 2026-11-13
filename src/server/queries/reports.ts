@@ -4,6 +4,7 @@ import { journalTags, reports } from "../db/schema";
 import { finite, loadDays, none, ok, type QueryCtx, toStrain } from "./common";
 import { latestReport } from "./home";
 import type { DriverItem, KeyStat, Metric, ReportVM, StackedSegment } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 const readReport = async (ctx: QueryCtx, period: string) => {
   const [r] = await ctx.db
@@ -25,10 +26,10 @@ const neighbour = async (ctx: QueryCtx, pattern: string, period: string, dir: -1
 };
 
 const BALANCE = {
-  LOAD_SWEET_SPOT: { status: "balanced", word: "Balanced", line: "Your strain matched your recovery most days." },
-  LOAD_BUILDING_FAST: { status: "overreaching", word: "Overreaching", line: "Your load rose faster than your body is used to. Watch your Recovery." },
-  LOAD_SPIKING: { status: "overreaching", word: "Overreaching", line: "Your load jumped well above your usual. Injury and illness risk rise." },
-  LOAD_RAMPING_DOWN: { status: "undertrained", word: "Undertrained", line: "Your load dropped below your usual. Fitness slowly fades if this lasts." },
+  LOAD_SWEET_SPOT: { status: "balanced", word: tr("Balanced"), line: tr("Your strain matched your recovery most days.") },
+  LOAD_BUILDING_FAST: { status: "overreaching", word: tr("Overreaching"), line: tr("Your load rose faster than your body is used to. Watch your Recovery.") },
+  LOAD_SPIKING: { status: "overreaching", word: tr("Overreaching"), line: tr("Your load jumped well above your usual. Injury and illness risk rise.") },
+  LOAD_RAMPING_DOWN: { status: "undertrained", word: tr("Undertrained"), line: tr("Your load dropped below your usual. Fitness slowly fades if this lasts.") },
 } as const;
 
 /** Reports `/reports/[period]` (spec §7.13); null for a period with no data. */
@@ -59,9 +60,9 @@ export async function getReport(period: string, ctx: QueryCtx): Promise<ReportVM
   const pa = prevReport?.averages;
 
   const bands: StackedSegment[] = [
-    { key: "green", label: "Green (67-100%)", count: r.bands.green, color: "recovery-green" },
-    { key: "yellow", label: "Yellow (34-66%)", count: r.bands.yellow, color: "recovery-yellow" },
-    { key: "red", label: "Red (0-33%)", count: r.bands.red, color: "recovery-red" },
+    { key: "green", label: tr("Green (67-100%)"), count: r.bands.green, color: "recovery-green" },
+    { key: "yellow", label: tr("Yellow (34-66%)"), count: r.bands.yellow, color: "recovery-yellow" },
+    { key: "red", label: tr("Red (0-33%)"), count: r.bands.red, color: "recovery-red" },
   ];
   const scored = r.bands.green + r.bands.yellow + r.bands.red;
 
@@ -102,9 +103,9 @@ export async function getReport(period: string, ctx: QueryCtx): Promise<ReportVM
     latestWeek: latestWeek?.period ?? null,
     latestMonth: latestMonth?.period ?? null,
     dials: [
-      { key: "sleep", label: "Avg sleep", metric: avg(a.sleepPerf), delta: r.deltas.sleepPerf },
-      { key: "recovery", label: "Avg recovery", metric: avg(a.recovery), delta: r.deltas.recovery },
-      { key: "strain", label: "Avg strain", metric: avg(a.strain), delta: r.deltas.strain },
+      { key: "sleep", label: tr("Avg sleep"), metric: avg(a.sleepPerf), delta: r.deltas.sleepPerf },
+      { key: "recovery", label: tr("Avg recovery"), metric: avg(a.recovery), delta: r.deltas.recovery },
+      { key: "strain", label: tr("Avg strain"), metric: avg(a.strain), delta: r.deltas.strain },
     ],
     insight: insightOf(r, word, inTarget, withTarget),
     bands: scored ? ok(bands) : none("no_data"),
@@ -122,8 +123,8 @@ export async function getReport(period: string, ctx: QueryCtx): Promise<ReportVM
     bestWorst:
       r.best && r.worst && scored >= 2
         ? [
-            { label: "Best day", day: r.best.day, recovery: r.best.recovery, strain: strainOf(r.best.day) },
-            { label: "Worst day", day: r.worst.day, recovery: r.worst.recovery, strain: strainOf(r.worst.day) },
+            { label: tr("Best day"), day: r.best.day, recovery: r.best.recovery, strain: strainOf(r.best.day) },
+            { label: tr("Worst day"), day: r.worst.day, recovery: r.worst.recovery, strain: strainOf(r.worst.day) },
           ]
         : null,
   };

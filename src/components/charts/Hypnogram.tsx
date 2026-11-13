@@ -12,6 +12,7 @@ import { MetricState } from "@/components/shells/MetricState"
 import { useClock, useOptionalShellCalendar } from "@/components/shells/ShellStatus"
 import { ReasonPlaceholder } from "@/components/metrics/ReasonPlaceholder"
 import { AXIS, ChartFigure, GRID, LINE_CURSOR, TOOLTIP_CLASS, TooltipLine, useSeriesAnimation } from "./ChartFrame"
+import { t as tr } from "@/lib/i18n"
 
 export type HypnogramNight = { bed: number; wake: number; segments: StageSegment[] }
 export type HypnogramProps = {
@@ -137,7 +138,7 @@ export function HypnogramChart({ night }: { night: HypnogramNight }) {
 export function Hypnogram({ data }: HypnogramProps) {
   const empty = (
     <div className="grid place-items-center">
-      <EmptyState body="No stage data for this sleep. Fitbit only stages sleeps longer than about 3 hours." />
+      <EmptyState body={tr("No stage data for this sleep. Fitbit only stages sleeps longer than about 3 hours.")} />
     </div>
   )
   return (

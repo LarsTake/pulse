@@ -21,6 +21,7 @@ import {
   vitalReason,
 } from "./common";
 import type { Contributor, KeyStat, Metric, RecoveryVM } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 const KEY_OF: Record<ChargeDriver["label"], Contributor["key"]> = {
   HEART_RATE_VARIABILITY: "hrv",
@@ -126,7 +127,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
   return [
     {
       key: "hrv",
-      label: "Heart rate variability",
+      label: tr("Heart rate variability"),
       unit: "ms",
       metric: metric("hrv", inputs?.hrv ?? row?.metrics?.hrvMs, r?.value != null ? "no_data" : vitalReason(row, isToday, true)),
       baseline: base(b?.hrv, usable(b?.hrv)),
@@ -135,7 +136,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
     },
     {
       key: "rhr",
-      label: "Resting heart rate",
+      label: tr("Resting heart rate"),
       unit: "bpm",
       metric: metric("rhr", inputs?.rhr ?? row?.sessionRhr, missing),
       baseline: base(b?.rhr, usable(b?.rhr)),
@@ -144,7 +145,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
     },
     {
       key: "resp",
-      label: "Respiratory rate",
+      label: tr("Respiratory rate"),
       unit: "rpm",
       metric: metric("resp", inputs?.resp ?? row?.metrics?.respBpm, missing),
       baseline: base(b?.resp, usable(b?.resp)),
@@ -154,7 +155,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
     },
     {
       key: "sleep",
-      label: "Sleep performance",
+      label: tr("Sleep performance"),
       unit: "%",
       metric: metric("sleep", inputs?.sleepPerf != null ? inputs.sleepPerf * 100 : null, missing),
       // The score centres sleep at 85% with a 12-point scale (noop's sleepPerfCenter / sleepPerfScale).
@@ -164,7 +165,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
     },
     {
       key: "skinTemp",
-      label: "Skin temperature",
+      label: tr("Skin temperature"),
       unit: "°C",
       metric: metric("skinTemp", inputs?.skinTempDev, row?.metrics?.nightlyTempC != null ? "calibrating" : missing),
       // Google's 30-night SD when it gives one, else Pulse's own baseline spread.

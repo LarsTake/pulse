@@ -13,17 +13,15 @@ import { SectionShell } from "@/components/shells/SectionShell"
 import { ContributorCard } from "./ContributorCard"
 import { pageDay, type SearchParams } from "../../_lib/day"
 import { CAPTION } from "@/components/metrics/primitives"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Healthspan" }
+export const metadata = { title: tr("Healthspan") }
 
 const INFO = {
-  title: "About Healthspan",
+  title: tr("About Healthspan"),
   body: (
     <p>
-      {AGE_LABEL} estimates how old your body behaves, from nine habits and vitals measured over the last 6 months. Pace of Aging compares your last 30
-      days with those 6 months: 1.0x means aging at the normal rate, below 1.0x slower, above 1.0x faster. Both are estimates for personal insight, not a
-      medical assessment.
-    </p>
+      {AGE_LABEL} {" "}{tr("estimates how old your body behaves, from nine habits and vitals measured over the last 6 months. Pace of Aging compares your last 30 days with those 6 months: 1.0x means aging at the normal rate, below 1.0x slower, above 1.0x faster. Both are estimates for personal insight, not a medical assessment.")}</p>
   ),
 }
 
@@ -43,7 +41,7 @@ function Orb({ vm, compact }: { vm: HealthspanVM; compact?: boolean }) {
       <p className={cn(CAPTION, "text-center tabular-nums")}>
         {r ? `Your age: ${formatValue("decimal1", vm.age)}` : "Healthspan needs 20 days of data."}
       </p>
-      {r && vm.result.provisional && <p className={cn(CAPTION, "text-center")}>Healthspan firms up after 20 days of data.</p>}
+      {r && vm.result.provisional && <p className={cn(CAPTION, "text-center")}>{tr("Healthspan firms up after 20 days of data.")}</p>}
     </div>
   )
 }
@@ -65,12 +63,12 @@ export default async function HealthspanPage({ searchParams }: PageProps<"/healt
       label: older ? "Years older" : "Years younger",
       tone: r ? (older ? "warning" : "optimal") : undefined,
     },
-    right: { value: r ? `${formatValue("decimal1", r.pace)}x` : MISSING, label: "Pace of aging" },
+    right: { value: r ? `${formatValue("decimal1", r.pace)}x` : MISSING, label: tr("Pace of aging") },
   } as const
 
   return (
     <DetailShell
-      title="Healthspan"
+      title={tr("Healthspan")}
       subtitle={n > 0 ? `Next update in ${n} ${n === 1 ? "day" : "days"}` : undefined}
       dateSwitcher={{ mode: "week" }}
       info={INFO}
@@ -79,10 +77,10 @@ export default async function HealthspanPage({ searchParams }: PageProps<"/healt
       stats={stats}
       collapse
       summary={
-        <SectionShell variant="card" title="Pace of Aging">
+        <SectionShell variant="card" title={tr("Pace of Aging")}>
           <TickScale
             variant="marker"
-            label="Pace of Aging"
+            label={tr("Pace of Aging")}
             metric={pace}
             min={-1}
             max={3}
@@ -92,12 +90,11 @@ export default async function HealthspanPage({ searchParams }: PageProps<"/healt
             ends={["−1.0x", "1.0x", "3.0x"]}
             leading={
               <>
-                <Turtle aria-hidden strokeWidth={1.75} /> Slow
-              </>
+                <Turtle aria-hidden strokeWidth={1.75} /> {" "}{tr("Slow")}</>
             }
             trailing={
               <>
-                Fast <Rabbit aria-hidden strokeWidth={1.75} />
+                {tr("Fast")}{" "}<Rabbit aria-hidden strokeWidth={1.75} />
               </>
             }
           />
@@ -118,19 +115,19 @@ export default async function HealthspanPage({ searchParams }: PageProps<"/healt
               format="decimal1"
               colorBy="single"
               fixedRange="6m"
-              reference={{ y: vm.age, label: "Your age" }}
+              reference={{ y: vm.age, label: tr("Your age") }}
             />
           ) : (
-            <EmptyState body="History builds one week at a time." />
+            <EmptyState body={tr("History builds one week at a time.")} />
           )}
         </SectionShell>
       }
       secondary={[
-        <ContributorCard key="sleep" title="Sleep" items={group("sleep")} />,
+        <ContributorCard key="sleep" title={tr("Sleep")} items={group("sleep")} />,
         // Strain (4 inputs) spans two rows; Sleep (2) and Fitness (3) stack beside it on laptop (U18 HS-01), and it
         // stretches to their bottom, its rows spread evenly, so both columns end on one line (SYM6).
-        <ContributorCard key="strain" title="Strain" items={group("strain")} className="xl:row-span-2" />,
-        <ContributorCard key="fitness" title="Fitness" items={group("fitness")} />,
+        <ContributorCard key="strain" title={tr("Strain")} items={group("strain")} className="xl:row-span-2" />,
+        <ContributorCard key="fitness" title={tr("Fitness")} items={group("fitness")} />,
       ]}
     />
   )

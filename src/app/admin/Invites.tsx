@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { RevokeInvite } from "./AdminClient"
 import { Pill, relative, shortDate, TD, TH } from "./ui"
+import { t as tr } from "@/lib/i18n"
 
 /** Who it's for (optional), then Create link; the new link shows once, ready to copy. */
 export function NewInvite({ signup }: { signup: "invite" | "open" | "closed" }) {
@@ -21,7 +22,7 @@ export function NewInvite({ signup }: { signup: "invite" | "open" | "closed" }) 
     const form = e.currentTarget
     const label = String(new FormData(form).get("label") ?? "").trim()
     start(async () => {
-      const r = await createInviteAction(label).catch(() => ({ ok: false as const, error: "Couldn’t reach Pulse. Try again." }))
+      const r = await createInviteAction(label).catch(() => ({ ok: false as const, error: tr("Couldn’t reach Pulse. Try again.") }))
       if (!r.ok) return void toast.error(r.error)
       form.reset()
       setCopied(false)
@@ -39,38 +40,35 @@ export function NewInvite({ signup }: { signup: "invite" | "open" | "closed" }) 
     }
   }
   return (
-    <section aria-label="New invite" className="rounded-xl bg-card p-5 shadow-card ring-1 ring-border">
+    <section aria-label={tr("New invite")} className="rounded-xl bg-card p-5 shadow-card ring-1 ring-border">
       <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <label className="min-w-0 flex-1">
-          <span className="text-[13px] leading-[18px] font-medium text-foreground-secondary">Who is it for?</span>
+          <span className="text-[13px] leading-[18px] font-medium text-foreground-secondary">{tr("Who is it for?")}</span>
           <input
             name="label"
             maxLength={60}
             autoComplete="off"
-            placeholder="Optional, e.g. Sam"
+            placeholder={tr("Optional, e.g. Sam")}
             className="mt-1.5 h-10 w-full rounded-lg bg-secondary px-3 text-[14px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
           />
         </label>
         <Button type="submit" disabled={pending} aria-busy={pending || undefined} className="h-10 rounded-lg px-4 text-[14px] font-semibold">
           {pending && <LoaderCircle aria-hidden className="animate-spin motion-reduce:animate-none" />}
-          Create invite link
-        </Button>
+          {tr("Create invite link")}</Button>
       </form>
       <p className="mt-2 text-[13px] leading-[18px] text-muted-foreground">
-        One account per link. Links expire after 7 days.
-        {signup !== "invite" && <> Sign-up is {signup === "open" ? "open to anyone" : "closed"} right now, so links only matter once it’s set to invite only.</>}
+        {tr("One account per link. Links expire after 7 days.")}{signup !== "invite" && <> {" "}{tr("Sign-up is")}{" "}{signup === "open" ? "open to anyone" : "closed"} {" "}{tr("right now, so links only matter once it’s set to invite only.")}</>}
       </p>
       {link && (
         <div role="status" className="mt-4 rounded-xl bg-coach/10 p-3 ring-1 ring-coach/25">
           <p className="text-[13px] leading-[18px] font-medium">
-            Invite link{link.label ? ` for ${link.label}` : ""} created. Send it now: it won’t be shown again.
-          </p>
+            {tr("Invite link")}{link.label ? ` for ${link.label}` : ""} {" "}{tr("created. Send it now: it won’t be shown again.")}</p>
           <div className="mt-2 flex items-center gap-2">
             <input
               ref={field}
               readOnly
               value={link.url}
-              aria-label="Invite link"
+              aria-label={tr("Invite link")}
               onFocus={(e) => e.currentTarget.select()}
               className="h-10 min-w-0 flex-1 rounded-lg bg-card px-3 font-numeric text-[13px] text-foreground ring-1 ring-border outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
             />
@@ -86,9 +84,9 @@ export function NewInvite({ signup }: { signup: "invite" | "open" | "closed" }) 
 }
 
 const TABS = [
-  { key: "open", label: "Open" },
-  { key: "used", label: "Used" },
-  { key: "expired", label: "Expired" },
+  { key: "open", label: tr("Open") },
+  { key: "used", label: tr("Used") },
+  { key: "expired", label: tr("Expired") },
 ] as const
 type Tab = (typeof TABS)[number]["key"]
 
@@ -99,8 +97,8 @@ export function InviteList({ invites, now }: { invites: InviteRow[]; now: number
   const shown = invites.filter((i) => status(i) === tab)
   const empty = { open: "No open invites. Create one above.", used: "No one has used an invite yet.", expired: "No expired invites." }
   return (
-    <section aria-label="Invites" className="mt-4 overflow-hidden rounded-xl bg-card shadow-card ring-1 ring-border">
-      <div role="tablist" aria-label="Invites" className="flex gap-1 overflow-x-auto border-b border-border px-2 pt-2 [scrollbar-width:none] sm:px-4 sm:pt-3">
+    <section aria-label={tr("Invites")} className="mt-4 overflow-hidden rounded-xl bg-card shadow-card ring-1 ring-border">
+      <div role="tablist" aria-label={tr("Invites")} className="flex gap-1 overflow-x-auto border-b border-border px-2 pt-2 [scrollbar-width:none] sm:px-4 sm:pt-3">
         {TABS.map((t) => {
           const n = invites.filter((i) => status(i) === t.key).length
           return (
@@ -129,13 +127,12 @@ export function InviteList({ invites, now }: { invites: InviteRow[]; now: number
           <table role="table" className="block w-full border-collapse md:table">
             <thead role="rowgroup" className="max-md:sr-only">
               <tr role="row" className="border-b border-border">
-                <th role="columnheader" scope="col" className={TH}>For</th>
-                <th role="columnheader" scope="col" className={TH}>Created</th>
+                <th role="columnheader" scope="col" className={TH}>{tr("For")}</th>
+                <th role="columnheader" scope="col" className={TH}>{tr("Created")}</th>
                 <th role="columnheader" scope="col" className={TH}>{tab === "used" ? "Used" : "Expires"}</th>
-                <th role="columnheader" scope="col" className={TH}>Status</th>
+                <th role="columnheader" scope="col" className={TH}>{tr("Status")}</th>
                 <th role="columnheader" scope="col" className={cn(TH, "text-right")}>
-                  Actions
-                </th>
+                  {tr("Actions")}</th>
               </tr>
             </thead>
             <tbody role="rowgroup" className="block divide-y divide-border md:table-row-group">
@@ -145,7 +142,7 @@ export function InviteList({ invites, now }: { invites: InviteRow[]; now: number
                 return (
                   <tr role="row" key={i.id} className="flex min-h-16 items-center gap-3 px-4 py-2.5 md:table-row md:min-h-0">
                     <td role="cell" className={cn(TD, "min-w-0 flex-1 font-medium md:table-cell md:px-4 md:py-3")}>
-                      <span className="block truncate md:whitespace-normal">{i.label ?? <span className="font-normal text-muted-foreground">Unnamed</span>}</span>
+                      <span className="block truncate md:whitespace-normal">{i.label ?? <span className="font-normal text-muted-foreground">{tr("Unnamed")}</span>}</span>
                       {/* Phones: the dates as one line under the name (their columns are hidden). */}
                       <span className="block truncate text-[13px] leading-[18px] font-normal text-muted-foreground md:hidden">
                         {tab === "used" ? `Used ${when.toLowerCase()}` : tab === "expired" ? `Expired ${when}` : `Created ${relative(i.createdAt * 1000, now).toLowerCase()} · expires ${when.toLowerCase()}`}
@@ -154,7 +151,7 @@ export function InviteList({ invites, now }: { invites: InviteRow[]; now: number
                     <td role="cell" className={cn(TD, "hidden whitespace-nowrap text-muted-foreground md:table-cell md:px-4 md:py-3")}>{relative(i.createdAt * 1000, now)}</td>
                     <td role="cell" className={cn(TD, "hidden whitespace-nowrap text-muted-foreground md:table-cell md:px-4 md:py-3")}>{when}</td>
                     <td role="cell" className={cn(TD, "max-w-40 shrink-0 md:table-cell md:max-w-none md:px-4 md:py-3", tab !== "used" && "max-md:hidden")}>
-                      {tab === "used" ? <Pill tone="good">{i.usedBy ? `Used by ${i.usedBy}` : "Used"}</Pill> : tab === "expired" ? <Pill>Expired</Pill> : <Pill tone="coach">Waiting</Pill>}
+                      {tab === "used" ? <Pill tone="good">{i.usedBy ? `Used by ${i.usedBy}` : "Used"}</Pill> : tab === "expired" ? <Pill>{tr("Expired")}</Pill> : <Pill tone="coach">{tr("Waiting")}</Pill>}
                     </td>
                     <td role="cell" className={cn(TD, "shrink-0 max-md:empty:hidden md:table-cell md:px-4 md:py-3 md:text-right")}>
                       {i.usedAt === null && <RevokeInvite id={i.id} label={i.label ?? "this invite"} expired={tab === "expired"} />}

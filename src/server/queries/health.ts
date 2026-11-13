@@ -52,6 +52,7 @@ import type {
   Vital,
   VitalKey,
 } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 const lastStored = async (ctx: QueryCtx, today: string) => {
   const [r] = await ctx.db
@@ -119,7 +120,7 @@ async function latestHr(ctx: QueryCtx) {
 const HS_META: Record<string, Omit<HealthspanContributor, "metric" | "recent" | "target" | "years" | "caption" | "key" | "state" | "trendHref">> = {
   sleepHours: {
     group: "sleep",
-    label: "Hours of sleep",
+    label: tr("Hours of sleep"),
     unit: "h",
     domain: [4, 10],
     higherIsBetter: true,
@@ -128,7 +129,7 @@ const HS_META: Record<string, Omit<HealthspanContributor, "metric" | "recent" | 
   },
   sri: {
     group: "sleep",
-    label: "Sleep consistency",
+    label: tr("Sleep consistency"),
     unit: "%",
     domain: [0, 100],
     higherIsBetter: true,
@@ -137,7 +138,7 @@ const HS_META: Record<string, Omit<HealthspanContributor, "metric" | "recent" | 
   },
   zone13: {
     group: "strain",
-    label: "Heart rate zones 1-3",
+    label: tr("Heart rate zones 1-3"),
     unit: "min",
     domain: [0, 300],
     higherIsBetter: true,
@@ -146,7 +147,7 @@ const HS_META: Record<string, Omit<HealthspanContributor, "metric" | "recent" | 
   },
   zone45: {
     group: "strain",
-    label: "Heart rate zones 4-5",
+    label: tr("Heart rate zones 4-5"),
     unit: "min",
     domain: [0, 150],
     higherIsBetter: true,
@@ -155,7 +156,7 @@ const HS_META: Record<string, Omit<HealthspanContributor, "metric" | "recent" | 
   },
   strength: {
     group: "strain",
-    label: "Strength activity time",
+    label: tr("Strength activity time"),
     unit: "min",
     domain: [0, 150],
     higherIsBetter: true,
@@ -164,7 +165,7 @@ const HS_META: Record<string, Omit<HealthspanContributor, "metric" | "recent" | 
   },
   steps: {
     group: "strain",
-    label: "Daily steps",
+    label: tr("Daily steps"),
     unit: "steps",
     domain: [0, 15000],
     higherIsBetter: true,
@@ -173,7 +174,7 @@ const HS_META: Record<string, Omit<HealthspanContributor, "metric" | "recent" | 
   },
   vo2max: {
     group: "fitness",
-    label: "VO2 max",
+    label: tr("VO2 max"),
     unit: "ml/kg/min",
     domain: [15, 70],
     higherIsBetter: true,
@@ -183,7 +184,7 @@ const HS_META: Record<string, Omit<HealthspanContributor, "metric" | "recent" | 
   },
   restingHr: {
     group: "fitness",
-    label: "Resting heart rate",
+    label: tr("Resting heart rate"),
     unit: "bpm",
     domain: [40, 90],
     higherIsBetter: false,
@@ -192,7 +193,7 @@ const HS_META: Record<string, Omit<HealthspanContributor, "metric" | "recent" | 
   },
   leanMass: {
     group: "fitness",
-    label: "Lean body mass",
+    label: tr("Lean body mass"),
     unit: "kg",
     domain: [40, 80],
     higherIsBetter: true,
@@ -294,11 +295,11 @@ function healthspanInsight(pace: number, cs: HealthspanContribution[]) {
 // ── Health Monitor ──────────────────────────────────────────────────────────
 
 const VITALS: { key: VitalKey; short: string; unit: string; signed?: boolean; pick: (r: DayRow) => number | null | undefined }[] = [
-  { key: "resp", short: "Resp", unit: "rpm", pick: (r) => r.metrics?.respBpm },
-  { key: "spo2", short: "SpO2", unit: "%", pick: (r) => r.metrics?.spo2Pct },
+  { key: "resp", short: tr("Resp"), unit: "rpm", pick: (r) => r.metrics?.respBpm },
+  { key: "spo2", short: tr("SpO2"), unit: "%", pick: (r) => r.metrics?.spo2Pct },
   { key: "restingHr", short: "RHR", unit: "bpm", pick: (r) => r.metrics?.rhrBpm ?? r.sessionRhr },
   { key: "hrv", short: "HRV", unit: "ms", pick: (r) => r.metrics?.hrvMs },
-  { key: "skinTempDev", short: "Temp", unit: "°C", signed: true, pick: (r) => r.recovery?.inputs.skinTempDev },
+  { key: "skinTempDev", short: tr("Temp"), unit: "°C", signed: true, pick: (r) => r.recovery?.inputs.skinTempDev },
 ];
 
 const num = (v: number, dp: number, signed = false) => {
@@ -327,10 +328,10 @@ export async function getMonitor(day: string, ctx: QueryCtx, preloaded?: Map<str
       // Ranges always show one decimal, so a whole-number reading never looks equal to its bound.
       const lo = num(range.low, 1, v.signed);
       const hi = num(range.high, 1, v.signed);
-      if (v.key === "spo2" && status === "low" && value < 95) chip = { tone: "warning", text: "Below 95%" };
+      if (v.key === "spo2" && status === "low" && value < 95) chip = { tone: "warning", text: tr("Below 95%") };
       else if (status === "in_range") chip = { tone: "optimal", text: v.key === "spo2" ? `Within ${lo} - 100` : `Within ${lo} - ${hi}` };
-      else if (status === "high") chip = { tone: "warning", text: `Elevated, above ${hi}` };
-      else if (status === "low") chip = { tone: "warning", text: `Low, below ${lo}` };
+      else if (status === "high") chip = { tone: "warning", text: tr("Elevated, above {0}", [hi]) };
+      else if (status === "low") chip = { tone: "warning", text: tr("Low, below {0}", [lo]) };
     }
     const reason = v.key === "skinTempDev" && row?.metrics?.nightlyTempC != null ? "calibrating" : vitalReason(row, isToday, v.key === "hrv");
     const tags = hm && hm.reason === null && hm.stale.includes(v.key === "restingHr" ? "rhr" : v.key === "skinTempDev" ? "skinTemp" : v.key) ? (["stale_baseline"] as const) : [];
@@ -376,23 +377,23 @@ type EcgCopy = Pick<EcgReading, "label" | "tone" | "explanation">;
  * a warning one, not red; every inconclusive state stays neutral. Unknown or unspecified codes read as "No result".
  */
 export const ECG_RESULT: Record<string, EcgCopy> = {
-  NORMAL_SINUS_RHYTHM: { label: "Normal sinus rhythm", tone: "optimal", explanation: "Your heart rhythm appears normal and shows no signs of AFib." },
+  NORMAL_SINUS_RHYTHM: { label: tr("Normal sinus rhythm"), tone: "optimal", explanation: "Your heart rhythm appears normal and shows no signs of AFib." },
   ATRIAL_FIBRILLATION: {
-    label: "Atrial fibrillation",
+    label: tr("Atrial fibrillation"),
     tone: "warning",
     explanation: "This reading shows signs of atrial fibrillation (AFib), an irregular heart rhythm. Share it with your doctor.",
   },
-  INCONCLUSIVE: { label: "Inconclusive", tone: "neutral", explanation: "This reading couldn’t be classified, often because of movement, a weak signal or another rhythm." },
+  INCONCLUSIVE: { label: tr("Inconclusive"), tone: "neutral", explanation: "This reading couldn’t be classified, often because of movement, a weak signal or another rhythm." },
   INCONCLUSIVE_HIGH_HEART_RATE: {
-    label: "Inconclusive: high heart rate",
+    label: tr("Inconclusive: high heart rate"),
     tone: "neutral",
     explanation: "Your heart rate was over 120 bpm, too high to check your rhythm. Rest for a few minutes and try again.",
   },
-  INCONCLUSIVE_LOW_HEART_RATE: { label: "Inconclusive: low heart rate", tone: "neutral", explanation: "Your heart rate was under 50 bpm, too low to check your rhythm." },
-  UNREADABLE: { label: "Poor recording", tone: "neutral", explanation: "The signal was too noisy to read. Try again sitting still with your arm resting on a table." },
-  NOT_ANALYZED: { label: "Not analyzed", tone: "neutral", explanation: "This recording was saved but not classified, so it has no rhythm result." },
+  INCONCLUSIVE_LOW_HEART_RATE: { label: tr("Inconclusive: low heart rate"), tone: "neutral", explanation: "Your heart rate was under 50 bpm, too low to check your rhythm." },
+  UNREADABLE: { label: tr("Poor recording"), tone: "neutral", explanation: "The signal was too noisy to read. Try again sitting still with your arm resting on a table." },
+  NOT_ANALYZED: { label: tr("Not analyzed"), tone: "neutral", explanation: "This recording was saved but not classified, so it has no rhythm result." },
 };
-const NO_RESULT: EcgCopy = { label: "No result", tone: "neutral", explanation: "No rhythm result came with this recording." };
+const NO_RESULT: EcgCopy = { label: tr("No result"), tone: "neutral", explanation: "No rhythm result came with this recording." };
 
 async function heartRhythm(ctx: QueryCtx, day: string): Promise<HeartRhythm> {
   const h = healthRecords;
@@ -412,10 +413,10 @@ async function heartRhythm(ctx: QueryCtx, day: string): Promise<HeartRhythm> {
 }
 
 const MEASUREMENTS = [
-  { key: "weight", label: "Weight", unit: "kg", format: "decimal1", col: dailyMetrics.weightKg, always: true },
-  { key: "body_fat", label: "Body fat", unit: "%", format: "decimal1", col: dailyMetrics.bodyFatPct, always: true },
-  { key: "glucose", label: "Blood glucose", unit: "mg/dL", format: "int", col: "glucose", always: false },
-  { key: "core_temp", label: "Core temperature", unit: "°C", format: "decimal1", col: "core_temp", always: false },
+  { key: "weight", label: tr("Weight"), unit: "kg", format: "decimal1", col: dailyMetrics.weightKg, always: true },
+  { key: "body_fat", label: tr("Body fat"), unit: "%", format: "decimal1", col: dailyMetrics.bodyFatPct, always: true },
+  { key: "glucose", label: tr("Blood glucose"), unit: "mg/dL", format: "int", col: "glucose", always: false },
+  { key: "core_temp", label: tr("Core temperature"), unit: "°C", format: "decimal1", col: "core_temp", always: false },
 ] as const;
 
 /** Every reading of a measurement for the user, newest first: a daily_metrics column, or a daily_values key. */

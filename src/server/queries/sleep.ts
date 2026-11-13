@@ -21,13 +21,14 @@ import {
   vitalReason,
 } from "./common";
 import type { KeyStat, Metric, SleepStatus, SleepVM, TimePoint } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 type Stage = "awake" | "rem" | "light" | "deep";
 const STAGE_ROWS: { stage: Stage; label: string; typical: [number, number] }[] = [
-  { stage: "awake", label: "Awake", typical: [5, 10] },
+  { stage: "awake", label: tr("Awake"), typical: [5, 10] },
   { stage: "rem", label: "REM", typical: [20, 25] },
-  { stage: "light", label: "Light", typical: [45, 55] },
-  { stage: "deep", label: "Deep", typical: [13, 23] },
+  { stage: "light", label: tr("Light"), typical: [45, 55] },
+  { stage: "deep", label: tr("Deep"), typical: [13, 23] },
 ];
 
 const status = (v: number | null | undefined, optimal: number, sufficient: number): SleepStatus | undefined =>

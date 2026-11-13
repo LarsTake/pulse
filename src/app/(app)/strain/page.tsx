@@ -22,8 +22,9 @@ import type { StrainVM } from "@/server/queries/types"
 import { pageDay, type SearchParams } from "../_lib/day"
 import { STRAIN_INFO, STRAIN_TARGET_INFO } from "../_lib/info"
 import { CAPTION, hrSeries, LABEL, statProps, TodayVsLegend } from "../_lib/view"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Strain", description: "Day Strain, your Strain Target, heart-rate zones, activities, calories burned and workout time." }
+export const metadata = { title: tr("Strain"), description: tr("Day Strain, your Strain Target, heart-rate zones, activities, calories burned and workout time.") }
 
 /** Weekly Trends in the reference app's order (strain-weekly-trends-*). */
 const WEEKLY: readonly TrendViewKey[] = ["strain", "zones13", "zones45", "steps", "calories", "strength"]
@@ -37,7 +38,7 @@ export default async function StrainPage({ searchParams }: PageProps<"/strain">)
 
   return (
     <DetailShell
-      title="Strain"
+      title={tr("Strain")}
       info={STRAIN_INFO}
       dateSwitcher={{ mode: "day", placement: "header", steppers: false }}
       notch
@@ -62,17 +63,17 @@ export default async function StrainPage({ searchParams }: PageProps<"/strain">)
           <TodayVsLegend period="prior 30 days" />
         </Card>
       }
-      insight={vm.coach && <InsightCard body={vm.coach} action={{ label: "Explore your strain insights", href: trendHref("strain", { d, today }) }} />}
+      insight={vm.coach && <InsightCard body={vm.coach} action={{ label: tr("Explore your strain insights"), href: trendHref("strain", { d, today }) }} />}
       primary={
-        <SectionShell variant="card" title="Heart rate" level={2}>
+        <SectionShell variant="card" title={tr("Heart rate")} level={2}>
           <IntradayHrChart data={hrSeries(vm.hr, vm.maxHr)} />
         </SectionShell>
       }
       secondary={[
-        <SectionShell key="zones" variant="card" title="Time in zones" level={2} fill className="xl:row-span-2">
+        <SectionShell key="zones" variant="card" title={tr("Time in zones")} level={2} fill className="xl:row-span-2">
           <ZoneBars variant="rows" data={vm.zones} note={vm.zoneNote} emptyCopy={vm.isToday ? "No heart-rate zones yet today." : "No heart-rate zones on this day."} />
         </SectionShell>,
-        <SectionShell key="activities" variant="card" title="Activities" level={2}>
+        <SectionShell key="activities" variant="card" title={tr("Activities")} level={2}>
           {vm.activities.length ? (
             <div className="space-y-1.5">
               {vm.activities.map((a) => (
@@ -80,7 +81,7 @@ export default async function StrainPage({ searchParams }: PageProps<"/strain">)
               ))}
             </div>
           ) : (
-            <EmptyState body="No activities on this day." />
+            <EmptyState body={tr("No activities on this day.")} />
           )}
         </SectionShell>,
       ]}
@@ -101,11 +102,11 @@ function TargetRow({ vm }: { vm: StrainVM }) {
         <Flame strokeWidth={1.75} />
       </span>
       <span aria-hidden className="min-w-0 flex-1">
-        <span className={cn(LABEL, "block text-balance")}>Strain Target</span>
+        <span className={cn(LABEL, "block text-balance")}>{tr("Strain Target")}</span>
         {reason && <span className={cn(CAPTION, "mt-0.5 block truncate")}>{reason}</span>}
         {t.value?.estimate && <MetricTags extra={["estimate"]} className="mt-1 justify-start" />}
       </span>
-      <InfoButton info={STRAIN_TARGET_INFO} label="Strain Target" variant="card" />
+      <InfoButton info={STRAIN_TARGET_INFO} label={tr("Strain Target")} variant="card" />
       {/* Same grid as KeyStatRow's value + arrow column, so the values right-align down the card. */}
       <span aria-hidden className="grid shrink-0 grid-cols-[auto_8px] gap-x-2">
         <span className={cn("font-numeric text-xl leading-6 font-bold tabular-nums", reason && "text-muted-foreground")}>{text}</span>

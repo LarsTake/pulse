@@ -14,6 +14,7 @@ import { SheetTrigger } from "./SheetTrigger"
 import { useTabNavigate } from "./AppNavigation"
 import { useShellCalendar, useShellStatus } from "./ShellStatus"
 import { DemoChip } from "./TopBar"
+import { t as tr } from "@/lib/i18n"
 
 /** The reference app's Home glyph: a house outline framing a rising line chart (home-today-overview-top). Lucide's house, door swapped for a chart. */
 const HomeChart = createLucideIcon("home-chart", [
@@ -22,10 +23,10 @@ const HomeChart = createLucideIcon("home-chart", [
 ])
 
 const TABS: { tab: Tab; label: string; icon: LucideIcon }[] = [
-  { tab: "home", label: "Home", icon: HomeChart },
-  { tab: "health", label: "Health", icon: HeartPulse },
-  { tab: "journal", label: "Journal", icon: NotebookPen },
-  { tab: "more", label: "More", icon: Menu },
+  { tab: "home", label: tr("Home"), icon: HomeChart },
+  { tab: "health", label: tr("Health"), icon: HeartPulse },
+  { tab: "journal", label: tr("Journal"), icon: NotebookPen },
+  { tab: "more", label: tr("More"), icon: Menu },
 ]
 const ROOTS = new Set(Object.values(TAB_ROOT))
 
@@ -61,7 +62,7 @@ function Lens({ index, axis, className }: { index: number; axis: "x" | "y"; clas
 function TabBar({ current }: { current: number }) {
   const go = useTabNavigate()
   return (
-    <nav aria-label="Primary" onClick={() => haptic(6)} className={cn(GLASS, "relative h-[62px] min-w-0 flex-1 rounded-[22px] p-1")}>
+    <nav aria-label={tr("Primary")} onClick={() => haptic(6)} className={cn(GLASS, "relative h-[62px] min-w-0 flex-1 rounded-[22px] p-1")}>
       <Lens index={current} axis="x" className="inset-y-1 left-1 w-[calc((100%-8px)/4)] rounded-[18px]" />
       <ul className="relative grid h-full grid-cols-4">
         {TABS.map(({ tab, label, icon: Icon }, i) => (
@@ -87,10 +88,10 @@ function TabBar({ current }: { current: number }) {
 function Rail({ current, wide, pathname }: { current: number; wide: boolean; pathname: string }) {
   const go = useTabNavigate()
   return (
-    <nav aria-label="Primary" className={cn(GLASS, "fixed top-[calc(var(--inset-top)+12px)] bottom-3 left-3 z-30 hidden w-[88px] flex-col items-center rounded-[28px] py-4 md:flex", !wide && "xl:hidden")}>
+    <nav aria-label={tr("Primary")} className={cn(GLASS, "fixed top-[calc(var(--inset-top)+12px)] bottom-3 left-3 z-30 hidden w-[88px] flex-col items-center rounded-[28px] py-4 md:flex", !wide && "xl:hidden")}>
       <Link
         href="/"
-        aria-label="Pulse home"
+        aria-label={tr("Pulse home")}
         className="mb-5 grid size-10 place-items-center rounded-full transition-[background-color,scale] duration-150 ease-standard outline-none hover:bg-foreground/8 focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
       >
         <span aria-hidden>
@@ -126,7 +127,7 @@ function Rail({ current, wide, pathname }: { current: number; wide: boolean; pat
             className={cn(PRESS, ITEM_TONE(pathname.startsWith("/settings")), "flex h-16 w-[72px] flex-col items-center justify-center gap-1 rounded-[20px]", pathname.startsWith("/settings") && "bg-glass-lens")}
           >
             <Settings aria-hidden strokeWidth={1.6} className="size-[26px]" />
-            <span className="text-xs leading-4 font-semibold">Settings</span>
+            <span className="text-xs leading-4 font-semibold">{tr("Settings")}</span>
           </Link>
         </>
       )}
@@ -142,7 +143,7 @@ function Rail({ current, wide, pathname }: { current: number; wide: boolean; pat
 /** Laptop sidebar, 232 px, floating (inferred, I2), with Settings under a hairline. */
 function Sidebar({ current, pathname }: { current: number; pathname: string }) {
   // Reports, Trends and the rest live in More (U21), so each destination is listed once.
-  const extra = [{ href: "/settings", match: "/settings", label: "Settings", icon: Settings }]
+  const extra = [{ href: "/settings", match: "/settings", label: tr("Settings"), icon: Settings }]
   const extraActive = extra.some((e) => pathname.startsWith(e.match))
   const tab = extraActive ? -1 : current
   const go = useTabNavigate()
@@ -161,10 +162,10 @@ function Sidebar({ current, pathname }: { current: number; pathname: string }) {
     </li>
   )
   return (
-    <nav aria-label="Primary" className={cn(GLASS, "fixed top-[calc(var(--inset-top)+12px)] bottom-3 left-3 z-30 hidden w-[232px] flex-col rounded-[28px] p-3 xl:flex")}>
+    <nav aria-label={tr("Primary")} className={cn(GLASS, "fixed top-[calc(var(--inset-top)+12px)] bottom-3 left-3 z-30 hidden w-[232px] flex-col rounded-[28px] p-3 xl:flex")}>
       <Link
         href="/"
-        aria-label="Pulse home"
+        aria-label={tr("Pulse home")}
         className="flex h-14 items-center rounded-full px-3 transition-[color] duration-150 ease-standard outline-none hover:text-foreground-secondary focus-visible:ring-3 focus-visible:ring-ring/50"
       >
         <span aria-hidden className="flex items-center gap-2.5">
@@ -224,7 +225,7 @@ function CheckInAction({ variant }: { variant: "float" | "rail" | "sidebar" }) {
         ? "flex h-12 items-center gap-3 rounded-full pr-4 pl-2.5 text-[15px] leading-5 font-semibold"
         : cn("grid shrink-0 place-items-center", variant === "rail" ? "size-14 rounded-[20px]" : "size-[62px] rounded-[22px] shadow-glass backdrop-blur-md backdrop-saturate-150")
     return (
-      <Link href="/coach" aria-label="Open Coach" className={cn(ACTION_FACE, face)}>
+      <Link href="/coach" aria-label={tr("Open Coach")} className={cn(ACTION_FACE, face)}>
         <Monogram />
         {variant === "sidebar" && "Coach"}
       </Link>
@@ -234,8 +235,7 @@ function CheckInAction({ variant }: { variant: "float" | "rail" | "sidebar" }) {
     return (
       <SheetTrigger sheet="checkin" aria-label={label} className={cn(ACTION_FACE, "flex h-12 items-center gap-3 rounded-full pr-4 pl-2.5 text-[15px] leading-5 font-semibold")}>
         <Monogram />
-        Check in
-      </SheetTrigger>
+        {tr("Check in")}</SheetTrigger>
     )
   return (
     <SheetTrigger

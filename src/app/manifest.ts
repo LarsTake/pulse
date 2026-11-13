@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { t as tr } from "@/lib/i18n"
 
 const shot = (name: string, sizes: string, form_factor: "narrow" | "wide", label: string) => ({
   src: `/screenshots/${name}.webp`,
@@ -21,7 +22,7 @@ export default function manifest(): MetadataRoute.Manifest {
     // Short on purpose: Android draws the name under the icon on its launch screen, in the system font.
     name: "Pulse",
     short_name: "Pulse",
-    description: "Recovery, strain and sleep from your Fitbit Air.",
+    description: tr("Recovery, strain and sleep from your Fitbit Air."),
     lang: "en",
     dir: "ltr",
     categories: ["health", "fitness", "lifestyle"],

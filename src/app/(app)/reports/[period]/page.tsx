@@ -18,6 +18,7 @@ import { ScoreDial } from "@/components/metrics/ScoreDial"
 import { DetailShell } from "@/components/shells/DetailShell"
 import { EmptyState } from "@/components/shells/EmptyState"
 import { SectionShell } from "@/components/shells/SectionShell"
+import { t as tr } from "@/lib/i18n"
 
 const WEEK = /^\d{4}-W\d{2}$/
 const MONTH = /^\d{4}-\d{2}$/
@@ -88,7 +89,7 @@ function KindToggle({ kind, week, month }: { kind: "week" | "month"; week: strin
       <span className={cn(SEGMENT, "text-muted-foreground opacity-40")}>{label}</span>
     )
   return (
-    <nav aria-label="Report period" className="inline-flex gap-0.5 rounded-lg bg-muted p-0.5">
+    <nav aria-label={tr("Report period")} className="inline-flex gap-0.5 rounded-lg bg-muted p-0.5">
       {item("week", "Week", week)}
       {item("month", "Month", month)}
     </nav>
@@ -158,8 +159,8 @@ export default async function ReportPage({ params }: PageProps<"/reports/[period
         title={title}
         hero={
           <EmptyState
-            body={`No data for this ${isWeek ? "week" : "month"}.`}
-            action={latest ? { label: `Latest ${isWeek ? "week" : "month"}`, href: `/reports/${latest.period}` } : undefined}
+            body={tr("No data for this {0}.", [isWeek ? "week" : "month"])}
+            action={latest ? { label: tr("Latest {0}", [isWeek ? "week" : "month"]), href: `/reports/${latest.period}` } : undefined}
           />
         }
       />
@@ -182,7 +183,7 @@ export default async function ReportPage({ params }: PageProps<"/reports/[period
       }
       insight={vm.insight && <InsightCard body={vm.insight} />}
       primary={
-        <SectionShell variant="card" title="Recovery breakdown" aside={<span className={CAPTION}>Days</span>}>
+        <SectionShell variant="card" title={tr("Recovery breakdown")} aside={<span className={CAPTION}>{tr("Days")}</span>}>
           <ZoneBars
             variant="stacked"
             unit="days"
@@ -194,36 +195,36 @@ export default async function ReportPage({ params }: PageProps<"/reports/[period
       secondary={[
         // On laptop Averages spans two rows with Training balance and Best and worst beside it, and the journal effects
         // take the full row under them (U18 R-01). Without a best and worst day there is nothing to stack, so no span.
-        <SectionShell key="avg" variant="card" title="Averages" className={vm.bestWorst ? "xl:row-span-2" : undefined} aside={<span className={CAPTION}>vs. {word}</span>}>
+        <SectionShell key="avg" variant="card" title={tr("Averages")} className={vm.bestWorst ? "xl:row-span-2" : undefined} aside={<span className={CAPTION}>vs. {word}</span>}>
           <Averages stats={vm.averages} word={word} />
         </SectionShell>,
-        <SectionShell key="balance" variant="card" title="Training balance">
+        <SectionShell key="balance" variant="card" title={tr("Training balance")}>
           {vm.trainingBalance.value ? (
             <div className="space-y-1">
               <p className={cn("font-numeric text-xl leading-6 font-bold", BALANCE_TONE[vm.trainingBalance.value.status])}>{vm.trainingBalance.value.word}</p>
-              <p className={cn(CAPTION, "tabular-nums")}>Training load (ACWR) {formatValue("decimal2", vm.trainingBalance.value.acwr)}</p>
+              <p className={cn(CAPTION, "tabular-nums")}>{tr("Training load (ACWR)")}{" "}{formatValue("decimal2", vm.trainingBalance.value.acwr)}</p>
               <p className="pt-2 text-[15px] leading-[22px] text-pretty text-foreground-secondary">{vm.trainingBalance.value.line}</p>
             </div>
           ) : (
-            <EmptyState body="Not enough data for a training balance." className="py-4" />
+            <EmptyState body={tr("Not enough data for a training balance.")} className="py-4" />
           )}
         </SectionShell>,
-        <SectionShell key="journal" variant="card" title="Top journal effects" className={vm.bestWorst ? "xl:col-span-2" : undefined} action={{ label: "View all", href: "/journal/insights" }}>
+        <SectionShell key="journal" variant="card" title={tr("Top journal effects")} className={vm.bestWorst ? "xl:col-span-2" : undefined} action={{ label: tr("View all"), href: "/journal/insights" }}>
           {vm.topImpacts.length ? (
             <DriverList variant="impact" unit="%" data={{ value: vm.topImpacts.slice(0, 3), reason: null, provisional: false }} />
           ) : (
-            <EmptyState body="No journal effects yet." className="py-4" />
+            <EmptyState body={tr("No journal effects yet.")} className="py-4" />
           )}
         </SectionShell>,
         ...(vm.bestWorst
           ? [
-              <SectionShell key="best" variant="card" title="Best and worst day">
+              <SectionShell key="best" variant="card" title={tr("Best and worst day")}>
                 <ul className="divide-y divide-border">
                   {vm.bestWorst.map((b) => (
                     <li key={b.label}>
                       <Link
                         href={dayHref("/", b.day, today)}
-                        aria-label={`${b.label}: ${formatDay(b.day, DAY.long)}, Recovery ${Math.round(b.recovery)} percent${b.strain === null ? "" : `, strain ${formatValue("decimal1", b.strain)}`}`}
+                        aria-label={tr("{0}: {1}, Recovery {2} percent{3}", [b.label, formatDay(b.day, DAY.long), Math.round(b.recovery), b.strain === null ? "" : `, strain ${formatValue("decimal1", b.strain)}`])}
                         className="-mx-2 flex min-h-16 items-center gap-3 rounded-lg px-2 py-2 transition-[background-color] duration-150 ease-standard outline-none hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-accent"
                       >
                         <span aria-hidden className="min-w-0 flex-1">
@@ -234,7 +235,7 @@ export default async function ReportPage({ params }: PageProps<"/reports/[period
                           <ScoreDial variant="recovery" size="sm" value={b.recovery} />
                           <span className="w-12 text-right">
                             <span className="block font-numeric text-xl leading-6 font-bold text-strain-text tabular-nums">{formatValue("decimal1", b.strain)}</span>
-                            <span className={CAPTION}>Strain</span>
+                            <span className={CAPTION}>{tr("Strain")}</span>
                           </span>
                         </span>
                         <ChevronRight aria-hidden className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />

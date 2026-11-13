@@ -21,8 +21,9 @@ import { DayLog } from "./DayLog"
 import { Log } from "./Log"
 import { WeekCard } from "./WeekCard"
 import { pageDay, type SearchParams } from "../_lib/day"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Journal" }
+export const metadata = { title: tr("Journal") }
 
 /** History rows before "Show 30 days": a week. The day strip above already reaches every day of the last three weeks. */
 const RECENT = 7
@@ -39,7 +40,7 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
   const open = (id: string) => !closed.has(id)
 
   return (
-    <PageShell title="Journal" dateSwitcher={{ mode: "day" }}>
+    <PageShell title={tr("Journal")} dateSwitcher={{ mode: "day" }}>
       {/* Full-bleed on phone: the strip scrolls edge to edge, its first tile keeps the 16 px gutter inside. From 768 px
           the tiles sit on the column's edges; the 4 px inset only leaves room for the focus ring, which the viewport clips (SYM2). */}
       <div className="-mx-4 md:-mx-1">
@@ -52,29 +53,29 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
       <div className="flex flex-col gap-8 xl:grid xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] xl:items-start xl:gap-x-6 xl:gap-y-10">
         {/* Log tiles first: a drink or a weigh-in is a two-tap job; then the check-in, then what the day holds (spec §11 LG1). */}
         <div className="flex flex-col gap-8">
-        <SectionShell variant="section" title="Log">
+        <SectionShell variant="section" title={tr("Log")}>
           <Log vm={log} />
         </SectionShell>
 
-        <CollapsibleSection id="check-in" title="Check-in" defaultOpen={open("check-in")}>
+        <CollapsibleSection id="check-in" title={tr("Check-in")} defaultOpen={open("check-in")}>
           <CheckIn dayLabel={date} checkIn={vm.checkIn} />
         </CollapsibleSection>
 
-        <CollapsibleSection id="logged" title={`Logged ${d === today ? "today" : d === addDays(today, -1) ? "yesterday" : `on ${date}`}`} defaultOpen={open("logged")}>
+        <CollapsibleSection id="logged" title={tr("Logged {0}", [d === today ? "today" : d === addDays(today, -1) ? "yesterday" : `on ${date}`])} defaultOpen={open("logged")}>
           <DayLog vm={log} />
         </CollapsibleSection>
         </div>
 
         <div className="flex flex-col gap-8">
-          <CollapsibleSection id="insights" title="Insights" defaultOpen={open("insights")} action={<ActionLink label="See all" href="/journal/insights" />}>
-            <InsightCard body={vm.teaser.text} action={vm.teaser.ready ? { label: "See all insights", href: "/journal/insights" } : undefined} />
+          <CollapsibleSection id="insights" title={tr("Insights")} defaultOpen={open("insights")} action={<ActionLink label={tr("See all")} href="/journal/insights" />}>
+            <InsightCard body={vm.teaser.text} action={vm.teaser.ready ? { label: tr("See all insights"), href: "/journal/insights" } : undefined} />
           </CollapsibleSection>
 
-          <SectionShell variant="section" title="This week">
+          <SectionShell variant="section" title={tr("This week")}>
             <WeekCard week={log.week} day={d} />
           </SectionShell>
 
-          <CollapsibleSection id="history" title="History" defaultOpen={open("history")}>
+          <CollapsibleSection id="history" title={tr("History")} defaultOpen={open("history")}>
           {vm.history.length ? (
             <Card className="gap-0 px-4 py-1 xl:px-5">
               <ul>
@@ -97,7 +98,7 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
                             </Badge>
                           ))}
                           {more > 0 && <span className="self-center font-numeric text-[13px] font-semibold text-muted-foreground tabular-nums">+{more}</span>}
-                          {!h.yes.length && <span className="self-center text-xs leading-4 font-medium text-muted-foreground">No behaviours</span>}
+                          {!h.yes.length && <span className="self-center text-xs leading-4 font-medium text-muted-foreground">{tr("No behaviours")}</span>}
                         </span>
                         <ChevronRight aria-hidden className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />
                       </Link>
@@ -117,8 +118,8 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
             </Card>
           ) : (
             <EmptyState
-              body="No check-ins yet. Your first one takes under a minute."
-              action={{ label: "Check in", sheet: "checkin" }}
+              body={tr("No check-ins yet. Your first one takes under a minute.")}
+              action={{ label: tr("Check in"), sheet: "checkin" }}
             />
           )}
           </CollapsibleSection>

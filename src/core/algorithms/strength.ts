@@ -1,4 +1,5 @@
-// Strength training the user logs set by set. Pure: no I/O.
+
+import { t as tr } from "@/lib/i18n"// Strength training the user logs set by set. Pure: no I/O.
 //
 // Three outputs:
 // - Hard sets per muscle per week, against the 10–20 set range that meta-analyses find for hypertrophy
@@ -27,36 +28,36 @@ export const MUSCLE_LABEL: Record<Muscle, string> = {
 export type ExerciseDef = { key: string; label: string; primary: Muscle[]; secondary: Muscle[]; bodyweight?: boolean };
 
 export const EXERCISES: ExerciseDef[] = [
-  { key: "bench_press", label: "Bench press", primary: ["chest"], secondary: ["triceps", "shoulders"] },
-  { key: "incline_bench", label: "Incline bench press", primary: ["chest", "shoulders"], secondary: ["triceps"] },
-  { key: "db_press", label: "Dumbbell press", primary: ["chest"], secondary: ["triceps", "shoulders"] },
-  { key: "push_up", label: "Push-up", primary: ["chest"], secondary: ["triceps", "shoulders", "core"], bodyweight: true },
-  { key: "dip", label: "Dip", primary: ["chest", "triceps"], secondary: ["shoulders"], bodyweight: true },
-  { key: "fly", label: "Chest fly", primary: ["chest"], secondary: [] },
-  { key: "pull_up", label: "Pull-up", primary: ["back", "biceps"], secondary: ["forearms"], bodyweight: true },
-  { key: "lat_pulldown", label: "Lat pulldown", primary: ["back"], secondary: ["biceps"] },
-  { key: "barbell_row", label: "Barbell row", primary: ["back"], secondary: ["biceps", "forearms"] },
-  { key: "cable_row", label: "Cable row", primary: ["back"], secondary: ["biceps"] },
-  { key: "deadlift", label: "Deadlift", primary: ["back", "glutes", "hamstrings"], secondary: ["quads", "forearms", "core"] },
-  { key: "overhead_press", label: "Overhead press", primary: ["shoulders"], secondary: ["triceps", "core"] },
-  { key: "lateral_raise", label: "Lateral raise", primary: ["shoulders"], secondary: [] },
-  { key: "face_pull", label: "Face pull", primary: ["shoulders", "back"], secondary: [] },
-  { key: "curl", label: "Biceps curl", primary: ["biceps"], secondary: ["forearms"] },
-  { key: "hammer_curl", label: "Hammer curl", primary: ["biceps", "forearms"], secondary: [] },
-  { key: "triceps_pushdown", label: "Triceps pushdown", primary: ["triceps"], secondary: [] },
-  { key: "skull_crusher", label: "Skull crusher", primary: ["triceps"], secondary: [] },
-  { key: "squat", label: "Back squat", primary: ["quads", "glutes"], secondary: ["hamstrings", "core"] },
-  { key: "front_squat", label: "Front squat", primary: ["quads"], secondary: ["glutes", "core"] },
-  { key: "leg_press", label: "Leg press", primary: ["quads", "glutes"], secondary: [] },
-  { key: "lunge", label: "Lunge", primary: ["quads", "glutes"], secondary: ["hamstrings"] },
-  { key: "rdl", label: "Romanian deadlift", primary: ["hamstrings", "glutes"], secondary: ["back"] },
-  { key: "leg_curl", label: "Leg curl", primary: ["hamstrings"], secondary: [] },
-  { key: "leg_extension", label: "Leg extension", primary: ["quads"], secondary: [] },
-  { key: "hip_thrust", label: "Hip thrust", primary: ["glutes"], secondary: ["hamstrings"] },
-  { key: "calf_raise", label: "Calf raise", primary: ["calves"], secondary: [] },
-  { key: "plank", label: "Plank", primary: ["core"], secondary: [], bodyweight: true },
-  { key: "crunch", label: "Crunch", primary: ["core"], secondary: [], bodyweight: true },
-  { key: "hanging_leg_raise", label: "Hanging leg raise", primary: ["core"], secondary: ["forearms"], bodyweight: true },
+  { key: "bench_press", label: tr("Bench press"), primary: ["chest"], secondary: ["triceps", "shoulders"] },
+  { key: "incline_bench", label: tr("Incline bench press"), primary: ["chest", "shoulders"], secondary: ["triceps"] },
+  { key: "db_press", label: tr("Dumbbell press"), primary: ["chest"], secondary: ["triceps", "shoulders"] },
+  { key: "push_up", label: tr("Push-up"), primary: ["chest"], secondary: ["triceps", "shoulders", "core"], bodyweight: true },
+  { key: "dip", label: tr("Dip"), primary: ["chest", "triceps"], secondary: ["shoulders"], bodyweight: true },
+  { key: "fly", label: tr("Chest fly"), primary: ["chest"], secondary: [] },
+  { key: "pull_up", label: tr("Pull-up"), primary: ["back", "biceps"], secondary: ["forearms"], bodyweight: true },
+  { key: "lat_pulldown", label: tr("Lat pulldown"), primary: ["back"], secondary: ["biceps"] },
+  { key: "barbell_row", label: tr("Barbell row"), primary: ["back"], secondary: ["biceps", "forearms"] },
+  { key: "cable_row", label: tr("Cable row"), primary: ["back"], secondary: ["biceps"] },
+  { key: "deadlift", label: tr("Deadlift"), primary: ["back", "glutes", "hamstrings"], secondary: ["quads", "forearms", "core"] },
+  { key: "overhead_press", label: tr("Overhead press"), primary: ["shoulders"], secondary: ["triceps", "core"] },
+  { key: "lateral_raise", label: tr("Lateral raise"), primary: ["shoulders"], secondary: [] },
+  { key: "face_pull", label: tr("Face pull"), primary: ["shoulders", "back"], secondary: [] },
+  { key: "curl", label: tr("Biceps curl"), primary: ["biceps"], secondary: ["forearms"] },
+  { key: "hammer_curl", label: tr("Hammer curl"), primary: ["biceps", "forearms"], secondary: [] },
+  { key: "triceps_pushdown", label: tr("Triceps pushdown"), primary: ["triceps"], secondary: [] },
+  { key: "skull_crusher", label: tr("Skull crusher"), primary: ["triceps"], secondary: [] },
+  { key: "squat", label: tr("Back squat"), primary: ["quads", "glutes"], secondary: ["hamstrings", "core"] },
+  { key: "front_squat", label: tr("Front squat"), primary: ["quads"], secondary: ["glutes", "core"] },
+  { key: "leg_press", label: tr("Leg press"), primary: ["quads", "glutes"], secondary: [] },
+  { key: "lunge", label: tr("Lunge"), primary: ["quads", "glutes"], secondary: ["hamstrings"] },
+  { key: "rdl", label: tr("Romanian deadlift"), primary: ["hamstrings", "glutes"], secondary: ["back"] },
+  { key: "leg_curl", label: tr("Leg curl"), primary: ["hamstrings"], secondary: [] },
+  { key: "leg_extension", label: tr("Leg extension"), primary: ["quads"], secondary: [] },
+  { key: "hip_thrust", label: tr("Hip thrust"), primary: ["glutes"], secondary: ["hamstrings"] },
+  { key: "calf_raise", label: tr("Calf raise"), primary: ["calves"], secondary: [] },
+  { key: "plank", label: tr("Plank"), primary: ["core"], secondary: [], bodyweight: true },
+  { key: "crunch", label: tr("Crunch"), primary: ["core"], secondary: [], bodyweight: true },
+  { key: "hanging_leg_raise", label: tr("Hanging leg raise"), primary: ["core"], secondary: ["forearms"], bodyweight: true },
 ];
 
 const BY_KEY = new Map(EXERCISES.map((e) => [e.key, e]));

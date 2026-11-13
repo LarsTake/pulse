@@ -1,5 +1,6 @@
 import { DetailShell } from "@/components/shells/DetailShell"
 import { LinkListSkeleton, MORE_COLUMN } from "@/components/shells/LinkList"
+import { t as tr } from "@/lib/i18n"
 
 const rows = (n: number) => Array.from({ length: n }, () => ({ label: "" }))
 
@@ -7,7 +8,7 @@ const rows = (n: number) => Array.from({ length: n }, () => ({ label: "" }))
 export default function Loading() {
   return (
     <DetailShell loading
-      title="Reports"
+      title={tr("Reports")}
       primary={
         <div className={MORE_COLUMN}>
           <div className="h-11 rounded-lg bg-muted" />

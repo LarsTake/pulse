@@ -8,6 +8,7 @@ import type { Metric } from "@/lib/reasons"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { ACTIVITY_ICON, type ActivityKind } from "./activityIcon"
 import { CAP_TRIM } from "./primitives"
+import { t as tr } from "@/lib/i18n"
 
 export type { ActivityKind }
 
@@ -109,7 +110,7 @@ export function ActivityCard({ name, kind, strain, start, end, href, timeZone, d
       caption={caption}
       start={s}
       end={e}
-      label={`${name}${spokenDistance}, ${noStrain ? "no strain" : `strain ${value}`}, ${s} to ${e}`}
+      label={tr("{0}{1}, {2}, {3} to {4}", [name, spokenDistance, noStrain ? "no strain" : `strain ${value}`, s, e])}
     />
   )
 }

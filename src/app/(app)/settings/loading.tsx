@@ -1,6 +1,7 @@
 import { DetailShell } from "@/components/shells/DetailShell"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
+import { t as tr } from "@/lib/i18n"
 
 const BODY = "text-[15px] leading-[22px]"
 const ROW = "flex min-h-13 items-center justify-between gap-3 py-2"
@@ -31,24 +32,24 @@ export default function Loading() {
   return (
     <div className="xl:-ml-[144px] xl:pl-[284px]">
     <DetailShell loading
-      title="Settings"
+      title={tr("Settings")}
       primary={
         <div aria-hidden className="mx-auto flex w-full max-w-[640px] flex-col gap-3 md:gap-4">
-          <SectionShell variant="card" level={2} title="Account">
+          <SectionShell variant="card" level={2} title={tr("Account")}>
             <Identity tile="size-14 rounded-full" />
             <Buttons />
           </SectionShell>
-          <SectionShell variant="card" level={2} title="Data source">
+          <SectionShell variant="card" level={2} title={tr("Data source")}>
             <Identity tile="size-11 rounded-xl" />
             {/* The status body (demo, not connected) and the Data types row (a connected source) take about the same
                 height, and a connected source shows only the row, so the skeleton shows the row. */}
             <Buttons />
             <div className={`${ROW} mt-4 border-t border-border`}>
-              <span className={BODY}>Data types</span>
+              <span className={BODY}>{tr("Data types")}</span>
               <SkeletonText className="w-24 text-[13px] leading-[18px]" />
             </div>
           </SectionShell>
-          <SectionShell variant="card" level={2} title="Profile" action={<Skeleton className="h-5 w-14 rounded-full" />}>
+          <SectionShell variant="card" level={2} title={tr("Profile")} action={<Skeleton className="h-5 w-14 rounded-full" />}>
             <dl className="divide-y divide-border">
               {PROFILE.map((k) => (
                 <div key={k} className={ROW}>

@@ -6,8 +6,9 @@ import { CurrentInViewList } from "../AdminNav"
 import { TextEditor, type TextField } from "../CoachConfig"
 import { adminGate } from "../gate"
 import { PageHeader, Panel } from "../ui"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "AI coach" }
+export const metadata = { title: tr("AI coach") }
 
 const requestTime = () => Date.now()
 
@@ -17,9 +18,9 @@ const requestTime = () => Date.now()
  */
 /** The coach's prose texts, above the tools. */
 const PROSE = {
-  instructions: { label: "Instructions", description: "Keep the safety rules: no numbers without a tool, honest missing data, not medical advice.", rows: 18 },
-  summary_instructions: { label: "Conversation summaries", description: "Preserve user preferences and earlier decisions. Measurements must be fetched fresh.", rows: 18 },
-  workout_glance: { label: "Workout glance", description: "The one-line take on a workout, shown on its screen. The workout's numbers are added after it.", rows: 6 },
+  instructions: { label: tr("Instructions"), description: tr("Keep the safety rules: no numbers without a tool, honest missing data, not medical advice."), rows: 18 },
+  summary_instructions: { label: tr("Conversation summaries"), description: tr("Preserve user preferences and earlier decisions. Measurements must be fetched fresh."), rows: 18 },
+  workout_glance: { label: tr("Workout glance"), description: tr("The one-line take on a workout, shown on its screen. The workout's numbers are added after it."), rows: 6 },
 } as const
 
 export default async function CoachConfigPage({ searchParams }: { searchParams: Promise<{ item?: string }> }) {
@@ -47,11 +48,11 @@ export default async function CoachConfigPage({ searchParams }: { searchParams: 
   return (
     <>
       <PageHeader
-        title="AI coach"
-        description="How the coach talks and how it describes its tools to the model. Edits apply from the next message for everyone, and every save is kept as a version. What each tool can read is fixed in code."
+        title={tr("AI coach")}
+        description={tr("How the coach talks and how it describes its tools to the model. Edits apply from the next message for everyone, and every save is kept as a version. What each tool can read is fixed in code.")}
       />
       <div className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-6">
-        <nav aria-label="Coach settings" className="min-w-0 rounded-xl bg-card p-2 shadow-card ring-1 ring-border lg:sticky lg:top-20 lg:self-start">
+        <nav aria-label={tr("Coach settings")} className="min-w-0 rounded-xl bg-card p-2 shadow-card ring-1 ring-border lg:sticky lg:top-20 lg:self-start">
           <CurrentInViewList className="flex scroll-px-2 gap-1 overflow-x-auto [scrollbar-width:none] max-lg:-m-2 max-lg:p-2 max-lg:[mask-image:linear-gradient(to_left,transparent,black_32px)] lg:grid lg:overflow-visible">
             {items.map(({ id, label, icon: Icon }, i) => {
               const on = id === selected
@@ -87,7 +88,7 @@ export default async function CoachConfigPage({ searchParams }: { searchParams: 
               rows: prose.rows,
               hint: (selected === "instructions" || selected === "summary_instructions") && (
                 <>
-                  Placeholders:{" "}
+                  {tr("Placeholders:")}{" "}
                   {Object.entries(PLACEHOLDERS).map(([k, v], i) => (
                     <span key={k}>
                       {i > 0 && ", "}
@@ -107,15 +108,15 @@ export default async function CoachConfigPage({ searchParams }: { searchParams: 
                 </span>
                 <div className="min-w-0">
                   <h2 className="font-mono text-[16px] leading-6 font-semibold">{selected}</h2>
-                  <p className="text-[13px] leading-[18px] text-muted-foreground">Read-only tool: looks up the signed-in person’s own data, nobody else’s.</p>
+                  <p className="text-[13px] leading-[18px] text-muted-foreground">{tr("Read-only tool: looks up the signed-in person’s own data, nobody else’s.")}</p>
                 </div>
               </div>
               <div className="mt-5">{editor(field(`tool.${selected}`, "Description"), { rows: 3 })}</div>
             </Panel>
 
-            <Panel title="Parameters" description={Object.keys(doc.params).length ? "Types are fixed in code; the descriptions tell the model how to fill them in." : undefined}>
+            <Panel title={tr("Parameters")} description={Object.keys(doc.params).length ? "Types are fixed in code; the descriptions tell the model how to fill them in." : undefined}>
               {Object.keys(doc.params).length === 0 ? (
-                <p className="text-[14px] text-muted-foreground">This tool takes no parameters.</p>
+                <p className="text-[14px] text-muted-foreground">{tr("This tool takes no parameters.")}</p>
               ) : (
                 <div className="grid gap-4">
                   {Object.entries(doc.params).map(([p, v]) => (

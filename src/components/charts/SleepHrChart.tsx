@@ -11,6 +11,7 @@ import { EmptyState } from "@/components/shells/EmptyState"
 import { MetricState } from "@/components/shells/MetricState"
 import { ReasonPlaceholder } from "@/components/metrics/ReasonPlaceholder"
 import { AXIS, ChartFigure, GlowDot, GRID, LINE_CURSOR, Pill, TOOLTIP_CLASS, TooltipLine, useSeriesAnimation } from "./ChartFrame"
+import { t as tr } from "@/lib/i18n"
 
 export type SleepHr = {
   /** Epoch ms of the main sleep's start and end. */
@@ -56,7 +57,7 @@ function Chart({ hr, highlight }: { hr: SleepHr; highlight?: { start: number; en
   const summary = `Heart rate during sleep from ${at(bed, tz)} to ${at(wake, tz)}: low ${Math.min(...night)}, average ${avg}, high ${Math.max(...night)} beats per minute.`
 
   return (
-    <ChartFigure summary={summary} config={{ night: { label: "Heart rate", color: "var(--foreground)" } }} className={H}>
+    <ChartFigure summary={summary} config={{ night: { label: tr("Heart rate"), color: "var(--foreground)" } }} className={H}>
       <AreaChart data={rows} accessibilityLayer margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
         <defs>
           <linearGradient id={`sleep-hr-${id}`} x1="0" y1="0" x2="0" y2="1">
@@ -85,7 +86,7 @@ function Chart({ hr, highlight }: { hr: SleepHr; highlight?: { start: number; en
             stroke="var(--card)"
             strokeWidth={2}
             label={({ viewBox }: { viewBox?: { x?: number; y?: number; width?: number; height?: number } }) => (
-              <Pill x={(viewBox?.x ?? 0) + (viewBox?.width ?? 0) / 2} y={(viewBox?.y ?? 0) + (viewBox?.height ?? 0) + 14} anchor="middle" text={`Low ${low.v}`} />
+              <Pill x={(viewBox?.x ?? 0) + (viewBox?.width ?? 0) / 2} y={(viewBox?.y ?? 0) + (viewBox?.height ?? 0) + 14} anchor="middle" text={tr("Low {0}", [low.v])} />
             )}
           />
         )}
@@ -128,7 +129,7 @@ function Chart({ hr, highlight }: { hr: SleepHr; highlight?: { start: number; en
 export function SleepHrChart({ data, highlight }: SleepHrChartProps) {
   const empty = (
     <div className="grid place-items-center">
-      <EmptyState body="No heart-rate data for this night." />
+      <EmptyState body={tr("No heart-rate data for this night.")} />
     </div>
   )
   return (

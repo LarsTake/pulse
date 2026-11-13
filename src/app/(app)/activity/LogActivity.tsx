@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { t as tr } from "@/lib/i18n"
 
 /** The catalogue type a recent workout kind stands for, for Select Activity's "Most recent". */
 const RECENT_TYPE: Partial<Record<ActivityKind, string>> = { walk: "walking", run: "running", strength: "weightlifting", ride: "cycling" }
@@ -36,8 +37,8 @@ export function SelectActivity({ recent, onSelect }: { recent: ActivityKind[]; o
     return (tab === "all" || a.category === tab) && (!q || a.label.toLowerCase().includes(q))
   }
   const sections = [
-    { key: "recent", title: "Most recent", keys: recent.flatMap((k) => RECENT_TYPE[k] ?? []).filter(fits) },
-    { key: "az", title: "All A-Z", keys: ACTIVITY_TYPES.map((a) => a.key).filter(fits) },
+    { key: "recent", title: tr("Most recent"), keys: recent.flatMap((k) => RECENT_TYPE[k] ?? []).filter(fits) },
+    { key: "az", title: tr("All A-Z"), keys: ACTIVITY_TYPES.map((a) => a.key).filter(fits) },
   ]
   return (
     <div>
@@ -47,14 +48,14 @@ export function SelectActivity({ recent, onSelect }: { recent: ActivityKind[]; o
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for activities"
-          aria-label="Search for activities"
+          placeholder={tr("Search for activities")}
+          aria-label={tr("Search for activities")}
           autoComplete="off"
           className="h-12 rounded-xl bg-foreground/[0.06] pl-11 text-base"
         />
       </div>
-      <ToggleGroup type="single" value={tab} onValueChange={(v) => v && setTab(v as Tab)} aria-label="Category" spacing={0} className="mt-3 gap-1">
-        {[{ key: "all", label: "All" }, ...ACTIVITY_CATEGORIES].map((c) => (
+      <ToggleGroup type="single" value={tab} onValueChange={(v) => v && setTab(v as Tab)} aria-label={tr("Category")} spacing={0} className="mt-3 gap-1">
+        {[{ key: "all", label: tr("All") }, ...ACTIVITY_CATEGORIES].map((c) => (
           <ToggleGroupItem
             key={c.key}
             value={c.key}
@@ -92,7 +93,7 @@ export function SelectActivity({ recent, onSelect }: { recent: ActivityKind[]; o
             </section>
           )
       )}
-      {sections.every((s) => !s.keys.length) && <p className="py-8 text-center text-[15px] leading-[22px] text-foreground-secondary">No activities match “{query.trim()}”.</p>}
+      {sections.every((s) => !s.keys.length) && <p className="py-8 text-center text-[15px] leading-[22px] text-foreground-secondary">{tr("No activities match “")}{query.trim()}”.</p>}
     </div>
   )
 }
@@ -139,8 +140,7 @@ function AddActivitySheet({ open, onOpenChange, recent, onSave }: { open: boolea
         <>
           <Button variant="ghost" size="touch" onClick={() => setPicking(false)} className="-ml-2 mb-2 gap-1 px-2 text-muted-foreground">
             <ChevronLeft aria-hidden strokeWidth={2} className="size-5" />
-            Back
-          </Button>
+            {tr("Back")}</Button>
           <SelectActivity
             recent={recent}
             onSelect={(k) => {
@@ -153,8 +153,7 @@ function AddActivitySheet({ open, onOpenChange, recent, onSave }: { open: boolea
         <div className="space-y-7">
           <p className="flex gap-3 rounded-xl bg-strain/15 px-4 py-3 text-[15px] leading-[22px] text-pretty text-strain-text">
             <Info aria-hidden strokeWidth={1.75} className="mt-0.5 size-5 shrink-0" />
-            Your band’s heart rate over this time gives the activity its Strain.
-          </p>
+            {tr("Your band’s heart rate over this time gives the activity its Strain.")}</p>
           <button
             type="button"
             onClick={() => setPicking(true)}
@@ -166,11 +165,10 @@ function AddActivitySheet({ open, onOpenChange, recent, onSave }: { open: boolea
           </button>
           <section aria-labelledby="add-activity-time" className="space-y-2">
             <h3 id="add-activity-time" className={SHEET_SECTION}>
-              Time
-            </h3>
+              {tr("Time")}</h3>
             {[
-              { id: "activity-start", label: "Start time", value: start, set: setStart },
-              { id: "activity-end", label: "End time", value: end, set: setEnd },
+              { id: "activity-start", label: tr("Start time"), value: start, set: setStart },
+              { id: "activity-end", label: tr("End time"), value: end, set: setEnd },
             ].map((f) => (
               <div key={f.id} className="flex min-h-14 items-center justify-between gap-3 px-1">
                 <Label htmlFor={f.id} className="text-[17px] leading-6 font-normal">
@@ -188,8 +186,7 @@ function AddActivitySheet({ open, onOpenChange, recent, onSave }: { open: boolea
             ))}
             {end <= start && (
               <p role="alert" className="px-1 text-xs leading-4 font-medium text-recovery-red-text">
-                End after the start.
-              </p>
+                {tr("End after the start.")}</p>
             )}
           </section>
         </div>
@@ -236,7 +233,7 @@ function StartActivitySheet({
         >
           <div className="flex items-center gap-2 bg-background/80 px-2 py-2">
             <DialogPrimitive.Close asChild>
-              <Button variant="ghost" size="icon-touch" aria-label="Close">
+              <Button variant="ghost" size="icon-touch" aria-label={tr("Close")}>
                 <X aria-hidden strokeWidth={1.75} className="size-[22px]" />
               </Button>
             </DialogPrimitive.Close>
@@ -267,12 +264,11 @@ function StartActivitySheet({
             <>
               <div className="flex justify-end px-4 pt-3">
                 <Label className="gap-3 text-xs leading-4 font-bold tracking-[0.1em] uppercase">
-                  Track route
-                  <Switch checked={route} onCheckedChange={setRoute} />
+                  {tr("Track route")}<Switch checked={route} onCheckedChange={setRoute} />
                 </Label>
               </div>
               <div className="grid flex-1 place-items-center">
-                <div role="img" aria-label="Live heart rate not available" className="grid size-62 place-items-center rounded-full bg-strain text-center text-on-strain">
+                <div role="img" aria-label={tr("Live heart rate not available")} className="grid size-62 place-items-center rounded-full bg-strain text-center text-on-strain">
                   <div>
                     <Heart aria-hidden fill="currentColor" strokeWidth={0} className="mx-auto size-9" />
                     <p className="font-numeric text-[88px] leading-none font-bold">{MISSING}</p>
@@ -285,13 +281,11 @@ function StartActivitySheet({
                     {strainTarget ? `${formatValue("decimal1", strainTarget[0])}–${formatValue("decimal1", strainTarget[1])}` : MISSING}
                   </span>
                   <Label htmlFor="start-target" className="flex-1 text-xs leading-4 font-bold tracking-[0.1em] uppercase">
-                    Strain target
-                  </Label>
+                    {tr("Strain target")}</Label>
                   <Switch id="start-target" checked={target} onCheckedChange={setTarget} disabled={!strainTarget} />
                 </div>
                 <Button size="sheet" className="mt-3 w-full" disabled={!onStart} onClick={() => onStart?.({ type, trackRoute: route, target })}>
-                  Start activity
-                </Button>
+                  {tr("Start activity")}</Button>
               </div>
             </>
           )}

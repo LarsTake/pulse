@@ -2,15 +2,16 @@
 import type { TrendRange } from "@/lib/url"
 import { TREND_GROUPS, TREND_METRICS, type TrendMetricKey } from "@/server/queries/trends"
 import { MetricSheet } from "./MetricSheet"
+import { t as tr } from "@/lib/i18n"
 
 /** Chart card beside the Averages card from 1280 px. */
 export const TRENDS_GRID = "grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-start xl:gap-4"
 
 export const PERIOD: Record<TrendRange, { label: string; prior: string }> = {
-  w: { label: "Last 7 days", prior: "the 7 days before" },
-  m: { label: "Last 30 days", prior: "the 30 days before" },
-  "6m": { label: "Last 6 months", prior: "the 6 months before" },
-  "1y": { label: "Last 12 months", prior: "the year before" },
+  w: { label: tr("Last 7 days"), prior: "the 7 days before" },
+  m: { label: tr("Last 30 days"), prior: "the 30 days before" },
+  "6m": { label: tr("Last 6 months"), prior: "the 6 months before" },
+  "1y": { label: tr("Last 12 months"), prior: "the year before" },
 }
 
 /**

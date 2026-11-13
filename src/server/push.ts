@@ -9,6 +9,7 @@ import { coachSettings, dailyScores, pushSubscriptions } from "./db/schema";
 import { coachAccess } from "./coach/store";
 import { userTimeZone } from "./profile";
 import { localDay, localMinutes } from "./time";
+import { t as tr } from "@/lib/i18n"
 
 export type PushPayload = { title: string; body: string; url: string; tag: string };
 type Sub = { endpoint: string; p256dh: string; auth: string };
@@ -82,7 +83,7 @@ export async function notifyRecovery(db: Db, userId: number, now = Math.floor(Da
     const subs = await claim(db, userId, "lastRecoveryDay", day);
     if (!subs.length) return;
     const value = Math.round(r.value);
-    await sendPush(db, userId, { title: "Recovery ready", body: `${value}%: ${BAND_WORD[recoveryBand(value)]}`, url: "/recovery", tag: "recovery" }, subs);
+    await sendPush(db, userId, { title: tr("Recovery ready"), body: `${value}%: ${BAND_WORD[recoveryBand(value)]}`, url: "/recovery", tag: "recovery" }, subs);
   } catch (err) {
     console.error(`[push] user ${userId} recovery alert: ${err instanceof Error ? err.message : String(err)}`);
   }
@@ -95,7 +96,7 @@ export async function notifySyncProblem(db: Db, userId: number, now = Math.floor
     const tz = (await userTimeZone(db, userId)) ?? "UTC";
     const subs = await claim(db, userId, "lastSyncAlertDay", localDay(now, tz));
     if (!subs.length) return;
-    await sendPush(db, userId, { title: "Pulse can’t sync", body: "Google access was lost. Open Settings to reconnect.", url: "/settings", tag: "sync" }, subs);
+    await sendPush(db, userId, { title: tr("Pulse can’t sync"), body: tr("Google access was lost. Open Settings to reconnect."), url: "/settings", tag: "sync" }, subs);
   } catch (err) {
     console.error(`[push] user ${userId} sync alert: ${err instanceof Error ? err.message : String(err)}`);
   }
@@ -127,7 +128,7 @@ export async function notifyBrief(db: Db, userId: number, now = Math.floor(Date.
       .returning({ userId: coachSettings.userId });
     if (!claimed) return;
     const value = Math.round(r.value);
-    await sendPush(db, userId, { title: "Your brief is ready", body: `Recovery ${value}%: ${BAND_WORD[recoveryBand(value)]}. Tap for today’s brief.`, url: "/coach?brief=1", tag: "brief" });
+    await sendPush(db, userId, { title: tr("Your brief is ready"), body: tr("Recovery {0}%: {1}. Tap for today’s brief.", [value, BAND_WORD[recoveryBand(value)]]), url: "/coach?brief=1", tag: "brief" });
   } catch (err) {
     console.error(`[push] user ${userId} brief alert: ${err instanceof Error ? err.message : String(err)}`);
   }

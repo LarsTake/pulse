@@ -8,8 +8,9 @@ import { CAPTION } from "@/components/metrics/primitives"
 import { DetailShell } from "@/components/shells/DetailShell"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { Button } from "@/components/ui/button"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Your data" }
+export const metadata = { title: tr("Your data") }
 
 const BODY = "max-w-[65ch] text-[15px] leading-[22px] text-pretty text-foreground-secondary"
 const grouped = new Intl.NumberFormat("en")
@@ -35,22 +36,20 @@ export default async function YourDataPage() {
 
   return (
     <DetailShell
-      title="Your data"
+      title={tr("Your data")}
       primary={
         <div className="mx-auto flex w-full max-w-[640px] flex-col gap-3 md:gap-4">
-          <SectionShell variant="card" level={2} title="Daily scores" aside={<span className={`${CAPTION} tabular-nums`}>{grouped.format(vm.days)}&nbsp;days</span>}>
+          <SectionShell variant="card" level={2} title={tr("Daily scores")} aside={<span className={`${CAPTION} tabular-nums`}>{grouped.format(vm.days)}{tr("\u00a0days")}</span>}>
             <p className={BODY}>
-              One row per day{since}: Recovery, Strain, sleep performance, hours and consistency, heart rate variability, resting heart rate, respiratory rate,
-              stress and steps.
-            </p>
+              {tr("One row per day")}{since}{tr(": Recovery, Strain, sleep performance, hours and consistency, heart rate variability, resting heart rate, respiratory rate, stress and steps.")}</p>
             <div className="mt-4 grid grid-cols-2 gap-2">
               <DownloadLink href="/export/daily?format=csv" label="CSV" />
               <DownloadLink href="/export/daily?format=json" label="JSON" />
             </div>
           </SectionShell>
 
-          <SectionShell variant="card" level={2} title="Journal" aside={<span className={`${CAPTION} tabular-nums`}>{grouped.format(vm.answers)}&nbsp;answers</span>}>
-            <p className={BODY}>Every check-in answer, hidden behaviours included. The JSON also lists your behaviours.</p>
+          <SectionShell variant="card" level={2} title={tr("Journal")} aside={<span className={`${CAPTION} tabular-nums`}>{grouped.format(vm.answers)}{tr("\u00a0answers")}</span>}>
+            <p className={BODY}>{tr("Every check-in answer, hidden behaviours included. The JSON also lists your behaviours.")}</p>
             <div className="mt-4 grid grid-cols-2 gap-2">
               <DownloadLink href="/export/journal?format=csv" label="CSV" />
               <DownloadLink href="/export/journal?format=json" label="JSON" />
@@ -58,15 +57,15 @@ export default async function YourDataPage() {
           </SectionShell>
 
           {coach && (
-            <SectionShell variant="card" level={2} title="Coach">
-              <p className={BODY}>Every saved coach chat, with the data cards it showed.</p>
+            <SectionShell variant="card" level={2} title={tr("Coach")}>
+              <p className={BODY}>{tr("Every saved coach chat, with the data cards it showed.")}</p>
               <div className="mt-4">
                 <DownloadLink href="/export/coach" label="JSON" />
               </div>
             </SectionShell>
           )}
 
-          <p className={CAPTION}>No export includes your Google access tokens or your AI provider key.</p>
+          <p className={CAPTION}>{tr("No export includes your Google access tokens or your AI provider key.")}</p>
         </div>
       }
     />

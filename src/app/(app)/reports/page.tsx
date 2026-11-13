@@ -8,8 +8,9 @@ import { MiniRing } from "@/components/metrics/MiniRing"
 import { DetailShell } from "@/components/shells/DetailShell"
 import { EmptyState } from "@/components/shells/EmptyState"
 import { LinkList, type LinkListRow, MORE_COLUMN } from "@/components/shells/LinkList"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Reports" }
+export const metadata = { title: tr("Reports") }
 
 /** The period's average Recovery as the reference app's 22 px ring and its value. */
 function Aside({ r }: { r: ReportListItem }) {
@@ -17,7 +18,7 @@ function Aside({ r }: { r: ReportListItem }) {
     <span className="flex shrink-0 items-center gap-2">
       <MiniRing variant="recovery" value={r.recovery} />
       <span className="w-[4ch] text-right font-numeric text-[15px] leading-5 font-bold tabular-nums">
-        <span className="sr-only">, average Recovery </span>
+        <span className="sr-only">{tr(", average Recovery")}{" "}</span>
         {formatValue("int", r.recovery)}
         {r.recovery !== null && "%"}
       </span>
@@ -62,7 +63,7 @@ function ViewSwitch({ view }: { view: View }) {
     </Link>
   )
   return (
-    <nav aria-label="Report period" className="flex gap-0.5 rounded-lg bg-muted p-0.5">
+    <nav aria-label={tr("Report period")} className="flex gap-0.5 rounded-lg bg-muted p-0.5">
       {item("weeks", "Weekly")}
       {item("months", "Monthly")}
     </nav>
@@ -88,10 +89,10 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
   const shown = view === "weeks" && !all ? groups.slice(0, RECENT_MONTHS) : groups
   return (
     <DetailShell
-      title="Reports"
+      title={tr("Reports")}
       primary={
         empty ? (
-          <EmptyState body="No reports yet. Your first weekly report appears once a week has data." />
+          <EmptyState body={tr("No reports yet. Your first weekly report appears once a week has data.")} />
         ) : (
           // One 640 px column like More and Settings: two columns of uneven month groups left holes.
           <div className={MORE_COLUMN}>
@@ -106,8 +107,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
                 scroll={false}
                 className="mx-auto grid h-11 place-items-center rounded-full px-5 text-xs font-bold tracking-[0.1em] text-foreground/85 uppercase outline-none transition-[background-color,color] duration-150 ease-standard hover:bg-foreground/[0.06] hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
               >
-                Show earlier weeks
-              </Link>
+                {tr("Show earlier weeks")}</Link>
             )}
           </div>
         )

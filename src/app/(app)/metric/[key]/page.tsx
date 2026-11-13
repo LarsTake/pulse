@@ -16,15 +16,16 @@ import { pageDay, type SearchParams } from "../../_lib/day"
 import { mapMetric } from "../../_lib/view"
 import { RangeStats, RangeStatsCard } from "./RangeStats"
 import { METRIC_GRID, MetricSection } from "./sections"
+import { t as tr } from "@/lib/i18n"
 
 const STACK: Record<"calories" | "distance", readonly TrendSeries[]> = {
   calories: [
-    { key: "resting", label: "Resting", color: DATA_COLORS["energy-resting"].css },
-    { key: "active", label: "Active", color: DATA_COLORS["energy-active"].css },
+    { key: "resting", label: tr("Resting"), color: DATA_COLORS["energy-resting"].css },
+    { key: "active", label: tr("Active"), color: DATA_COLORS["energy-active"].css },
   ],
   distance: [
-    { key: "everyday", label: "Everyday", color: DATA_COLORS["energy-resting"].css },
-    { key: "workouts", label: "Workouts", color: DATA_COLORS["energy-active"].css },
+    { key: "everyday", label: tr("Everyday"), color: DATA_COLORS["energy-resting"].css },
+    { key: "workouts", label: tr("Workouts"), color: DATA_COLORS["energy-active"].css },
   ],
 }
 
@@ -59,19 +60,19 @@ export default async function MetricPage({ params, searchParams }: PageProps<"/m
       summary={lead && <MetricSection s={lead} vm={vm} timeZone={timeZone} timeFormat={timeFormat} />}
       primary={
         empty ? (
-          <SectionShell variant="card" level={2} title="History">
+          <SectionShell variant="card" level={2} title={tr("History")}>
             <EmptyState
               body={
                 vm.group === "nutrition"
                   ? `No ${vm.label.toLowerCase()} logged yet. Log it in Journal, or in Fitbit or Google Health, and it shows here.`
                   : `No ${vm.label.toLowerCase()} from Google Health yet. It shows here once your phone, Fitbit or a connected device records it and syncs.`
               }
-              action={vm.group === "nutrition" ? { label: "Open Journal", href: "/journal" } : undefined}
+              action={vm.group === "nutrition" ? { label: tr("Open Journal"), href: "/journal" } : undefined}
             />
           </SectionShell>
         ) : (
           <div className={METRIC_GRID}>
-            <SectionShell variant="card" level={2} title="History">
+            <SectionShell variant="card" level={2} title={tr("History")}>
               <TrendChart
                 key={vm.key}
                 label={vm.label}
@@ -96,7 +97,7 @@ export default async function MetricPage({ params, searchParams }: PageProps<"/m
       }
       secondary={empty ? [] : more.map((s) => <MetricSection key={s.kind} s={s} vm={vm} timeZone={timeZone} timeFormat={timeFormat} className={more.length === 1 ? "xl:col-span-2" : undefined} />)}
       footer={
-        <SectionShell variant="card" level={2} title={`About ${vm.label.toLowerCase()}`}>
+        <SectionShell variant="card" level={2} title={tr("About {0}", [vm.label.toLowerCase()])}>
           <div className="max-w-[65ch] space-y-2 text-[15px] leading-[22px] text-pretty text-foreground-secondary">
             <p>{vm.about}</p>
             <p>{vm.source}</p>

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { BehaviorPicker, saveSelection, shownOf } from "./SelectBehaviors"
+import { t as tr } from "@/lib/i18n"
 
 /**
  * More › Behaviours (U21, journal-behavior-picker-*): choose what the journal asks from the catalogue and your own behaviours,
@@ -67,8 +68,7 @@ export function Behaviours({ vm }: { vm: BehavioursVM }) {
   return (
     <div className="mx-auto flex w-full max-w-[640px] flex-col gap-6">
       <p className="max-w-[65ch] text-[15px] leading-[22px] text-pretty text-foreground-secondary">
-        Choose what your journal asks. A behaviour you leave out keeps its past answers, and they still count in your insights.
-      </p>
+        {tr("Choose what your journal asks. A behaviour you leave out keeps its past answers, and they still count in your insights.")}</p>
       <BehaviorPicker tags={vm.tags} initial={initial} selected={selected} onChange={setSelected} />
       {/* Pinned over the list once something changed, clear of the round action at the phone's foot. */}
       {(dirty || saving) && (
@@ -78,11 +78,10 @@ export function Behaviours({ vm }: { vm: BehavioursVM }) {
           </Button>
         </div>
       )}
-      <SectionShell variant="card" level={2} title="Your own">
+      <SectionShell variant="card" level={2} title={tr("Your own")}>
         <form onSubmit={add} className="space-y-2" noValidate>
           <Label htmlFor="new-behaviour" className="text-[15px] leading-[22px] font-medium">
-            Add a behaviour
-          </Label>
+            {tr("Add a behaviour")}</Label>
           <div className="flex gap-2">
             <Input
               ref={input}
@@ -94,7 +93,7 @@ export function Behaviours({ vm }: { vm: BehavioursVM }) {
                 setLabel(e.target.value)
                 setAddError(null)
               }}
-              placeholder="e.g. Cold shower…"
+              placeholder={tr("e.g. Cold shower…")}
               autoComplete="off"
               maxLength={32}
               aria-invalid={!!addError}

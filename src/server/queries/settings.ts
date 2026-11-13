@@ -7,6 +7,7 @@ import { dailyScores, journalEntries, journalTags, oauthTokens, reports, syncSta
 import { firstDay, type QueryCtx, todayOf } from "./common";
 import { latestReport } from "./home";
 import type { MoreVM, SettingsVM, ShellStatusVM, YourDataVM } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 export { requestSync } from "../worker";
 
@@ -15,24 +16,24 @@ const STALE_MS = 2 * 3600_000;
 
 /** Google sync jobs grouped as Settings lists them. */
 const GROUPS: { key: string; label: string; types: string[] }[] = [
-  { key: "heart-rate", label: "Heart rate", types: ["heart-rate"] },
-  { key: "steps", label: "Steps", types: ["steps", "steps-daily"] },
-  { key: "sleep", label: "Sleep", types: ["sleep"] },
-  { key: "hrv", label: "Heart rate variability", types: ["daily-heart-rate-variability"] },
-  { key: "rhr", label: "Resting heart rate", types: ["daily-resting-heart-rate"] },
-  { key: "resp", label: "Respiratory rate", types: ["daily-respiratory-rate"] },
-  { key: "temp", label: "Skin temperature", types: ["daily-sleep-temperature-derivations"] },
-  { key: "zones", label: "Heart rate zones", types: ["daily-heart-rate-zones", "time-in-heart-rate-zone"] },
-  { key: "spo2", label: "Blood oxygen", types: ["daily-oxygen-saturation"] },
-  { key: "exercise", label: "Exercise", types: ["exercise"] },
-  { key: "vo2max", label: "VO2 max", types: ["daily-vo2-max", "run-vo2-max"] },
-  { key: "calories", label: "Calories", types: ["total-calories"] },
-  { key: "weight", label: "Weight and body fat", types: ["weight", "body-fat", "height"] },
-  { key: "activity", label: "Distance, floors and active minutes", types: ["distance", "floors", "altitude", "active-zone-minutes", "active-minutes", "active-energy-burned", "sedentary-period", "heart-rate-daily", "swim-lengths-data"] },
+  { key: "heart-rate", label: tr("Heart rate"), types: ["heart-rate"] },
+  { key: "steps", label: tr("Steps"), types: ["steps", "steps-daily"] },
+  { key: "sleep", label: tr("Sleep"), types: ["sleep"] },
+  { key: "hrv", label: tr("Heart rate variability"), types: ["daily-heart-rate-variability"] },
+  { key: "rhr", label: tr("Resting heart rate"), types: ["daily-resting-heart-rate"] },
+  { key: "resp", label: tr("Respiratory rate"), types: ["daily-respiratory-rate"] },
+  { key: "temp", label: tr("Skin temperature"), types: ["daily-sleep-temperature-derivations"] },
+  { key: "zones", label: tr("Heart rate zones"), types: ["daily-heart-rate-zones", "time-in-heart-rate-zone"] },
+  { key: "spo2", label: tr("Blood oxygen"), types: ["daily-oxygen-saturation"] },
+  { key: "exercise", label: tr("Exercise"), types: ["exercise"] },
+  { key: "vo2max", label: tr("VO2 max"), types: ["daily-vo2-max", "run-vo2-max"] },
+  { key: "calories", label: tr("Calories"), types: ["total-calories"] },
+  { key: "weight", label: tr("Weight and body fat"), types: ["weight", "body-fat", "height"] },
+  { key: "activity", label: tr("Distance, floors and active minutes"), types: ["distance", "floors", "altitude", "active-zone-minutes", "active-minutes", "active-energy-burned", "sedentary-period", "heart-rate-daily", "swim-lengths-data"] },
   // logged-entries: Journal › Log's import of entries logged in other apps (sync.ts LOG_IMPORT_KEY).
-  { key: "nutrition", label: "Food and water", types: ["hydration-log", "nutrition-log", "logged-entries"] },
-  { key: "vitals", label: "Glucose and core temperature", types: ["blood-glucose", "core-body-temperature"] },
-  { key: "rhythm", label: "ECG and irregular rhythm", types: ["electrocardiogram", "irregular-rhythm-notification"] },
+  { key: "nutrition", label: tr("Food and water"), types: ["hydration-log", "nutrition-log", "logged-entries"] },
+  { key: "vitals", label: tr("Glucose and core temperature"), types: ["blood-glucose", "core-body-temperature"] },
+  { key: "rhythm", label: tr("ECG and irregular rhythm"), types: ["electrocardiogram", "irregular-rhythm-notification"] },
 ];
 
 /**
@@ -116,7 +117,7 @@ export async function getSettings(ctx: QueryCtx): Promise<SettingsVM> {
     ctx.mode === "demo"
       ? rows
           .filter((r) => r.type === "seed")
-          .map((r) => ({ key: "seed", label: "Demo generator", lastSuccessAt: r.lastSuccessAt && r.lastSuccessAt * 1000, status: statusOf(r.lastSuccessAt, r.lastError), error: rowError(r.lastError) }))
+          .map((r) => ({ key: "seed", label: tr("Demo generator"), lastSuccessAt: r.lastSuccessAt && r.lastSuccessAt * 1000, status: statusOf(r.lastSuccessAt, r.lastError), error: rowError(r.lastError) }))
       : GROUPS.map((g) => {
           const members = rows.filter((r) => g.types.includes(r.type));
           const successes = members.map((r) => r.lastSuccessAt);
@@ -130,8 +131,8 @@ export async function getSettings(ctx: QueryCtx): Promise<SettingsVM> {
     mode: ctx.mode,
     source:
       ctx.mode === "demo"
-        ? { label: "Demo data", status: "demo" }
-        : { label: "Google Health", status: auth, needsPermissions },
+        ? { label: tr("Demo data"), status: "demo" }
+        : { label: tr("Google Health"), status: auth, needsPermissions },
     import: ctx.mode === "google" && auth === "connected" ? importProgress(rows) : null,
     sync,
     profile: {

@@ -14,6 +14,7 @@ import { ChartContainer } from "@/components/ui/chart"
 import { SkeletonText } from "@/components/ui/skeleton"
 import { Wordmark } from "@/components/brand/Wordmark"
 import { MetricTags, type TagKind, CAP_TRIM } from "./primitives"
+import { t as tr } from "@/lib/i18n"
 
 export type DialSize = "sm" | "md" | "lg"
 export type DialVariant = "recovery" | "strain" | "sleep" | "stat" | "gauge"
@@ -355,7 +356,7 @@ export function ScoreDial(props: ScoreDialProps) {
       <Link
         href={href}
         data-dial={variant}
-        aria-label={`${aria}. Open ${r.label} details`}
+        aria-label={tr("{0}. Open {1} details", [aria, r.label])}
         className="flex min-w-24 flex-col items-center gap-1 rounded-xl p-1 transition-[scale,color] duration-150 ease-standard outline-none hover:text-foreground-secondary focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
       >
         {content}

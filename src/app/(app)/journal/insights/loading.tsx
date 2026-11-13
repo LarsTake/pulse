@@ -1,6 +1,7 @@
 import { DriverListSkeleton } from "@/components/metrics/DriverList"
 import { DetailShell } from "@/components/shells/DetailShell"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
+import { t as tr } from "@/lib/i18n"
 
 const BODY = "text-[15px] leading-[22px]"
 
@@ -12,7 +13,7 @@ const BODY = "text-[15px] leading-[22px]"
 export default function Loading() {
   return (
     <DetailShell loading
-      title="Behaviour insights"
+      title={tr("Behaviour insights")}
       hero={
         <div aria-hidden data-hero-align="start" className="w-full space-y-4 xl:w-[360px]">
           <div className="space-y-2">
@@ -22,7 +23,7 @@ export default function Loading() {
               <SkeletonText className={`${BODY} w-full`} />
               <SkeletonText className={`${BODY} w-1/3`} />
             </div>
-            <p className="text-xs leading-4 font-medium text-muted-foreground">Updated daily</p>
+            <p className="text-xs leading-4 font-medium text-muted-foreground">{tr("Updated daily")}</p>
           </div>
           <Skeleton className="h-11 w-[140px] rounded-lg" />
         </div>
@@ -30,8 +31,7 @@ export default function Loading() {
       summary={<DriverListSkeleton rows={6} />}
       footer={
         <p className="text-xs leading-4 font-medium text-pretty text-muted-foreground">
-          Effects are differences in averages, not proof of cause. Change one habit at a time to see what it really does.
-        </p>
+          {tr("Effects are differences in averages, not proof of cause. Change one habit at a time to see what it really does.")}</p>
       }
     />
   )

@@ -7,6 +7,7 @@ import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { EmptyState } from "@/components/shells/EmptyState"
 import { MetricState } from "@/components/shells/MetricState"
 import { LABEL } from "@/components/metrics/primitives"
+import { t as tr } from "@/lib/i18n"
 
 /** `zone` 0-5 orders the rows (0 is time under Zone 1: `min` 0, `max` the bpm below Zone 1); `label` names it ("Zone 1"). */
 export type ZoneRow = {
@@ -56,8 +57,7 @@ function Rows({ zones, note, noteLink }: { zones: ZoneRow[]; note?: string; note
     return (
       <div className="flex flex-1 flex-col justify-center">
         <p className="rounded-lg bg-secondary px-3 py-3 text-[15px] leading-[22px] text-pretty text-foreground-secondary">
-          Heart rate stayed under the {lowest.label} zone ({lowest.min}{"\u00a0"}bpm) the whole time.
-        </p>
+          {tr("Heart rate stayed under the")}{" "}{lowest.label} {" "}{tr("zone (")}{lowest.min}{"\u00a0"}{tr("bpm) the whole time.")}</p>
         <Note note={note} link={noteLink} />
       </div>
     )
@@ -69,11 +69,9 @@ function Rows({ zones, note, noteLink }: { zones: ZoneRow[]; note?: string; note
       <div aria-hidden className="mb-2 flex items-baseline justify-between px-1">
         <span className={cn(LABEL, "flex items-baseline gap-1.5 text-muted-foreground", !typical && "invisible")}>
           <span className="size-2.5 self-center rounded-[2px] bg-(image:--pattern-hatch) ring-1 ring-border" />
-          Typical range
-        </span>
+          {tr("Typical range")}</span>
         <span className={cn(LABEL, "flex items-baseline gap-2 text-muted-foreground")}>
-          Duration
-          <span className="font-numeric text-[15px] leading-5 font-bold text-foreground tabular-nums">
+          {tr("Duration")}<span className="font-numeric text-[15px] leading-5 font-bold text-foreground tabular-nums">
             {hmm(Math.floor(T / 60))}
             <span className="text-xs text-muted-foreground">:{String(T % 60).padStart(2, "0")}</span>
           </span>
@@ -91,7 +89,7 @@ function Rows({ zones, note, noteLink }: { zones: ZoneRow[]; note?: string; note
           return (
             <li
               key={z.zone}
-              aria-label={`${z.label} zone, ${spoken}, ${durationWords(minutes)}, ${sh === "<1%" ? "under 1 percent" : sh.replace("%", " percent")}`}
+              aria-label={tr("{0} zone, {1}, {2}, {3}", [z.label, spoken, durationWords(minutes), sh === "<1%" ? "under 1 percent" : sh.replace("%", " percent")])}
               className={cn("flex flex-1 flex-col justify-center gap-2 rounded-lg bg-secondary px-3 py-2.5", !z.seconds && "opacity-40")}
             >
               <div aria-hidden className="flex items-baseline gap-2">

@@ -27,6 +27,7 @@ import { toStrainScale } from "@/core/scoring/strain";
 import { stressLevel } from "@/lib/bands";
 import { addDays, localDay, localMidnight } from "../time";
 import type { ActivityKind, DayPoint, Metric, MetricTag, ReasonCode, SleepPlanVM, Span, StressDayChart, TimelineItem, TimePoint } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 export type QueryCtx = {
   db: Db;
@@ -346,8 +347,8 @@ export async function daySpans(ctx: QueryCtx, row: DayRow | undefined, day: stri
 export function daySpansOf(row: DayRow | undefined, dayStart: number, exs: ExerciseRow[]): Span[] {
   const spans: Span[] = [];
   const s = row?.sleep;
-  if (s?.main) spans.push({ kind: "sleep", label: "Sleep", start: ms(Math.max(s.main.start, dayStart)), end: ms(s.main.end) });
-  for (const n of s?.naps ?? []) spans.push({ kind: "nap", label: "Nap", start: ms(n.start), end: ms(n.end) });
+  if (s?.main) spans.push({ kind: "sleep", label: tr("Sleep"), start: ms(Math.max(s.main.start, dayStart)), end: ms(s.main.end) });
+  for (const n of s?.naps ?? []) spans.push({ kind: "nap", label: tr("Nap"), start: ms(n.start), end: ms(n.end) });
   for (const e of exs) spans.push({ kind: "workout", label: SPAN_LABEL[activityKind(e.type)], start: ms(e.startTs), end: ms(e.endTs) });
   return spans;
 }

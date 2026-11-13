@@ -5,13 +5,14 @@ import { CalendarDays, Ellipsis, HeartPulse } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, MENU_ITEM, MENU_PANEL } from "@/components/ui/dropdown-menu"
+import { t as tr } from "@/lib/i18n"
 
 /** The activity's "..." (activity-weightlifting-detail-top): the day's Strain and the heart-rate settings its zones come from. Pulse can't edit an imported workout. */
 export function ActivityMenu({ strainHref, settingsHref }: { strainHref: string; settingsHref: string }) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon-touch" aria-label="More for this activity" className="text-foreground hover:bg-foreground/8">
+        <Button variant="ghost" size="icon-touch" aria-label={tr("More for this activity")} className="text-foreground hover:bg-foreground/8">
           <Ellipsis aria-hidden strokeWidth={2} className="size-6" />
         </Button>
       </DropdownMenuTrigger>
@@ -19,14 +20,12 @@ export function ActivityMenu({ strainHref, settingsHref }: { strainHref: string;
         <DropdownMenuItem asChild className={MENU_ITEM}>
           <Link href={strainHref}>
             <CalendarDays aria-hidden strokeWidth={1.75} className="size-5 text-foreground-secondary" />
-            Strain for this day
-          </Link>
+            {tr("Strain for this day")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className={MENU_ITEM}>
           <Link href={settingsHref}>
             <HeartPulse aria-hidden strokeWidth={1.75} className="size-5 text-foreground-secondary" />
-            Heart-rate settings
-          </Link>
+            {tr("Heart-rate settings")}</Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

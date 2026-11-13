@@ -9,12 +9,13 @@ import { getDb } from "../db";
 import { dashboardMetrics } from "../db/schema";
 import { dashboardDefault } from "../queries/home";
 import type { ActionResult } from "./journal";
+import { t as tr } from "@/lib/i18n"
 
 const Dashboard = z.object({
   keys: z
-    .array(z.string().refine(isDashboardKey, { message: "Unknown metric" }))
+    .array(z.string().refine(isDashboardKey, { message: tr("Unknown metric") }))
     .min(1, "Choose at least one metric")
-    .refine((k) => new Set(k).size === k.length, { message: "A metric is listed twice" }),
+    .refine((k) => new Set(k).size === k.length, { message: tr("A metric is listed twice") }),
 });
 
 /** Saves the chosen metrics in order. The default list is stored as no rows, so a later default change reaches it. */

@@ -24,6 +24,7 @@ import {
 import { hrChartOf, zoneNote, zoneRows } from "./strain";
 import type { Metric } from "@/lib/reasons";
 import type { ActivityVM, KeyStat, ZoneRow } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 /** Activity `/activity/[id]` (spec §7.4); null for an unknown id. */
 export async function getActivity(id: string, ctx: QueryCtx): Promise<ActivityVM | null> {
@@ -82,7 +83,7 @@ export async function getActivity(id: string, ctx: QueryCtx): Promise<ActivityVM
   const hrr: ActivityVM["hrr"] =
     hrr60 == null
       ? none("insufficient_hr_data")
-      : ok(hrr60 >= 20 ? { value: hrr60, tone: "optimal", label: "Good" } : hrr60 >= 12 ? { value: hrr60, tone: "neutral", label: "Typical" } : { value: hrr60, tone: "warning", label: "Low" });
+      : ok(hrr60 >= 20 ? { value: hrr60, tone: "optimal", label: tr("Good") } : hrr60 >= 12 ? { value: hrr60, tone: "neutral", label: tr("Typical") } : { value: hrr60, tone: "warning", label: tr("Low") });
 
   return {
     id,

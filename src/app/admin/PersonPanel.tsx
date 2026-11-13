@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch"
 import { CoachSwitch, run } from "./AdminClient"
 import type { Person } from "./People"
 import { BTN, Pill, relative, shortDate } from "./ui"
+import { t as tr } from "@/lib/i18n"
 
 const ROLE = { owner: "Owner", admin: "Admin", user: "Member" } as const
 
@@ -36,8 +37,7 @@ function Confirm({ open, onOpenChange, title, body, action, danger, pending, onC
         {children}
         <DialogFooter>
           <button type="button" className={cn(BTN.outline, "h-9 px-4 text-[14px] pointer-coarse:h-10")} onClick={() => onOpenChange(false)} disabled={pending}>
-            Cancel
-          </button>
+            {tr("Cancel")}</button>
           <button type="button" className={cn(danger ? BTN.danger : BTN.primary, "h-9 px-4 text-[14px] pointer-coarse:h-10")} onClick={onConfirm} disabled={pending} aria-busy={pending || undefined}>
             {pending ? "Working…" : action}
           </button>
@@ -141,7 +141,7 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
         <SheetContent side="right" showCloseButton={false} className="gap-0 overflow-y-auto overscroll-none bg-background p-0 pb-[env(safe-area-inset-bottom)] data-[side=right]:w-full data-[side=right]:max-sm:border-l-0 data-[side=right]:sm:max-w-md">
           <SheetHeader className="border-b border-border p-5 pt-[max(var(--inset-top),20px)] pr-14">
             <SheetClose
-              aria-label="Close"
+              aria-label={tr("Close")}
               className="absolute top-[max(var(--inset-top),12px)] right-3 grid size-10 place-items-center rounded-lg text-muted-foreground outline-none transition-[background-color,color] duration-150 ease-standard hover:bg-foreground/[0.05] hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               <X aria-hidden className="size-5" strokeWidth={1.75} />
@@ -158,24 +158,24 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
           </SheetHeader>
 
           <div className="grid gap-4 p-5">
-            <Group title="Details">
+            <Group title={tr("Details")}>
               <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2.5 text-[14px]">
-                <dt className="text-muted-foreground">Role</dt>
+                <dt className="text-muted-foreground">{tr("Role")}</dt>
                 <dd className="text-right">
                   <Pill tone={admin || p.role === "owner" ? "coach" : "neutral"}>{admin ? "Admin" : ROLE[p.role]}</Pill>
                 </dd>
-                <dt className="text-muted-foreground">Username</dt>
+                <dt className="text-muted-foreground">{tr("Username")}</dt>
                 <dd className="min-w-0 truncate text-right">{p.username ? `@${p.username}` : "Not set"}</dd>
-                <dt className="text-muted-foreground">Joined</dt>
+                <dt className="text-muted-foreground">{tr("Joined")}</dt>
                 <dd className="text-right">{shortDate(p.createdAt)}</dd>
-                <dt className="text-muted-foreground">Last active</dt>
+                <dt className="text-muted-foreground">{tr("Last active")}</dt>
                 <dd className="text-right">{p.lastSeen ? relative(p.lastSeen, now) : "Not signed in"}</dd>
-                <dt className="text-muted-foreground">Signed in on</dt>
+                <dt className="text-muted-foreground">{tr("Signed in on")}</dt>
                 <dd className="text-right font-numeric tabular-nums">{p.sessions === 1 ? "1 device" : `${p.sessions} devices`}</dd>
-                <dt className="text-muted-foreground">Google</dt>
-                <dd className="text-right">{p.google ? <Pill tone="good">Connected</Pill> : <Pill>Not yet</Pill>}</dd>
-                <dt className="text-muted-foreground">AI coach</dt>
-                <dd className="text-right">{p.coachReady ? <Pill tone="coach">Set up</Pill> : <span className="text-muted-foreground">Not set up</span>}</dd>
+                <dt className="text-muted-foreground">{tr("Google")}</dt>
+                <dd className="text-right">{p.google ? <Pill tone="good">{tr("Connected")}</Pill> : <Pill>{tr("Not yet")}</Pill>}</dd>
+                <dt className="text-muted-foreground">{tr("AI coach")}</dt>
+                <dd className="text-right">{p.coachReady ? <Pill tone="coach">{tr("Set up")}</Pill> : <span className="text-muted-foreground">{tr("Not set up")}</span>}</dd>
               </dl>
             </Group>
 
@@ -189,40 +189,37 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
 
             {manageable && (
               <>
-                <Group title="Access">
+                <Group title={tr("Access")}>
                   <div className="grid gap-3">
-                    <Row title="Admin" body="Can open this dashboard: people, invites, access and the coach’s wording.">
-                      <Switch checked={admin} disabled={pending} onCheckedChange={toggleAdmin} aria-label={`Admin: ${p.name}`} />
+                    <Row title={tr("Admin")} body={tr("Can open this dashboard: people, invites, access and the coach’s wording.")}>
+                      <Switch checked={admin} disabled={pending} onCheckedChange={toggleAdmin} aria-label={tr("Admin: {0}", [p.name])} />
                     </Row>
-                    <Row title="AI coach" body={chosen ? "Can set up the coach with their own key." : "Set for everyone on the Access page."}>
-                      {chosen ? <CoachSwitch id={p.id} name={p.name} allowed={p.coachAllowed} /> : <span className="text-[13px] text-muted-foreground">Server-wide</span>}
+                    <Row title={tr("AI coach")} body={chosen ? "Can set up the coach with their own key." : "Set for everyone on the Access page."}>
+                      {chosen ? <CoachSwitch id={p.id} name={p.name} allowed={p.coachAllowed} /> : <span className="text-[13px] text-muted-foreground">{tr("Server-wide")}</span>}
                     </Row>
                   </div>
                 </Group>
 
-                <Group title="Sign-in">
+                <Group title={tr("Sign-in")}>
                   <div className="grid gap-3">
-                    <Row title="Sign out everywhere" body="Ends every session. They sign in again with their password.">
+                    <Row title={tr("Sign out everywhere")} body={tr("Ends every session. They sign in again with their password.")}>
                       <button type="button" disabled={pending || p.sessions === 0} onClick={() => setConfirm("signout")} className={BTN.outline}>
                         <LogOut aria-hidden />
-                        Sign out
-                      </button>
+                        {tr("Sign out")}</button>
                     </Row>
-                    <Row title="Reset password" body={canReset ? "Sets a temporary password you send them, and signs them out everywhere." : "Only an owner (ADMIN_EMAILS) can reset passwords."}>
+                    <Row title={tr("Reset password")} body={canReset ? "Sets a temporary password you send them, and signs them out everywhere." : "Only an owner (ADMIN_EMAILS) can reset passwords."}>
                       <button type="button" disabled={pending || !canReset} onClick={() => (setTemp(null), setCopied(false), setConfirm("reset"))} className={BTN.outline}>
                         <KeyRound aria-hidden />
-                        Reset
-                      </button>
+                        {tr("Reset")}</button>
                     </Row>
                   </div>
                 </Group>
 
-                <Group title="Danger zone" tone="danger">
-                  <Row title="Delete account" body={admin ? "Remove admin first." : "Removes the account and all its data. This can’t be undone."}>
-                    <button type="button" disabled={pending || admin} onClick={() => setConfirm("delete")} aria-label={`Delete ${p.name}`} className={BTN.danger}>
+                <Group title={tr("Danger zone")} tone="danger">
+                  <Row title={tr("Delete account")} body={admin ? "Remove admin first." : "Removes the account and all its data. This can’t be undone."}>
+                    <button type="button" disabled={pending || admin} onClick={() => setConfirm("delete")} aria-label={tr("Delete {0}", [p.name])} className={BTN.danger}>
                       <Trash2 aria-hidden />
-                      Delete
-                    </button>
+                      {tr("Delete")}</button>
                   </Row>
                 </Group>
               </>
@@ -234,8 +231,8 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
       <Confirm
         open={confirm === "delete"}
         onOpenChange={(o) => !o && setConfirm(null)}
-        title={`Delete ${p.name}’s account?`}
-        body="Removes the account and everything Pulse stored for it: synced data, scores, journal, coach chats, profile and the Google connection. This can’t be undone."
+        title={tr("Delete {0}’s account?", [p.name])}
+        body={tr("Removes the account and everything Pulse stored for it: synced data, scores, journal, coach chats, profile and the Google connection. This can’t be undone.")}
         action="Delete account"
         danger
         pending={pending}
@@ -244,8 +241,8 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
       <Confirm
         open={confirm === "signout"}
         onOpenChange={(o) => !o && setConfirm(null)}
-        title={`Sign ${p.name} out everywhere?`}
-        body="Every device they’re signed in on is signed out. Their data stays."
+        title={tr("Sign {0} out everywhere?", [p.name])}
+        body={tr("Every device they’re signed in on is signed out. Their data stays.")}
         action="Sign out everywhere"
         pending={pending}
         onConfirm={signOut}
@@ -265,7 +262,7 @@ export function PersonPanel({ person: p, now, chosen, canReset, me, children }: 
       >
         {temp && (
           <div className="flex items-center gap-2">
-            <input readOnly value={temp} aria-label="Temporary password" onFocus={(e) => e.currentTarget.select()} className="h-10 min-w-0 flex-1 rounded-md bg-secondary px-3 font-mono text-[14px] outline-none focus-visible:ring-3 focus-visible:ring-ring/50" />
+            <input readOnly value={temp} aria-label={tr("Temporary password")} onFocus={(e) => e.currentTarget.select()} className="h-10 min-w-0 flex-1 rounded-md bg-secondary px-3 font-mono text-[14px] outline-none focus-visible:ring-3 focus-visible:ring-ring/50" />
             <button type="button" onClick={copy} className={cn(BTN.outline, "h-10")}>
               {copied ? <Check aria-hidden /> : <Copy aria-hidden />}
               {copied ? "Copied" : "Copy"}

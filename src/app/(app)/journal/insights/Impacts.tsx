@@ -10,11 +10,12 @@ import type { ImpactMetricKey, JournalInsightsVM } from "@/server/queries/types"
 import { DriverList } from "@/components/metrics/DriverList"
 import { ResponsiveSheet } from "@/components/shells/ResponsiveSheet"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { t as tr } from "@/lib/i18n"
 
 const METRICS: { key: ImpactMetricKey; label: string; word: string }[] = [
-  { key: "recovery", label: "Recovery", word: "Recovery" },
+  { key: "recovery", label: tr("Recovery"), word: tr("Recovery") },
   { key: "hrv", label: "HRV", word: "HRV" },
-  { key: "sleep", label: "Sleep", word: "sleep performance" },
+  { key: "sleep", label: tr("Sleep"), word: tr("sleep performance") },
 ]
 const metricWord = (m: ImpactMetricKey) => METRICS.find((x) => x.key === m)!.word
 const FOOTER = "Effects are differences in averages, not proof of cause. Change one habit at a time to see what it really does."
@@ -30,7 +31,7 @@ export function MetricToggle({ metric }: { metric: ImpactMetricKey }) {
       value={metric}
       onValueChange={(v) => v && router.replace(`${pathname}${withParam(params.toString(), "m", v === "recovery" ? null : v)}`, { scroll: false })}
       spacing={0}
-      aria-label="Outcome"
+      aria-label={tr("Outcome")}
       className="gap-0.5 rounded-lg bg-muted p-0.5"
     >
       {METRICS.map((m) => (

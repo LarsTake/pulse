@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { t as tr } from "@/lib/i18n"
 
 export class ConfigError extends Error {
   override name = "ConfigError";
@@ -60,10 +61,10 @@ const Env = z
       for (const k of keys) if (!e[k]) ctx.addIssue({ code: "custom", path: [k], message: `required ${why}` });
     };
     if (!!e.COACH_LOCAL_URL !== !!e.COACH_LOCAL_MODEL)
-      ctx.addIssue({ code: "custom", path: [e.COACH_LOCAL_URL ? "COACH_LOCAL_MODEL" : "COACH_LOCAL_URL"], message: "set COACH_LOCAL_URL and COACH_LOCAL_MODEL together" });
+      ctx.addIssue({ code: "custom", path: [e.COACH_LOCAL_URL ? "COACH_LOCAL_MODEL" : "COACH_LOCAL_URL"], message: tr("set COACH_LOCAL_URL and COACH_LOCAL_MODEL together") });
     // Refused in production, except the e2e suite's production build (E2E_PROD), which also sets PULSE_E2E=1.
     if (e.COACH_MOCK && process.env.NODE_ENV === "production" && process.env.PULSE_E2E !== "1")
-      ctx.addIssue({ code: "custom", path: ["COACH_MOCK"], message: "is for tests only, never in production" });
+      ctx.addIssue({ code: "custom", path: ["COACH_MOCK"], message: tr("is for tests only, never in production") });
     if (e.ANDROID_PACKAGE_NAME || e.ANDROID_CERT_SHA256) need(["ANDROID_PACKAGE_NAME", "ANDROID_CERT_SHA256"], "together for the Android app");
     if (e.VAPID_PUBLIC_KEY || e.VAPID_PRIVATE_KEY) need(["VAPID_PUBLIC_KEY", "VAPID_PRIVATE_KEY", "VAPID_SUBJECT"], "together for notifications");
     if (e.DATA_SOURCE === "google") {

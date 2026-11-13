@@ -10,8 +10,9 @@ import { DemoSignIn } from "@/components/auth/AuthButtons"
 import { LoginForm } from "@/components/auth/AuthForm"
 import { AUTH_FOOTNOTE, AUTH_LINK, AuthHero } from "@/components/auth/AuthHero"
 import { AuthShell } from "@/components/shells/AuthShell"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata: Metadata = { title: "Sign in" }
+export const metadata: Metadata = { title: tr("Sign in") }
 
 /**
  * Sign in `/login`. A real instance signs in with an email or username and a password (Google only feeds the data,
@@ -30,12 +31,12 @@ export default async function LoginPage() {
           <>
             <DemoSignIn />
             <p className={AUTH_FOOTNOTE}>
-              This server runs on generated data. To use your own, set up a Google OAuth client (see <span translate="no">docs/setup.md</span>).
+              {tr("This server runs on generated data. To use your own, set up a Google OAuth client (see")}{" "}<span translate="no">docs/setup.md</span>).
             </p>
           </>
         }
       >
-        <AuthHero title="Know when to push, and when to rest" body="Recovery, Strain and Sleep from your Fitbit Air, scored on your own server." />
+        <AuthHero title={tr("Know when to push, and when to rest")} body={tr("Recovery, Strain and Sleep from your Fitbit Air, scored on your own server.")} />
       </AuthShell>
     )
   }
@@ -45,7 +46,7 @@ export default async function LoginPage() {
   const [mode, first] = await Promise.all([signupMode(db), userCount(db).then((n) => n === 0)])
   return (
     <AuthShell>
-      <AuthHero compact title="Welcome back" body="Sign in to see today’s Recovery, Strain and Sleep." />
+      <AuthHero compact title={tr("Welcome back")} body={tr("Sign in to see today’s Recovery, Strain and Sleep.")} />
       <div className="mt-8 space-y-5">
         <LoginForm />
         <p className={AUTH_FOOTNOTE}>
@@ -55,10 +56,9 @@ export default async function LoginPage() {
             "New to Pulse? Open the invite link you were sent."
           ) : (
             <>
-              New to Pulse?{" "}
+              {tr("New to Pulse?")}{" "}
               <Link href="/signup" className={AUTH_LINK}>
-                Create account
-              </Link>
+                {tr("Create account")}</Link>
             </>
           )}
         </p>

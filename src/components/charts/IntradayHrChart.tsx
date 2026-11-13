@@ -14,6 +14,7 @@ import { EmptyState } from "@/components/shells/EmptyState"
 import { MetricState } from "@/components/shells/MetricState"
 import { ReasonPlaceholder } from "@/components/metrics/ReasonPlaceholder"
 import { AXIS, BandGradient, bandPaint, ChartFigure, FadeGradient, GlowDot, GRID, LINE_CURSOR, TOOLTIP_CLASS, TooltipLine, useSeriesAnimation, type Band } from "./ChartFrame"
+import { t as tr } from "@/lib/i18n"
 
 /** A marked stretch on an intraday chart. `label` is the short name: "Run", "Ride", "Strength", "Sleep", "Nap". */
 export type ChartSpan = { kind: "workout" | "sleep"; start: number; end: number; label: string }
@@ -153,7 +154,7 @@ function Chart({ hr, variant }: { hr: HrSeries; variant: "day" | "activity" }) {
 
   return (
     <div>
-      <ChartFigure summary={summary} config={{ bpm: { label: "Heart rate", color: "var(--strain)" } }} className={variant === "day" ? "h-[200px]" : "h-[180px]"}>
+      <ChartFigure summary={summary} config={{ bpm: { label: tr("Heart rate"), color: "var(--strain)" } }} className={variant === "day" ? "h-[200px]" : "h-[180px]"}>
         <AreaChart data={rows} accessibilityLayer margin={{ top: workout ? 8 : 18, right: workout ? 8 : 28, bottom: 0, left: 0 }}>
           <defs>
             <BandGradient id={`hr-line-${id}`} top={hotTop} bottom={hotBottom} bands={bands} />
@@ -233,7 +234,7 @@ function Chart({ hr, variant }: { hr: HrSeries; variant: "day" | "activity" }) {
 export function IntradayHrChart({ data, variant = "day" }: IntradayHrChartProps) {
   const empty = (
     <div className="grid place-items-center">
-      <EmptyState body="No heart-rate data for this day." />
+      <EmptyState body={tr("No heart-rate data for this day.")} />
     </div>
   )
   return (

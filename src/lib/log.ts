@@ -1,3 +1,5 @@
+import { LOCALE } from "./format"
+import { t as tr } from "@/lib/i18n"
 // What Pulse can log to Google Health (spec §11 LG1): the Google data types, the write scope each needs, and the
 // choices the log sheets offer. Shared by the sheets, the log actions and the Google writer.
 
@@ -165,31 +167,31 @@ export type LogData = {
 
 /** One line for the recent-log list. */
 export function describeEntry(type: LogType, data: unknown): { title: string; detail: string } {
-  const n = (v: number) => v.toLocaleString("en-US")
+  const n = (v: number) => v.toLocaleString(LOCALE)
   switch (type) {
     case "hydration-log":
-      return { title: "Water", detail: `${n((data as LogData[typeof type]).ml)} ml` }
+      return { title: tr("Water"), detail: `${n((data as LogData[typeof type]).ml)} ml` }
     case "nutrition-log": {
       const f = data as LogData[typeof type]
       const macros = [f.protein != null && `${f.protein} g protein`, f.carbs != null && `${f.carbs} g carbs`, f.fat != null && `${f.fat} g fat`]
       return { title: f.name ?? labelOf(MEALS, f.meal), detail: [`${n(f.kcal)} kcal`, ...macros].filter(Boolean).join(", ") }
     }
     case "weight":
-      return { title: "Weight", detail: `${(data as LogData[typeof type]).kg} kg` }
+      return { title: tr("Weight"), detail: `${(data as LogData[typeof type]).kg} kg` }
     case "body-fat":
-      return { title: "Body fat", detail: `${(data as LogData[typeof type]).pct}%` }
+      return { title: tr("Body fat"), detail: `${(data as LogData[typeof type]).pct}%` }
     case "moods": {
       const m = data as LogData[typeof type]
-      return { title: "Mood", detail: [m.valence && labelOf(VALENCES, m.valence), ...m.moods.map((x) => labelOf(MOODS, x))].filter(Boolean).join(", ") }
+      return { title: tr("Mood"), detail: [m.valence && labelOf(VALENCES, m.valence), ...m.moods.map((x) => labelOf(MOODS, x))].filter(Boolean).join(", ") }
     }
     case "symptoms":
-      return { title: "Symptoms", detail: (data as LogData[typeof type]).symptoms.map((x) => labelOf(SYMPTOMS, x)).join(", ") }
+      return { title: tr("Symptoms"), detail: (data as LogData[typeof type]).symptoms.map((x) => labelOf(SYMPTOMS, x)).join(", ") }
     case "menstrual-period": {
       const p = data as LogData[typeof type]
       const days = Math.round((Date.parse(p.end) - Date.parse(p.start)) / 86_400_000) + 1
-      return { title: "Period", detail: [`${days} ${days === 1 ? "day" : "days"}`, p.flow && `${labelOf(FLOWS, p.flow).toLowerCase()} flow`].filter(Boolean).join(", ") }
+      return { title: tr("Period"), detail: [`${days} ${days === 1 ? "day" : "days"}`, p.flow && `${labelOf(FLOWS, p.flow).toLowerCase()} flow`].filter(Boolean).join(", ") }
     }
     case "ovulation-test":
-      return { title: "Ovulation test", detail: labelOf(OVULATION_RESULTS, (data as LogData[typeof type]).result) }
+      return { title: tr("Ovulation test"), detail: labelOf(OVULATION_RESULTS, (data as LogData[typeof type]).result) }
   }
 }

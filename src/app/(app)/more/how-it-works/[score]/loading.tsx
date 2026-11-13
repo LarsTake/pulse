@@ -1,6 +1,7 @@
 import { DetailShell } from "@/components/shells/DetailShell"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
+import { t as tr } from "@/lib/i18n"
 
 const BODY = "text-[15px] leading-[22px]"
 const SECTIONS = ["What goes in", "How it is weighted", "What the bands mean", "Limits"]
@@ -10,7 +11,7 @@ export default function Loading() {
   return (
     <DetailShell loading
       title={"\u00a0"}
-      subtitle="How it works"
+      subtitle={tr("How it works")}
       primary={
         <div aria-hidden className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <SkeletonText className="w-full max-w-[44ch] text-[17px] leading-6" />

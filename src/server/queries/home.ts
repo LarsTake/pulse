@@ -41,6 +41,7 @@ import {
   toStrain,
 } from "./common";
 import type { ActivityKind, EnergyBankVM, HomeVM, KeyStat, Metric, VitalKey } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 export const VITAL_LABEL: Record<VitalKey, string> = {
   resp: "Respiratory rate",
@@ -161,7 +162,7 @@ function insightsOf(ctx: QueryCtx, rows: Map<string, DayRow>, row: DayRow | unde
   const r = row?.recovery;
   if (r?.value != null) out.push({ key: "recovery", title: RECOVERY_TITLE[recoveryBand(r.value)], body: recoveryInsight(r.drivers), href: "/recovery" });
   const sl = sleepInsight(rows, day, ctx.timeZone);
-  if (sl) out.push({ key: "sleep", title: "Last night’s sleep", body: sl, href: "/sleep" });
+  if (sl) out.push({ key: "sleep", title: tr("Last night’s sleep"), body: sl, href: "/sleep" });
   return out;
 }
 

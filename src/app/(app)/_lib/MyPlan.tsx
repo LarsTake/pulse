@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { CAPTION, LABEL } from "./view"
 
 import type { HomeVM } from "@/server/queries/types"
+import { t as tr } from "@/lib/i18n"
 
 type PlanVM = NonNullable<HomeVM["plan"]>
 
@@ -17,7 +18,7 @@ type PlanVM = NonNullable<HomeVM["plan"]>
 export function MyPlan({ plan, children }: { plan: PlanVM; children?: React.ReactNode }) {
   const pct = Math.round(plan.done * 100)
   return (
-    <SectionShell variant="section" title="My Plan">
+    <SectionShell variant="section" title={tr("My Plan")}>
       <Collapsible className={cn(CARD_MATERIAL, "p-4 xl:p-5")}>
         <CollapsibleTrigger className="group/plan flex w-full items-start justify-between gap-3 rounded-md text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
           <span className="min-w-0">
@@ -31,7 +32,7 @@ export function MyPlan({ plan, children }: { plan: PlanVM; children?: React.Reac
         <p className={cn(LABEL, "mt-3")}>
           <span className="font-numeric text-base tabular-nums">{pct}%</span> accomplished
         </p>
-        <Progress value={pct} aria-label={`${plan.title}: ${pct}% accomplished`} className="mt-2 h-1 bg-dial-track" />
+        <Progress value={pct} aria-label={tr("{0}: {1}% accomplished", [plan.title, pct])} className="mt-2 h-1 bg-dial-track" />
         {children && <CollapsibleContent className="pt-3">{children}</CollapsibleContent>}
       </Collapsible>
     </SectionShell>

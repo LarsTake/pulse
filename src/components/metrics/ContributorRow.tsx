@@ -7,6 +7,7 @@ import type { Metric } from "@/lib/reasons"
 import { SkeletonText } from "@/components/ui/skeleton"
 import { MetricState, type MetricMeta } from "@/components/shells/MetricState"
 import { CAPTION, LABEL, MetricTags, ValueUnit } from "./primitives"
+import { t as tr } from "@/lib/i18n"
 
 type Common = {
   icon?: React.ReactNode
@@ -159,7 +160,7 @@ function HealthspanRow({ p, value, meta }: { p: Extract<ContributorRowProps, { v
           <div className="relative min-w-0 flex-1 pt-11 pb-10">
             {value !== null && (
               <MarkerLabel at={at(value)} className="top-0">
-                <span className="text-xs leading-4 font-medium text-foreground-secondary">6 Month avg.</span>
+                <span className="text-xs leading-4 font-medium text-foreground-secondary">{tr("6 Month avg.")}</span>
                 <span className="font-numeric text-[15px] leading-5 font-bold tabular-nums">{withUnit(value)}</span>
                 <Triangle className="size-2.5 rotate-180 fill-foreground text-foreground" strokeWidth={0} />
               </MarkerLabel>
@@ -182,7 +183,7 @@ function HealthspanRow({ p, value, meta }: { p: Extract<ContributorRowProps, { v
               <MarkerLabel at={at(recent)} className="bottom-0">
                 <Triangle className="size-2.5 fill-muted-foreground text-muted-foreground" strokeWidth={0} />
                 <span className="font-numeric text-[15px] leading-5 font-bold tabular-nums">{withUnit(recent)}</span>
-                <span className="text-xs leading-4 font-medium text-foreground-secondary">30 Day avg.</span>
+                <span className="text-xs leading-4 font-medium text-foreground-secondary">{tr("30 Day avg.")}</span>
               </MarkerLabel>
             )}
           </div>

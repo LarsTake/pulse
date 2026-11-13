@@ -7,6 +7,7 @@ import { addBp, addLabs, addStrength, deleteBodyLog, type BpInput, type LabInput
 import { getDb } from "../db";
 import { userTimeZone } from "../profile";
 import type { ActionResult } from "./journal";
+import { t as tr } from "@/lib/i18n"
 
 const now = () => Math.floor(Date.now() / 1000);
 
@@ -51,7 +52,7 @@ export async function deleteBodyLogEntry(input: z.input<typeof Delete>): Promise
   const r = Delete.safeParse(input);
   if (!r.success) return { ok: false, error: r.error.issues[0].message };
   const gone = await deleteBodyLog(getDb(), c.userId, r.data.kind, r.data.id);
-  if (!gone) return { ok: false, error: "Already deleted" };
+  if (!gone) return { ok: false, error: tr("Already deleted") };
   revalidatePath(r.data.kind === "strength" ? "/strength" : "/health", "layout");
   return { ok: true, data: undefined };
 }

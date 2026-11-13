@@ -7,17 +7,18 @@ import { cn } from "@/lib/utils"
 import { CoachSwitch } from "./AdminClient"
 import { PersonPanel } from "./PersonPanel"
 import { BTN, Pill, relative, TD, TH } from "./ui"
+import { t as tr } from "@/lib/i18n"
 
 /** Account rows as the browser gets them: dates as epoch ms. */
 export type Person = Omit<AccountRow, "createdAt" | "lastSeen"> & { createdAt: number; lastSeen: number | null }
 
 const WEEK = 7 * 86_400_000
 const FILTERS = [
-  { key: "all", label: "Everyone" },
-  { key: "admins", label: "Admins" },
-  { key: "active", label: "Active this week" },
-  { key: "google", label: "No Google yet" },
-  { key: "coach", label: "Coach set up" },
+  { key: "all", label: tr("Everyone") },
+  { key: "admins", label: tr("Admins") },
+  { key: "active", label: tr("Active this week") },
+  { key: "google", label: tr("No Google yet") },
+  { key: "coach", label: tr("Coach set up") },
 ] as const
 type Filter = (typeof FILTERS)[number]["key"]
 
@@ -45,7 +46,7 @@ export function People({ people, me, now, chosen, canReset }: { people: Person[]
   return (
     <div className="overflow-hidden rounded-xl bg-card shadow-card ring-1 ring-border">
       <div className="flex flex-col gap-3 border-b border-border p-4 md:flex-row md:items-center md:justify-between">
-        <div role="group" aria-label="Show" className="-mx-4 flex gap-1 overflow-x-auto px-4 [scrollbar-width:none] max-md:[mask-image:linear-gradient(to_left,transparent,black_32px)] md:mx-0 md:px-0">
+        <div role="group" aria-label={tr("Show")} className="-mx-4 flex gap-1 overflow-x-auto px-4 [scrollbar-width:none] max-md:[mask-image:linear-gradient(to_left,transparent,black_32px)] md:mx-0 md:px-0">
           {FILTERS.map((f) => (
             <button
               key={f.key}
@@ -63,13 +64,13 @@ export function People({ people, me, now, chosen, canReset }: { people: Person[]
           ))}
         </div>
         <label className="relative block md:w-64">
-          <span className="sr-only">Search people</span>
+          <span className="sr-only">{tr("Search people")}</span>
           <Search aria-hidden className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" strokeWidth={2} />
           <input
             type="search"
             value={q}
             onChange={(e) => setQ(e.currentTarget.value)}
-            placeholder="Search people"
+            placeholder={tr("Search people")}
             className="h-10 w-full rounded-lg bg-secondary pr-3 pl-9 text-[14px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
           />
         </label>
@@ -82,15 +83,14 @@ export function People({ people, me, now, chosen, canReset }: { people: Person[]
         <table role="table" className="block w-full border-collapse xl:table">
           <thead role="rowgroup" className="max-xl:sr-only">
             <tr role="row" className="border-b border-border">
-              <th role="columnheader" scope="col" className={TH}>Person</th>
-              <th role="columnheader" scope="col" className={TH}>Role</th>
-              <th role="columnheader" scope="col" className={TH}>Joined</th>
-              <th role="columnheader" scope="col" className={TH}>Last active</th>
-              <th role="columnheader" scope="col" className={TH}>Google</th>
-              <th role="columnheader" scope="col" className={TH}>Coach</th>
+              <th role="columnheader" scope="col" className={TH}>{tr("Person")}</th>
+              <th role="columnheader" scope="col" className={TH}>{tr("Role")}</th>
+              <th role="columnheader" scope="col" className={TH}>{tr("Joined")}</th>
+              <th role="columnheader" scope="col" className={TH}>{tr("Last active")}</th>
+              <th role="columnheader" scope="col" className={TH}>{tr("Google")}</th>
+              <th role="columnheader" scope="col" className={TH}>{tr("Coach")}</th>
               <th role="columnheader" scope="col" className={cn(TH, "text-right")}>
-                Actions
-              </th>
+                {tr("Actions")}</th>
             </tr>
           </thead>
           <tbody role="rowgroup" className="block divide-y divide-border xl:table-row-group">
@@ -132,31 +132,29 @@ export function People({ people, me, now, chosen, canReset }: { people: Person[]
                     </td>
                     <td role="cell" className={cn(TD, "hidden whitespace-nowrap text-muted-foreground xl:table-cell xl:px-4 xl:py-3")}>{relative(p.createdAt, now)}</td>
                     <td role="cell" className={cn(TD, "hidden whitespace-nowrap text-muted-foreground xl:table-cell xl:px-4 xl:py-3")}>{p.lastSeen ? relative(p.lastSeen, now) : "Signed out"}</td>
-                    <td role="cell" className={cn(TD, "hidden xl:table-cell xl:px-4 xl:py-3")}>{p.google ? <Pill tone="good">Connected</Pill> : <Pill>Not yet</Pill>}</td>
+                    <td role="cell" className={cn(TD, "hidden xl:table-cell xl:px-4 xl:py-3")}>{p.google ? <Pill tone="good">{tr("Connected")}</Pill> : <Pill>{tr("Not yet")}</Pill>}</td>
                     <td role="cell" className={cn(TD, "hidden xl:table-cell xl:px-4 xl:py-3")}>
                       {chosen && p.role !== "owner" ? (
                         <CoachSwitch id={p.id} name={p.name} allowed={p.coachAllowed} />
                       ) : p.coachReady ? (
-                        <Pill tone="coach">Set up</Pill>
+                        <Pill tone="coach">{tr("Set up")}</Pill>
                       ) : (
-                        <span className="text-[13px] text-muted-foreground">Not set up</span>
+                        <span className="text-[13px] text-muted-foreground">{tr("Not set up")}</span>
                       )}
                     </td>
                     <td role="cell" className={cn(TD, "hidden xl:table-cell xl:px-4 xl:py-3 xl:text-right")}>
                       {p.role === "owner" ? (
-                        <span className="text-[13px] text-muted-foreground">Set in .env</span>
+                        <span className="text-[13px] text-muted-foreground">{tr("Set in .env")}</span>
                       ) : p.id === me ? (
-                        <span className="text-[13px] text-muted-foreground">You</span>
+                        <span className="text-[13px] text-muted-foreground">{tr("You")}</span>
                       ) : (
                         <span className="flex items-center justify-end gap-2">
-                          <button type="button" onClick={open} aria-label={`Manage ${p.name}`} className={BTN.outline}>
+                          <button type="button" onClick={open} aria-label={tr("Manage {0}", [p.name])} className={BTN.outline}>
                             <Settings2 aria-hidden />
-                            Manage
-                          </button>
-                          <button type="button" disabled={admin} onClick={askDelete} aria-label={`Delete ${p.name}`} title={admin ? "Remove admin first" : undefined} className={BTN.danger}>
+                            {tr("Manage")}</button>
+                          <button type="button" disabled={admin} onClick={askDelete} aria-label={tr("Delete {0}", [p.name])} title={admin ? "Remove admin first" : undefined} className={BTN.danger}>
                             <Trash2 aria-hidden />
-                            Delete
-                          </button>
+                            {tr("Delete")}</button>
                         </span>
                       )}
                     </td>
@@ -168,7 +166,7 @@ export function People({ people, me, now, chosen, canReset }: { people: Person[]
         </table>
       )}
       <p className="border-t border-border px-4 py-3 text-[13px] text-muted-foreground">
-        Showing {shown.length} of {people.length}
+        {tr("Showing")}{" "}{shown.length} of {people.length}
       </p>
     </div>
   )

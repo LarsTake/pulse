@@ -1,3 +1,4 @@
+import { LOCALE } from "@/lib/format"
 import { connection } from "next/server"
 import { Dumbbell, Trophy } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -14,22 +15,19 @@ import { EmptyState } from "@/components/shells/EmptyState"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { SheetTrigger } from "@/components/shells/SheetTrigger"
 import { DeleteEntry } from "../_lib/DeleteEntry"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Strength" }
+export const metadata = { title: tr("Strength") }
 
 const INFO = {
-  title: "About Strength",
+  title: tr("About Strength"),
   body: (
     <>
       <p>
-        Log sessions set by set. Pulse counts hard sets per muscle each week (a secondary muscle counts half) against the 10 to 20 sets that most
-        studies find builds muscle best.
-      </p>
+        {tr("Log sessions set by set. Pulse counts hard sets per muscle each week (a secondary muscle counts half) against the 10 to 20 sets that most studies find builds muscle best.")}</p>
       <p>
-        Muscular load puts a session on the 0 to 21 Strain scale. A wrist band reads heart rate, and lifting raises heart rate less than it loads
-        muscle; this is the part it misses. It is an estimate from your sets and loads.
-      </p>
-      <p>PRs compare each exercise’s estimated one-rep max (Epley) with your best of the past year.</p>
+        {tr("Muscular load puts a session on the 0 to 21 Strain scale. A wrist band reads heart rate, and lifting raises heart rate less than it loads muscle; this is the part it misses. It is an estimate from your sets and loads.")}</p>
+      <p>{tr("PRs compare each exercise’s estimated one-rep max (Epley) with your best of the past year.")}</p>
     </>
   ),
 }
@@ -59,8 +57,7 @@ function Hero({ vm }: { vm: StrengthVM }) {
     <div className="flex flex-col items-center gap-3 py-2">
       <ScoreDial variant="stat" size="lg" label={label} value={value} color="strain" max={21} format="decimal1" reason={value === null ? "no_data" : null} extraTags={["estimate"]} />
       <p className={CAPTION}>
-        This week: {vm.weekSessions} {vm.weekSessions === 1 ? "session" : "sessions"} · {vm.weekTonnage.toLocaleString("en-US")} kg moved
-      </p>
+        {tr("This week:")}{" "}{vm.weekSessions} {vm.weekSessions === 1 ? "session" : "sessions"} · {vm.weekTonnage.toLocaleString(LOCALE)} {" "}{tr("kg moved")}</p>
     </div>
   )
 }
@@ -68,7 +65,7 @@ function Hero({ vm }: { vm: StrengthVM }) {
 function MuscleVolume({ vm }: { vm: StrengthVM }) {
   const max = Math.max(24, ...vm.week.map((w) => w.sets))
   return (
-    <SectionShell variant="card" title="Sets per muscle" action={<span className={CAPTION}>since {formatDay(vm.weekStart, DAY.monthDay)}</span>}>
+    <SectionShell variant="card" title={tr("Sets per muscle")} action={<span className={CAPTION}>since {formatDay(vm.weekStart, DAY.monthDay)}</span>}>
       <ul className="flex flex-col gap-3">
         {vm.week.map((w) => (
           <li key={w.muscle} className="grid grid-cols-[6.5rem_1fr_4.5rem] items-center gap-3">
@@ -80,24 +77,24 @@ function MuscleVolume({ vm }: { vm: StrengthVM }) {
             </span>
             <span className="text-right font-numeric text-[15px] tabular-nums">
               {formatValue("decimal1", w.sets).replace(/\.0$/, "")}
-              <span className="sr-only"> sets, {WORD[w.status]}</span>
+              <span className="sr-only"> {" "}{tr("sets,")}{" "}{WORD[w.status]}</span>
             </span>
           </li>
         ))}
       </ul>
-      <p className={cn(CAPTION, "mt-4")}>Shaded: 10–20 hard sets a week. Blue under, green in range, orange over.</p>
+      <p className={cn(CAPTION, "mt-4")}>{tr("Shaded: 10–20 hard sets a week. Blue under, green in range, orange over.")}</p>
     </SectionShell>
   )
 }
 
 function Weekly({ vm }: { vm: StrengthVM }) {
   return (
-    <SectionShell variant="card" title="Weekly volume">
+    <SectionShell variant="card" title={tr("Weekly volume")}>
       <ColumnChart
-        summary="Kilograms moved per week, last 8 weeks"
+        summary={tr("Kilograms moved per week, last 8 weeks")}
         format="int"
         unit="kg"
-        data={vm.weekly.map((w, i) => ({ label: formatDay(w.week, DAY.monthDay), title: `Week of ${formatDay(w.week, DAY.monthDay)} · ${w.sessions} sessions`, value: w.tonnage || null, highlight: i === vm.weekly.length - 1 }))}
+        data={vm.weekly.map((w, i) => ({ label: formatDay(w.week, DAY.monthDay), title: tr("Week of {0} · {1} sessions", [formatDay(w.week, DAY.monthDay), w.sessions]), value: w.tonnage || null, highlight: i === vm.weekly.length - 1 }))}
         tickEvery={2}
       />
     </SectionShell>
@@ -105,9 +102,9 @@ function Weekly({ vm }: { vm: StrengthVM }) {
 }
 
 function Sessions({ vm }: { vm: StrengthVM }) {
-  if (!vm.sessions.length) return <EmptyState body="No sessions yet. Log your first one and Pulse starts counting sets per muscle and PRs." />
+  if (!vm.sessions.length) return <EmptyState body={tr("No sessions yet. Log your first one and Pulse starts counting sets per muscle and PRs.")} />
   return (
-    <SectionShell variant="section" title="Sessions">
+    <SectionShell variant="section" title={tr("Sessions")}>
       <ul className="flex flex-col gap-3">
         {vm.sessions.slice(0, 12).map((s) => (
           <li key={s.id} className={cn(CARD_MATERIAL, "p-4")}>
@@ -115,19 +112,19 @@ function Sessions({ vm }: { vm: StrengthVM }) {
               <div>
                 <p className={LABEL}>{formatDay(s.day, DAY.short)}</p>
                 <p className={cn(CAPTION, "mt-1")}>
-                  {s.sets} sets · {s.tonnage.toLocaleString("en-US")} kg{s.durationMin ? ` · ${s.durationMin} min` : ""}
+                  {s.sets} {" "}{tr("sets ·")}{" "}{s.tonnage.toLocaleString(LOCALE)} kg{s.durationMin ? ` · ${s.durationMin} min` : ""}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <ValueUnit value={formatValue("decimal1", s.load)} unit="load" className="font-numeric text-xl font-bold text-strain-text" />
-                <DeleteEntry kind="strength" id={s.id} label={`session on ${formatDay(s.day, DAY.long)}`} />
+                <DeleteEntry kind="strength" id={s.id} label={tr("session on {0}", [formatDay(s.day, DAY.long)])} />
               </div>
             </div>
             {s.prs.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
                 {s.prs.map((p) => (
                   <StatusChip key={p.key} tone="optimal">
-                    <Trophy aria-hidden strokeWidth={2} className="size-3.5" /> PR {p.label}: {p.set.kg} kg × {p.set.reps}
+                    <Trophy aria-hidden strokeWidth={2} className="size-3.5" /> PR {p.label}: {p.set.kg} {" "}{tr("kg ×")}{" "}{p.set.reps}
                   </StatusChip>
                 ))}
               </div>
@@ -137,7 +134,7 @@ function Sessions({ vm }: { vm: StrengthVM }) {
                 <li key={`${x.key}-${i}`} className="flex items-center justify-between gap-3 py-2">
                   <span className="text-[15px] leading-5">{x.label}</span>
                   <span className={cn(CAPTION, "tabular-nums")}>
-                    {x.sets.length} × · top {x.best}
+                    {x.sets.length} {" "}{tr("× · top")}{" "}{x.best}
                   </span>
                 </li>
               ))}
@@ -155,7 +152,7 @@ export default async function StrengthPage() {
   const vm = await getStrength(await userCtx())
   return (
     <DetailShell
-      title="Strength"
+      title={tr("Strength")}
       info={INFO}
       action={<Tag kind="beta" />}
       hero={<Hero vm={vm} />}

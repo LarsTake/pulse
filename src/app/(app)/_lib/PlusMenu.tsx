@@ -11,6 +11,7 @@ import { InfoDialogContent } from "@/components/shells/InfoDialog"
 import { openSheet } from "@/components/shells/SheetTrigger"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, MENU_ITEM, MENU_PANEL } from "@/components/ui/dropdown-menu"
 import { ADD_ACTIVITY_INFO } from "./info"
+import { t as tr } from "@/lib/i18n"
 
 type Entry = { key: string; label: string; icon: LucideIcon; shown: boolean; onSelect: () => void }
 
@@ -28,14 +29,14 @@ export function PlusMenu({ label }: { label: string }) {
   // Web Bluetooth: Chrome and Edge on a computer or Android.
   const bluetooth = useBluetoothSupport() === true
   const entries: Entry[] = [
-    { key: "start", label: "Start activity", icon: Timer, shown: FEATURES.startActivity, onSelect: () => openSheet("start-activity") },
-    { key: "add", label: "Add activity", icon: Plus, shown: true, onSelect: () => (FEATURES.logActivity ? openSheet("add-activity") : setInfo(true)) },
-    { key: "live-hr", label: "Live heart rate", icon: HeartPulse, shown: FEATURES.liveHeartRate && bluetooth, onSelect: () => router.push("/live") },
-    { key: "strength", label: "Strength trainer", icon: Dumbbell, shown: FEATURES.strengthTrainer, onSelect: () => openSheet("strength") },
-    { key: "bp", label: "Log blood pressure", icon: Stethoscope, shown: FEATURES.bloodPressure, onSelect: () => openSheet("bp") },
-    { key: "labs", label: "Log lab results", icon: FlaskConical, shown: FEATURES.labs, onSelect: () => openSheet("labs") },
-    { key: "journal", label: "Complete your journal", icon: NotebookPen, shown: true, onSelect: () => openSheet("checkin") },
-    { key: "live", label: "Share live", icon: Camera, shown: FEATURES.liveShare, onSelect: () => openSheet("live") },
+    { key: "start", label: tr("Start activity"), icon: Timer, shown: FEATURES.startActivity, onSelect: () => openSheet("start-activity") },
+    { key: "add", label: tr("Add activity"), icon: Plus, shown: true, onSelect: () => (FEATURES.logActivity ? openSheet("add-activity") : setInfo(true)) },
+    { key: "live-hr", label: tr("Live heart rate"), icon: HeartPulse, shown: FEATURES.liveHeartRate && bluetooth, onSelect: () => router.push("/live") },
+    { key: "strength", label: tr("Strength trainer"), icon: Dumbbell, shown: FEATURES.strengthTrainer, onSelect: () => openSheet("strength") },
+    { key: "bp", label: tr("Log blood pressure"), icon: Stethoscope, shown: FEATURES.bloodPressure, onSelect: () => openSheet("bp") },
+    { key: "labs", label: tr("Log lab results"), icon: FlaskConical, shown: FEATURES.labs, onSelect: () => openSheet("labs") },
+    { key: "journal", label: tr("Complete your journal"), icon: NotebookPen, shown: true, onSelect: () => openSheet("checkin") },
+    { key: "live", label: tr("Share live"), icon: Camera, shown: FEATURES.liveShare, onSelect: () => openSheet("live") },
   ]
 
   return (

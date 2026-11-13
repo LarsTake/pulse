@@ -3,22 +3,23 @@ import { DetailShell } from "@/components/shells/DetailShell"
 import { GROUP_LABEL, MORE_COLUMN } from "@/components/shells/LinkList"
 import { CARD_MATERIAL } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
+import { t as tr } from "@/lib/i18n"
 
 /** Activities: the summary card and two day groups at their final size (spec §5.19). */
 export default function Loading() {
   return (
     <DetailShell
       loading
-      title="Activities"
+      title={tr("Activities")}
       primary={
         <div className={MORE_COLUMN}>
           <div className="space-y-2">
-            <p className={GROUP_LABEL}>Last 30 days</p>
+            <p className={GROUP_LABEL}>{tr("Last 30 days")}</p>
             <div className={cn(CARD_MATERIAL, "h-[92px]")} />
           </div>
           {[1, 2].map((n) => (
             <div key={n} className="space-y-2">
-              <p className={GROUP_LABEL}>&nbsp;</p>
+              <p className={GROUP_LABEL}>{"\u00a0"}</p>
               <div className={cn(CARD_MATERIAL, "p-1.5")}>
                 <TimelineSkeleton rows={n} />
               </div>

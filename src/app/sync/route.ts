@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { requestUser } from "@/server/auth";
 import { syncErrorText } from "@/server/queries/settings";
 import { syncAndWait } from "@/server/worker";
+import { t as tr } from "@/lib/i18n"
 
 /**
  * "Sync now": runs the signed-in user's sync past the worker's 5-minute gate and answers when it lands. A route, not
@@ -11,7 +12,7 @@ import { syncAndWait } from "@/server/worker";
  */
 export async function POST(req: NextRequest) {
   const user = await requestUser(req);
-  if (!user) return Response.json({ ok: false, error: "Signed out. Sign in again." }, { status: 401 });
+  if (!user) return Response.json({ ok: false, error: tr("Signed out. Sign in again.") }, { status: 401 });
   const r = await syncAndWait(user.userId);
   return Response.json(r.ok ? { ok: true } : { ok: false, error: r.error ? syncErrorText(r.error) : "Sync failed" }, { headers: { "cache-control": "no-store" } });
 }

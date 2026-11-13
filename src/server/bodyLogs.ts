@@ -9,6 +9,7 @@ import { exerciseDef, type StrengthSession } from "@/core/algorithms/strength";
 import type { Db } from "./db";
 import { bpReadings, labResults, loggedEntries, strengthSessions } from "./db/schema";
 import { fromWall, localDay } from "./time";
+import { t as tr } from "@/lib/i18n"
 
 type Result<T = void> = { ok: true; data: T } | { ok: false; error: string };
 
@@ -17,8 +18,8 @@ const int = (lo: number, hi: number, what: string) => z.number().int(`${what}: w
 
 function when(at: string | undefined, tz: string, now: number): Result<number> {
   const ts = at ? fromWall(at, tz) : now;
-  if (ts > now + 60) return { ok: false, error: "Can’t log the future" };
-  if (ts < now - 20 * 366 * 86_400) return { ok: false, error: "That is too far back" };
+  if (ts > now + 60) return { ok: false, error: tr("Can’t log the future") };
+  if (ts < now - 20 * 366 * 86_400) return { ok: false, error: tr("That is too far back") };
   return { ok: true, data: ts };
 }
 
@@ -68,8 +69,8 @@ export type LabInput = z.input<typeof LabInput>;
 export async function addLabs(db: Db, userId: number, input: LabInput, tz: string, now: number): Promise<Result<{ count: number }>> {
   const r = LabInput.safeParse(input);
   if (!r.success) return { ok: false, error: r.error.issues[0].message };
-  if (r.data.day > localDay(now, tz)) return { ok: false, error: "Can’t log a future day" };
-  for (const x of r.data.results) if (x.refLow !== null && x.refHigh !== null && x.refLow > x.refHigh) return { ok: false, error: "The range’s low end is above its high end" };
+  if (r.data.day > localDay(now, tz)) return { ok: false, error: tr("Can’t log a future day") };
+  for (const x of r.data.results) if (x.refLow !== null && x.refHigh !== null && x.refLow > x.refHigh) return { ok: false, error: tr("The range’s low end is above its high end") };
   await db.insert(labResults).values(r.data.results.map((x) => ({ userId, id: randomUUID(), day: r.data.day, marker: x.marker, value: x.value, refLow: x.refLow, refHigh: x.refHigh, createdAt: now })));
   return { ok: true, data: { count: r.data.results.length } };
 }

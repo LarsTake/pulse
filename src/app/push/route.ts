@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requestUser } from "@/server/auth";
 import { getDb } from "@/server/db";
 import { removeSubscription, saveSubscription } from "@/server/push";
+import { t as tr } from "@/lib/i18n"
 
 const NO_STORE = { "cache-control": "no-store" };
 // The server POSTs to the endpoint later, so only https on a browser push service: anything else would let a user aim
@@ -14,9 +15,9 @@ const Subscription = z.object({ endpoint: Endpoint, keys: z.object({ p256dh: z.s
 /** Turn notifications on: stores the browser's PushSubscription for the signed-in user. Like /sync, no Origin check: a cross-site POST carries no session cookie. */
 export async function POST(req: NextRequest) {
   const user = await requestUser(req);
-  if (!user) return Response.json({ ok: false, error: "Signed out. Sign in again." }, { status: 401, headers: NO_STORE });
+  if (!user) return Response.json({ ok: false, error: tr("Signed out. Sign in again.") }, { status: 401, headers: NO_STORE });
   const sub = Subscription.safeParse(await req.json().catch(() => null));
-  if (!sub.success) return Response.json({ ok: false, error: "Bad subscription" }, { status: 400, headers: NO_STORE });
+  if (!sub.success) return Response.json({ ok: false, error: tr("Bad subscription") }, { status: 400, headers: NO_STORE });
   await saveSubscription(getDb(), user.userId, sub.data);
   return Response.json({ ok: true }, { headers: NO_STORE });
 }
@@ -24,9 +25,9 @@ export async function POST(req: NextRequest) {
 /** Turn notifications off for this browser: body `{ endpoint }`. */
 export async function DELETE(req: NextRequest) {
   const user = await requestUser(req);
-  if (!user) return Response.json({ ok: false, error: "Signed out. Sign in again." }, { status: 401, headers: NO_STORE });
+  if (!user) return Response.json({ ok: false, error: tr("Signed out. Sign in again.") }, { status: 401, headers: NO_STORE });
   const body = z.object({ endpoint: z.string().max(2048) }).safeParse(await req.json().catch(() => null));
-  if (!body.success) return Response.json({ ok: false, error: "Bad request" }, { status: 400, headers: NO_STORE });
+  if (!body.success) return Response.json({ ok: false, error: tr("Bad request") }, { status: 400, headers: NO_STORE });
   await removeSubscription(getDb(), user.userId, body.data.endpoint);
   return Response.json({ ok: true }, { headers: NO_STORE });
 }

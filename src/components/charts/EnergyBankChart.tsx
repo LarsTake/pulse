@@ -14,6 +14,7 @@ import { useClock, useOptionalShellCalendar } from "@/components/shells/ShellSta
 import { ReasonPlaceholder } from "@/components/metrics/ReasonPlaceholder"
 import { AXIS, BandGradient, bandPaint, ChartFigure, FadeGradient, GlowDot, GRID, LINE_CURSOR, Pill, TOOLTIP_CLASS, TooltipLine, useSeriesAnimation, type Band } from "./ChartFrame"
 import { spanAreas } from "./IntradayHrChart"
+import { t as tr } from "@/lib/i18n"
 
 export type EnergySeries = {
   /** Reserve 0-100 from wake to now (today) or to sleep (past days). */
@@ -46,14 +47,14 @@ function Chart({ e }: { e: EnergySeries }) {
   const summary = `Energy from ${at(first, tz)}: started at ${formatValue("int", startV)} percent, now ${formatValue("int", latest?.value)} percent.`
 
   return (
-    <ChartFigure summary={summary} config={{ all: { label: "Energy", color: "var(--recovery-green)" } }} className="h-[140px]">
+    <ChartFigure summary={summary} config={{ all: { label: tr("Energy"), color: "var(--recovery-green)" } }} className="h-[140px]">
       <ComposedChart data={data} accessibilityLayer margin={{ top: 18, right: 8, bottom: 0, left: 0 }}>
         <CartesianGrid {...GRID} />
         <defs>
           <BandGradient id={`energy-${id}`} top={top} bottom={bottom} bands={BANDS} />
           <FadeGradient id={`energy-fill-${id}`} color={bandColor(latest?.value ?? top, BANDS)} from={0.24} />
         </defs>
-        {spanAreas(e.naps?.map((n) => ({ kind: "sleep" as const, start: n.start, end: n.end, label: "Nap" })))}
+        {spanAreas(e.naps?.map((n) => ({ kind: "sleep" as const, start: n.start, end: n.end, label: tr("Nap") })))}
         <XAxis dataKey="x" type="number" scale="time" domain={[first, last]} ticks={hourTicks(first, last, 6, tz)} tickFormatter={(v: number) => at(v, tz)} interval="preserveStartEnd" minTickGap={24} {...AXIS} />
         <YAxis domain={[0, 100]} ticks={[33, 67, 100]} width={28} {...AXIS} tickMargin={4} />
         <ChartTooltip
@@ -117,7 +118,7 @@ function Chart({ e }: { e: EnergySeries }) {
 export function EnergyBankChart({ data }: EnergyBankChartProps) {
   const empty = (
     <div className="grid place-items-center">
-      <EmptyState body="Energy Bank starts once you wake up." />
+      <EmptyState body={tr("Energy Bank starts once you wake up.")} />
     </div>
   )
   return (

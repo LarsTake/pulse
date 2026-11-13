@@ -8,8 +8,9 @@ import { DetailShell } from "@/components/shells/DetailShell"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { mapMetric } from "../_lib/view"
 import { MetricPicker, PERIOD, TRENDS_GRID } from "./parts"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Trends" }
+export const metadata = { title: tr("Trends") }
 
 /** Trends `/trends?metric=&r=` (More, U21): one daily metric over up to a year, each range against the one before. */
 export default async function TrendsPage({ searchParams }: PageProps<"/trends">) {
@@ -26,12 +27,12 @@ export default async function TrendsPage({ searchParams }: PageProps<"/trends">)
 
   return (
     <DetailShell
-      title="Trends"
+      title={tr("Trends")}
       primary={
         <div className="flex flex-col gap-4 xl:gap-6">
           <MetricPicker current={m.key} r={r} />
           <div className={TRENDS_GRID}>
-            <SectionShell variant="card" level={2} title={m.label} action={{ label: "Details", href: m.href }}>
+            <SectionShell variant="card" level={2} title={m.label} action={{ label: tr("Details"), href: m.href }}>
               <TrendChart
                 key={m.key}
                 label={m.label}
@@ -44,7 +45,7 @@ export default async function TrendsPage({ searchParams }: PageProps<"/trends">)
                 ranges={RANGES}
               />
             </SectionShell>
-            <SectionShell variant="card" level={2} title="Averages">
+            <SectionShell variant="card" level={2} title={tr("Averages")}>
               <div className="divide-y divide-border">
                 {vm.periods.map((p) => (
                   <KeyStatRow

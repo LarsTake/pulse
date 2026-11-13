@@ -3,17 +3,18 @@ import { and, eq, inArray, notInArray } from "drizzle-orm";
 import { type Db, rows, sql } from "./db";
 import { journalTags } from "./db/schema";
 import { behavior } from "@/lib/behaviors";
+import { t as tr } from "@/lib/i18n"
 
 export const DEFAULT_JOURNAL_TAGS = [
-  { tag: "alcohol", label: "Alcohol" },
-  { tag: "late_caffeine", label: "Late caffeine" },
-  { tag: "late_meal", label: "Late meal" },
-  { tag: "screen_in_bed", label: "Screen in bed" },
-  { tag: "meditation", label: "Meditation" },
-  { tag: "stretching", label: "Stretching" },
-  { tag: "sauna", label: "Sauna" },
-  { tag: "travel", label: "Travel" },
-  { tag: "illness", label: "Illness" },
+  { tag: "alcohol", label: tr("Alcohol") },
+  { tag: "late_caffeine", label: tr("Late caffeine") },
+  { tag: "late_meal", label: tr("Late meal") },
+  { tag: "screen_in_bed", label: tr("Screen in bed") },
+  { tag: "meditation", label: tr("Meditation") },
+  { tag: "stretching", label: tr("Stretching") },
+  { tag: "sauna", label: tr("Sauna") },
+  { tag: "travel", label: tr("Travel") },
+  { tag: "illness", label: tr("Illness") },
 ] as const;
 
 /** Inserts any missing default tag for the user; existing rows (and custom tags) are left alone. Returns rows inserted. */

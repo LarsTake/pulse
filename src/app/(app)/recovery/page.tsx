@@ -11,8 +11,9 @@ import { getWeeklyTrends, type TrendViewKey } from "@/server/queries/trendView"
 import { pageDay, type SearchParams } from "../_lib/day"
 import { RECOVERY_INFO } from "../_lib/info"
 import { statProps, TodayVsLegend } from "../_lib/view"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Recovery", description: "Your Recovery and what shaped it: HRV, resting heart rate, breathing and sleep against the last 30 days." }
+export const metadata = { title: tr("Recovery"), description: tr("Your Recovery and what shaped it: HRV, resting heart rate, breathing and sleep against the last 30 days.") }
 
 /** Weekly Trends: Recovery and HRV as captured (recovery-weekly-trends-*), then the other contributors in row order. */
 const WEEKLY: readonly TrendViewKey[] = ["recovery", "hrv", "rhr", "resp", "sleep"]
@@ -25,7 +26,7 @@ export default async function RecoveryPage({ searchParams }: PageProps<"/recover
 
   return (
     <DetailShell
-      title="Recovery"
+      title={tr("Recovery")}
       info={RECOVERY_INFO}
       dateSwitcher={{ mode: "day", placement: "header", steppers: false }}
       notch
@@ -40,7 +41,7 @@ export default async function RecoveryPage({ searchParams }: PageProps<"/recover
           <TodayVsLegend period="last 30 days" />
         </Card>
       }
-      insight={vm.insight && <InsightCard body={vm.insight} action={{ label: "Explore your recovery insights", href: trendHref("recovery", { d, today }) }} />}
+      insight={vm.insight && <InsightCard body={vm.insight} action={{ label: tr("Explore your recovery insights"), href: trendHref("recovery", { d, today }) }} />}
       primary={<BehaviorInsights chips={vm.behaviors} href={dayHref("/journal/insights", d, today)} />}
       footer={<WeeklyTrends cards={weekly} d={d} today={today} />}
     />

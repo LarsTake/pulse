@@ -12,6 +12,7 @@ import { useBluetoothSupport } from "@/hooks/use-bluetooth"
 import { CAPTION, LABEL } from "@/components/metrics/primitives"
 import { Button } from "@/components/ui/button"
 import { CARD_MATERIAL } from "@/components/ui/card"
+import { t as tr } from "@/lib/i18n"
 
 // Web Bluetooth is not in TypeScript's DOM lib; the few members used here.
 type Characteristic = EventTarget & { value: DataView | null; startNotifications(): Promise<Characteristic>; stopNotifications(): Promise<Characteristic> }
@@ -221,10 +222,9 @@ export function LiveHr({ vm }: { vm: LiveHrVM }) {
     return (
       <div className={cn(CARD_MATERIAL, "flex flex-col items-center gap-3 p-6 text-center")}>
         <BluetoothOff aria-hidden strokeWidth={1.75} className="size-8 text-muted-foreground" />
-        <p className="text-[17px] leading-6 font-semibold">This browser can’t reach Bluetooth</p>
+        <p className="text-[17px] leading-6 font-semibold">{tr("This browser can’t reach Bluetooth")}</p>
         <p className="max-w-[48ch] text-[15px] leading-[22px] text-pretty text-foreground-secondary">
-          Open Pulse in Chrome or Edge on a computer or an Android phone. Safari and the iPhone don’t offer Web Bluetooth.
-        </p>
+          {tr("Open Pulse in Chrome or Edge on a computer or an Android phone. Safari and the iPhone don’t offer Web Bluetooth.")}</p>
       </div>
     )
 
@@ -255,7 +255,7 @@ export function LiveHr({ vm }: { vm: LiveHrVM }) {
         <p className={cn(CAPTION, "flex items-center gap-1.5")} aria-live="polite">
           <Bluetooth aria-hidden className="size-3.5" />
           {status === "live" ? device : status === "connecting" ? "Connecting…" : status === "lost" ? `${device} disconnected` : "Not connected"}
-          {hrv !== null && status === "live" && <span className="ml-2 tabular-nums">· HRV {Math.round(hrv)} ms</span>}
+          {hrv !== null && status === "live" && <span className="ml-2 tabular-nums">{tr("· HRV")}{" "}{Math.round(hrv)} ms</span>}
         </p>
       </div>
 
@@ -268,11 +268,9 @@ export function LiveHr({ vm }: { vm: LiveHrVM }) {
             </Button>
             <div className="grid grid-cols-2 gap-2">
               <Button size="sheet" variant="outline-pill" onClick={reset} disabled={!elapsed}>
-                <RotateCcw aria-hidden /> Reset
-              </Button>
+                <RotateCcw aria-hidden /> {" "}{tr("Reset")}</Button>
               <Button size="sheet" variant="outline-pill" onClick={disconnect}>
-                Disconnect
-              </Button>
+                {tr("Disconnect")}</Button>
             </div>
           </>
         ) : (
@@ -285,13 +283,13 @@ export function LiveHr({ vm }: { vm: LiveHrVM }) {
       </div>
 
       <section className={cn(CARD_MATERIAL, "p-4")}>
-        <h2 className={LABEL}>Last 5 minutes</h2>
+        <h2 className={LABEL}>{tr("Last 5 minutes")}</h2>
         <Spark samples={trace} lo={lo} hi={hi} />
       </section>
 
       <section className={cn(CARD_MATERIAL, "p-4")}>
         <div className="flex items-baseline justify-between">
-          <h2 className={LABEL}>Session</h2>
+          <h2 className={LABEL}>{tr("Session")}</h2>
           <span className="font-numeric text-xl font-bold tabular-nums">{hmm(elapsed / 60)}</span>
         </div>
         <dl className="mt-3 grid grid-cols-3 gap-3 text-center">
@@ -321,9 +319,8 @@ export function LiveHr({ vm }: { vm: LiveHrVM }) {
           })}
         </ul>
         <p className={cn(CAPTION, "mt-3")}>
-          Zones on heart-rate reserve: resting {vm.restingHr}
-          {vm.restingSource === "default" ? " (default)" : ""}, max {vm.maxHr} bpm. Shown here only; your day’s Strain still comes from the band’s sync.
-        </p>
+          {tr("Zones on heart-rate reserve: resting")}{" "}{vm.restingHr}
+          {vm.restingSource === "default" ? " (default)" : ""}{tr(", max")}{" "}{vm.maxHr} {" "}{tr("bpm. Shown here only; your day’s Strain still comes from the band’s sync.")}</p>
       </section>
     </div>
   )

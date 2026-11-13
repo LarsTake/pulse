@@ -9,8 +9,9 @@ import { coachSuggestions } from "@/server/coach/suggestions"
 import { Coach, CoachBarActions } from "./Coach"
 import { CoachViewport } from "@/components/shells/CoachViewport"
 import { Consent, ProviderForm } from "./CoachSetup"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Coach" }
+export const metadata = { title: tr("Coach") }
 
 const FRAME = "xl:-ml-[144px] xl:has-data-[chats=closed]:pl-[76px] xl:has-data-[chats=open]:pl-[284px]"
 
@@ -25,15 +26,15 @@ export default async function CoachPage({ searchParams }: { searchParams: Promis
     return (
       <div className={FRAME}>
         <DetailShell
-          title="Coach"
+          title={tr("Coach")}
           primary={
             <div className="mx-auto w-full max-w-[560px] pb-10">
               {!setup.consent ? (
                 <Consent />
               ) : (
                 <div className="space-y-4">
-                  <h2 className="text-[22px] leading-7 font-bold text-balance">Connect your AI provider</h2>
-                  <p className="text-[15px] leading-[22px] text-pretty text-foreground-secondary">The coach runs on your own account with a provider, so you pay them directly for what you use.</p>
+                  <h2 className="text-[22px] leading-7 font-bold text-balance">{tr("Connect your AI provider")}</h2>
+                  <p className="text-[15px] leading-[22px] text-pretty text-foreground-secondary">{tr("The coach runs on your own account with a provider, so you pay them directly for what you use.")}</p>
                   <ProviderForm providers={providerOptions()} current={setup} />
                 </div>
               )}
@@ -52,7 +53,7 @@ export default async function CoachPage({ searchParams }: { searchParams: Promis
     <CoachViewport>
       <DetailShell
         contained
-        title="Coach"
+        title={tr("Coach")}
         action={<CoachBarActions chatCount={chatCount} chatOpen={(saved?.length ?? 0) > 0} />}
         primary={<Coach key={id} id={id} initial={saved ?? []} groups={groups} next={next} prefill={brief === "1" && !saved ? "Today's brief" : (q ?? "").slice(0, 500)} auto={brief === "1" && !saved} suggestions={suggestions} />}
       />

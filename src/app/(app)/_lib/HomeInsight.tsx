@@ -4,6 +4,7 @@ import * as React from "react"
 import { Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { CARD_MATERIAL } from "@/components/ui/card"
+import { t as tr } from "@/lib/i18n"
 
 export type HomeInsightItem = { key: string; title: string; body: string }
 
@@ -20,7 +21,7 @@ export function HomeInsight({ items }: { items: HomeInsightItem[] }) {
   if (!n) return null
   const several = n > 1
   return (
-    <section aria-label="Insights" aria-roledescription={several ? "carousel" : undefined} className={cn("relative", several && "pb-2")}>
+    <section aria-label={tr("Insights")} aria-roledescription={several ? "carousel" : undefined} className={cn("relative", several && "pb-2")}>
       {several && <div aria-hidden className="absolute inset-x-5 bottom-0 h-8 rounded-b-2xl bg-card/60" />}
       {/* the reference app's card: text inset 20 px, the counter pill 8 px from the top and right corner [latest-home-top-1..3] (spec §11 F6). */}
       <div className={cn(CARD_MATERIAL, "relative p-5 pr-12 xl:p-6 xl:pr-14")}>
@@ -46,7 +47,7 @@ export function HomeInsight({ items }: { items: HomeInsightItem[] }) {
           <button
             type="button"
             onClick={() => setI((k) => (k + 1) % n)}
-            aria-label={`Next insight (${i + 1} of ${n})`}
+            aria-label={tr("Next insight ({0} of {1})", [i + 1, n])}
             className="absolute top-2 right-2 flex h-12 w-6 flex-col items-center justify-center gap-1 rounded-lg bg-foreground/8 text-foreground transition-[background-color,scale] duration-150 ease-standard outline-none after:absolute after:-inset-x-2.5 after:-inset-y-0.5 hover:bg-foreground/12 focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
           >
             <Check aria-hidden className="size-4" strokeWidth={2.25} />

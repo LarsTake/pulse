@@ -1,4 +1,5 @@
 import * as React from "react"
+import { t as tr } from "@/lib/i18n"
 
 // Client-side "a sync is running" flag, so the band's syncing ring turns on the moment Sync now is pressed,
 // before the server status catches up. A counter, so overlapping syncs keep it on until the last one ends.
@@ -24,7 +25,7 @@ export async function syncNow(): Promise<{ ok: boolean; error?: string }> {
   const end = startSyncing()
   return fetch("/sync", { method: "POST", cache: "no-store" })
     .then((res) => res.json())
-    .catch(() => ({ ok: false, error: "Couldn’t reach Pulse" }))
+    .catch(() => ({ ok: false, error: tr("Couldn’t reach Pulse") }))
     .finally(end)
 }
 

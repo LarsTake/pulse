@@ -14,6 +14,7 @@ import { localDay } from "../time";
 import type { BehavioursVM, JournalVM } from "../queries/types";
 import { requestSync } from "../worker";
 import { inDayRange } from "@/lib/url";
+import { t as tr } from "@/lib/i18n"
 
 export type ActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: string };
 
@@ -39,10 +40,10 @@ export async function saveJournalEntry(input: z.input<typeof Entry>): Promise<Ac
   if (!r.success) return { ok: false, error: r.error.issues[0].message };
   const { day, tag, value } = r.data;
   const detail = value ? (r.data.detail ?? null) : null;
-  if (day > (await localToday(userId))) return { ok: false, error: "Can’t log a future day" };
+  if (day > (await localToday(userId))) return { ok: false, error: tr("Can’t log a future day") };
   const db = getDb();
   const [known] = await db.select({ tag: journalTags.tag }).from(journalTags).where(and(eq(journalTags.userId, userId), eq(journalTags.tag, tag)));
-  if (!known) return { ok: false, error: `Unknown tag: ${tag}` };
+  if (!known) return { ok: false, error: tr("Unknown tag: {0}", [tag]) };
   if (value === null) {
     await db.delete(journalEntries).where(and(eq(journalEntries.userId, userId), eq(journalEntries.day, day), eq(journalEntries.tag, tag)));
   } else {
@@ -69,9 +70,9 @@ export async function loadCheckIn(day: string): Promise<ActionResult<Pick<Journa
   const user = await currentUser();
   if (!user) return SIGNED_OUT;
   const r = z.iso.date().safeParse(day);
-  if (!r.success) return { ok: false, error: "Invalid day" };
+  if (!r.success) return { ok: false, error: tr("Invalid day") };
   const ctx = await userCtx(user.userId);
-  if (!inDayRange(r.data, localDay(ctx.now, ctx.timeZone))) return { ok: false, error: "Invalid day" };
+  if (!inDayRange(r.data, localDay(ctx.now, ctx.timeZone))) return { ok: false, error: tr("Invalid day") };
   // ponytail: getJournal also builds the strip, history and teaser the sheet drops; a lean query if it ever shows.
   const { tags, checkIn, strip } = await getJournal(r.data, ctx);
   return { ok: true, data: { tags, checkIn, strip } };
@@ -88,7 +89,7 @@ export async function saveJournalNote(input: z.input<typeof Note>): Promise<Acti
   const { userId } = user;
   const { day } = r.data;
   const text = r.data.text.trim();
-  if (day > (await localToday(userId))) return { ok: false, error: "Can’t log a future day" };
+  if (day > (await localToday(userId))) return { ok: false, error: tr("Can’t log a future day") };
   const n = journalNotes;
   if (!text) await getDb().delete(n).where(and(eq(n.userId, userId), eq(n.day, day)));
   else await getDb().insert(n).values({ userId, day, text }).onConflictDoUpdate({ target: [n.userId, n.day], set: { text } });
@@ -115,8 +116,8 @@ export async function saveBehaviors(input: z.input<typeof Selection>): Promise<A
   const r = Selection.safeParse(input);
   if (!r.success) return { ok: false, error: r.error.issues[0].message };
   const result = await selectTags(getDb(), user.userId, r.data.tags);
-  if (result === "unknown") return { ok: false, error: "Unknown behaviour" };
-  if (result === "full") return { ok: false, error: `Too many behaviours: the limit is ${MAX_TAGS}` };
+  if (result === "unknown") return { ok: false, error: tr("Unknown behaviour") };
+  if (result === "full") return { ok: false, error: tr("Too many behaviours: the limit is {0}", [MAX_TAGS]) };
   revalidateTags();
   revalidatePath("/");
   return { ok: true, data: undefined };
@@ -132,10 +133,10 @@ export async function addCustomTag(input: z.input<typeof CustomTag>): Promise<Ac
   if (!r.success) return { ok: false, error: r.error.issues[0].message };
   const { label } = r.data;
   const tag = tagKey(label);
-  if (!tag) return { ok: false, error: "Label needs a letter or digit" };
+  if (!tag) return { ok: false, error: tr("Label needs a letter or digit") };
   const added = await addTag(getDb(), user.userId, tag, label);
-  if (added === "exists") return { ok: false, error: `Tag already exists: ${tag}` };
-  if (added === "full") return { ok: false, error: `Too many behaviours: the limit is ${MAX_TAGS}` };
+  if (added === "exists") return { ok: false, error: tr("Tag already exists: {0}", [tag]) };
+  if (added === "full") return { ok: false, error: tr("Too many behaviours: the limit is {0}", [MAX_TAGS]) };
   revalidateTags();
   return { ok: true, data: { tag } };
 }

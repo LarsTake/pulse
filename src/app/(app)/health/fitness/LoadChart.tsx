@@ -5,11 +5,12 @@ import { DAY, formatDay, formatValue } from "@/lib/format"
 import type { FitnessVM } from "@/server/queries/types"
 import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { AXIS, ChartFigure, FadeGradient, GRID, LINE_CURSOR, TOOLTIP_CLASS, useSeriesAnimation } from "@/components/charts/ChartFrame"
+import { t as tr } from "@/lib/i18n"
 
 const CONFIG = {
-  ctl: { label: "Fitness", color: "var(--chart-1)" },
-  atl: { label: "Fatigue", color: "var(--chart-4)" },
-  tsb: { label: "Form", color: "var(--chart-2)" },
+  ctl: { label: tr("Fitness"), color: "var(--chart-1)" },
+  atl: { label: tr("Fatigue"), color: "var(--chart-4)" },
+  tsb: { label: tr("Form"), color: "var(--chart-2)" },
 }
 
 /** Fitness (CTL), fatigue (ATL) and form (TSB) over 90 days (spec §7.10). */

@@ -15,6 +15,7 @@ import { AuthField } from "@/components/auth/AuthForm"
 import { authClient } from "@/lib/auth-client"
 import { disconnectGoogle } from "./actions"
 import { AvatarCropSheet, decodePhoto, encodeAvatar } from "./AvatarCropSheet"
+import { t as tr } from "@/lib/i18n"
 
 /** Landing back from Google with `?oauth=connected` or `?oauth=<code>` shows one toast, then drops the param. */
 function OAuthToastInner() {
@@ -60,23 +61,20 @@ export function DisconnectButton() {
   return (
     <>
       <Button variant="outline" size="touch" className="w-full text-recovery-red-text" onClick={() => setOpen(true)}>
-        Disconnect
-      </Button>
+        {tr("Disconnect")}</Button>
       <Dialog open={open} onOpenChange={(o) => !pending && setOpen(o)}>
         <DialogContent showCloseButton={false} className="ring-1 ring-border">
           <DialogHeader>
-            <DialogTitle>Disconnect Google?</DialogTitle>
-            <DialogDescription>Removes every permission Pulse has in your Google account, so you don’t have to do it in Google. Sync stops; your stored data stays on this server.</DialogDescription>
+            <DialogTitle>{tr("Disconnect Google?")}</DialogTitle>
+            <DialogDescription>{tr("Removes every permission Pulse has in your Google account, so you don’t have to do it in Google. Sync stops; your stored data stays on this server.")}</DialogDescription>
           </DialogHeader>
           {error && (
             <p role="alert" className="text-xs leading-4 font-medium text-recovery-red-text">
-              Couldn’t reach Google to remove access. Check your connection and try again.
-            </p>
+              {tr("Couldn’t reach Google to remove access. Check your connection and try again.")}</p>
           )}
           <DialogFooter>
             <Button variant="secondary" size="touch" onClick={() => setOpen(false)} disabled={pending}>
-              Cancel
-            </Button>
+              {tr("Cancel")}</Button>
             <Button variant="outline" size="touch" className="text-recovery-red-text" onClick={run} disabled={pending}>
               {pending ? "Disconnecting…" : "Disconnect"}
             </Button>
@@ -95,24 +93,21 @@ export function SwitchGoogleButton({ current }: { current: string | null }) {
   const [open, setOpen] = React.useState(false)
   return (
     <>
-      <Button variant="secondary" size="touch" className="w-full" aria-label="Change password" onClick={() => setOpen(true)}>
-        Switch Google account
-      </Button>
+      <Button variant="secondary" size="touch" className="w-full" aria-label={tr("Change password")} onClick={() => setOpen(true)}>
+        {tr("Switch Google account")}</Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent showCloseButton={false} className="ring-1 ring-border">
           <DialogHeader>
-            <DialogTitle>Switch Google account?</DialogTitle>
+            <DialogTitle>{tr("Switch Google account?")}</DialogTitle>
             <DialogDescription>
-              {current ? `Pulse removes what it synced from ${current}` : "Pulse removes the data synced so far"} and imports the new account’s history. Your journal, profile and dashboard stay.
-            </DialogDescription>
+              {current ? `Pulse removes what it synced from ${current}` : "Pulse removes the data synced so far"} {" "}{tr("and imports the new account’s history. Your journal, profile and dashboard stay.")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="secondary" size="touch" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
+              {tr("Cancel")}</Button>
             <Button asChild size="touch">
               {/* A plain anchor: it leaves the app for Google's account chooser. */}
-              <a href="/oauth/start?switch=1">Choose account</a>
+              <a href="/oauth/start?switch=1">{tr("Choose account")}</a>
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -152,10 +147,9 @@ export function ChangePasswordButton() {
   }
   return (
     <>
-      <Button variant="secondary" size="touch" className="w-full" aria-label="Change password" onClick={() => setOpen(true)}>
+      <Button variant="secondary" size="touch" className="w-full" aria-label={tr("Change password")} onClick={() => setOpen(true)}>
         <KeyRound aria-hidden strokeWidth={2} />
-        Password
-      </Button>
+        {tr("Password")}</Button>
       <ResponsiveSheet
         open={open}
         onOpenChange={(o) => {
@@ -163,18 +157,18 @@ export function ChangePasswordButton() {
           setOpen(o)
           setError(null)
         }}
-        title="Change password"
-        description="Other devices are signed out."
+        title={tr("Change password")}
+        description={tr("Other devices are signed out.")}
       >
         <form onSubmit={submit} className="flex flex-col gap-5 px-4 pb-[max(env(safe-area-inset-bottom),16px)] md:px-6 md:pb-6">
-          <AuthField label="Current password" name="current" type="password" autoComplete="current-password" required />
-          <AuthField label="New password" name="next" type="password" autoComplete="new-password" required minLength={10} maxLength={128} hint="At least 10 characters." />
+          <AuthField label={tr("Current password")} name="current" type="password" autoComplete="current-password" required />
+          <AuthField label={tr("New password")} name="next" type="password" autoComplete="new-password" required minLength={10} maxLength={128} hint={tr("At least 10 characters.")} />
           {error && (
             <p role="alert" className="px-1 text-[13px] leading-[18px] font-medium text-recovery-red-text">
               {error}
             </p>
           )}
-          <SaveButton pending={pending} label="Change password" />
+          <SaveButton pending={pending} label={tr("Change password")} />
         </form>
       </ResponsiveSheet>
     </>
@@ -211,8 +205,7 @@ export function DeleteAccountButton() {
         className="h-11 rounded-full px-5 text-[13px] font-bold tracking-[0.06em] text-recovery-red-text uppercase ring-1 ring-recovery-red/45 hover:bg-recovery-red/10 hover:text-recovery-red-text"
         onClick={() => setOpen(true)}
       >
-        Delete account
-      </Button>
+        {tr("Delete account")}</Button>
       <Dialog
         open={open}
         onOpenChange={(o) => {
@@ -224,12 +217,11 @@ export function DeleteAccountButton() {
         <DialogContent showCloseButton={false} className="ring-1 ring-border">
           <form onSubmit={submit} className="grid gap-4">
             <DialogHeader>
-              <DialogTitle>Delete your account?</DialogTitle>
+              <DialogTitle>{tr("Delete your account?")}</DialogTitle>
               <DialogDescription>
-                Removes your account and everything Pulse stored for it: synced data, scores, journal, profile and the Google connection. This can’t be undone.
-              </DialogDescription>
+                {tr("Removes your account and everything Pulse stored for it: synced data, scores, journal, profile and the Google connection. This can’t be undone.")}</DialogDescription>
             </DialogHeader>
-            <AuthField label="Password" name="password" type="password" autoComplete="current-password" required autoFocus />
+            <AuthField label={tr("Password")} name="password" type="password" autoComplete="current-password" required autoFocus />
             {error && (
               <p role="alert" className="px-1 text-[13px] leading-[18px] font-medium text-recovery-red-text">
                 {error}
@@ -237,8 +229,7 @@ export function DeleteAccountButton() {
             )}
             <DialogFooter>
               <Button type="button" variant="secondary" size="touch" onClick={() => setOpen(false)} disabled={pending}>
-                Cancel
-              </Button>
+                {tr("Cancel")}</Button>
               <Button type="submit" variant="outline" size="touch" className="text-recovery-red-text" disabled={pending} aria-busy={pending || undefined}>
                 {pending ? "Deleting…" : "Delete account"}
               </Button>
@@ -261,16 +252,15 @@ export function EditProfileButton({ defaults }: { defaults: ProfileDefaults }) {
     <>
       <Button
         variant="ghost"
-        aria-label="Edit profile"
+        aria-label={tr("Edit profile")}
         onClick={() => setOpen(true)}
         className="relative -my-2 h-9 gap-1.5 rounded-full px-3 after:absolute after:-inset-y-1 text-[13px] font-semibold text-foreground-secondary hover:bg-foreground/[0.06] hover:text-foreground"
       >
         <Pencil aria-hidden strokeWidth={2} className="size-3.5" />
-        Edit
-      </Button>
-      <ResponsiveSheet open={open} onOpenChange={setOpen} title="Profile" description="Time format only changes how times are shown. Other changes recompute your scores.">
+        {tr("Edit")}</Button>
+      <ResponsiveSheet open={open} onOpenChange={setOpen} title={tr("Profile")} description={tr("Time format only changes how times are shown. Other changes recompute your scores.")}>
         <div className="px-4 pb-[max(env(safe-area-inset-bottom),16px)] md:px-6 md:pb-6">
-          <ProfileForm defaults={defaults} onSaved={saved} footer={(pending) => <SaveButton pending={pending} label="Save profile" />} />
+          <ProfileForm defaults={defaults} onSaved={saved} footer={(pending) => <SaveButton pending={pending} label={tr("Save profile")} />} />
         </div>
       </ResponsiveSheet>
     </>
@@ -344,9 +334,9 @@ export function AvatarButtons() {
 }
 
 const THEMES = [
-  { value: "system", label: "System", Icon: Monitor },
-  { value: "light", label: "Light", Icon: Sun },
-  { value: "dark", label: "Dark", Icon: Moon },
+  { value: "system", label: tr("System"), Icon: Monitor },
+  { value: "light", label: tr("Light"), Icon: Sun },
+  { value: "dark", label: tr("Dark"), Icon: Moon },
 ] as const
 
 /**
@@ -357,7 +347,7 @@ export function ThemePicker() {
   const { theme, setTheme } = useTheme()
   return (
     <fieldset>
-      <legend className="sr-only">Theme</legend>
+      <legend className="sr-only">{tr("Theme")}</legend>
       <div className="grid grid-cols-3 gap-1 rounded-[14px] bg-field p-1">
         {THEMES.map(({ value, label, Icon }) => (
           <label key={value} className="relative">

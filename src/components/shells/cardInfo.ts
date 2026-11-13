@@ -1,4 +1,5 @@
 import type { InfoContent } from "./InfoButton"
+import { t as tr } from "@/lib/i18n"
 
 const COPY: Record<string, string> = {
   "Stress": "Body activation during still minutes, from 0 to 3. Movement, workouts and sleep are excluded.",
@@ -86,7 +87,10 @@ const COPY: Record<string, string> = {
   "Last 12 months": "Summary of recorded values in the last year, compared with the year before.",
 }
 
+// Titles reach this already translated (SectionShell gets tr(title)); look the English copy up through them.
+const BY_TITLE = new Map(Object.entries(COPY).map(([en, body]) => [tr(en), body]))
+
 export function cardInfo(title: string): InfoContent | undefined {
-  const body = COPY[title]
-  return body ? { title, body } : undefined
+  const body = COPY[title] ?? BY_TITLE.get(title)
+  return body ? { title, body: tr(body) } : undefined
 }

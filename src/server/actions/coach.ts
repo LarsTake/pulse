@@ -12,8 +12,9 @@ import { ctxOf } from "../queries/common";
 import { getConfig } from "../config";
 import { getDb } from "../db";
 import type { ActionResult } from "./journal";
+import { t as tr } from "@/lib/i18n"
 
-const NO_ACCESS = { ok: false as const, error: "Coach isn’t turned on for your account." };
+const NO_ACCESS = { ok: false as const, error: tr("Coach isn’t turned on for your account.") };
 const DONE = { ok: true as const, data: undefined };
 
 async function member(): Promise<number | ActionResult<never>> {
@@ -47,18 +48,18 @@ export async function saveProviderAction(input: z.input<typeof Provider>): Promi
   const { provider, model } = r.data;
   const cfg = getConfig();
   const keyless = (provider === "local" && !!cfg.coachLocal) || (provider === "mock" && cfg.coachMock);
-  if (!keyless && !providerOf(provider)) return { ok: false, error: "Pick a provider." };
+  if (!keyless && !providerOf(provider)) return { ok: false, error: tr("Pick a provider.") };
   const apiKey = keyless ? null : r.data.apiKey;
-  if (!keyless && !apiKey) return { ok: false, error: "Paste your API key." };
-  if (apiKey && !cfg.authSecret) return { ok: false, error: "This server has no BETTER_AUTH_SECRET, so it can’t store keys safely. Ask whoever runs it." };
+  if (!keyless && !apiKey) return { ok: false, error: tr("Paste your API key.") };
+  if (apiKey && !cfg.authSecret) return { ok: false, error: tr("This server has no BETTER_AUTH_SECRET, so it can’t store keys safely. Ask whoever runs it.") };
   const usedModel = provider === "local" ? cfg.coachLocal!.model : model;
   const m = modelFor(provider, usedModel, apiKey);
-  if (!m) return { ok: false, error: "Pick a provider." };
+  if (!m) return { ok: false, error: tr("Pick a provider.") };
   try {
-    await generateText({ model: m, prompt: "Reply with OK.", maxOutputTokens: 5, maxRetries: 0, abortSignal: AbortSignal.timeout(20_000) });
+    await generateText({ model: m, prompt: tr("Reply with OK."), maxOutputTokens: 5, maxRetries: 0, abortSignal: AbortSignal.timeout(20_000) });
   } catch (e) {
     console.warn(`[coach] key test failed for ${provider}: ${e instanceof Error ? e.name : "error"}`);
-    return { ok: false, error: "That didn’t work: check the key and the model id, and that your account has credit." };
+    return { ok: false, error: tr("That didn’t work: check the key and the model id, and that your account has credit.") };
   }
   await saveProvider(getDb(), me, provider, usedModel, apiKey);
   revalidatePath("/coach");
@@ -101,10 +102,10 @@ export async function moreChatsAction(cursor: z.input<typeof Cursor>): Promise<A
   const me = await currentUser();
   if (!me) return SIGNED_OUT;
   const c = Cursor.safeParse(cursor);
-  if (!c.success) return { ok: false, error: "Couldn’t load older chats." };
+  if (!c.success) return { ok: false, error: tr("Couldn’t load older chats.") };
   const db = getDb();
   const ctx = await ctxOf(db, me.userId).catch(() => null);
-  if (!ctx) return { ok: false, error: "Couldn’t load older chats." };
+  if (!ctx) return { ok: false, error: tr("Couldn’t load older chats.") };
   const { chats, next } = await listChats(db, me.userId, c.data);
   return { ok: true, data: { groups: groupChats(chats, ctx.now, ctx.timeZone), next } };
 }

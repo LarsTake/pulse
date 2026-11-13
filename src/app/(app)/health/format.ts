@@ -1,4 +1,5 @@
 import { formatValue, LOCALE } from "@/lib/format"
+import { t as tr } from "@/lib/i18n"
 
 const ORDINAL = new Intl.PluralRules(LOCALE, { type: "ordinal" })
 const SUFFIX: Partial<Record<Intl.LDMLPluralRule, string>> = { one: "st", two: "nd", few: "rd" }
@@ -12,8 +13,8 @@ export const ordinal = (n: number) => {
 /** "2.3 years younger" / "1.0 years older" / "Same as your age" (spec §6), with its tone class. */
 export function ageDelta(delta: number) {
   const v = formatValue("decimal1", Math.abs(delta))
-  if (v === "0.0") return { text: "Same as your age", tone: "text-foreground-secondary" }
-  return delta < 0 ? { text: `${v}\u00a0years younger`, tone: "text-optimal-text" } : { text: `${v}\u00a0years older`, tone: "text-warning-text" }
+  if (v === "0.0") return { text: tr("Same as your age"), tone: "text-foreground-secondary" }
+  return delta < 0 ? { text: tr("{0} years younger", [v]), tone: "text-optimal-text" } : { text: tr("{0} years older", [v]), tone: "text-warning-text" }
 }
 
 /** "excellent" (the core's key) → "Excellent". */

@@ -1,4 +1,5 @@
 import type { DeltaDir, Tone } from "./bands";
+import { INTL_LOCALE, t, UI_LOCALE } from "./i18n";
 
 // Number, date and spoken-label formatting (spec §3.3, §6). Formatters are referenced by key so a
 // server component can hand them to a client component (functions do not cross that boundary).
@@ -9,10 +10,10 @@ export const MISSING = "--";
 const MINUS = "−";
 
 /**
- * The one locale every Intl formatter uses (spec §6). The copy is English only, so the locale is fixed rather than
- * read from Accept-Language: server and client then render the same strings (no hydration mismatch).
+ * The one locale every Intl formatter uses (spec §6): the server's interface language (src/lib/i18n.ts), never
+ * Accept-Language, so server and client render the same strings (no hydration mismatch).
  */
-export const LOCALE = "en-US";
+export const LOCALE = INTL_LOCALE;
 /** Joins a number to its unit or word so the pair never wraps apart: `10${NBSP}MB`. */
 export const NBSP = " ";
 
@@ -92,10 +93,10 @@ export const DAY = {
 
 /** "Today", "Yesterday", else "Mon, Sep 28". Dates are YYYY-MM-DD in the user's zone. */
 export function dayLabel(date: string, today: string) {
-  if (date === today) return "Today";
+  if (date === today) return t("Today");
   const y = new Date(`${today}T00:00:00Z`);
   y.setUTCDate(y.getUTCDate() - 1);
-  if (date === y.toISOString().slice(0, 10)) return "Yesterday";
+  if (date === y.toISOString().slice(0, 10)) return t("Yesterday");
   return formatDay(date, DAY.short);
 }
 
@@ -103,7 +104,9 @@ export function dayLabel(date: string, today: string) {
  * reference app prints them ("TUE., APR. 14", home-past-day-activities-top); a month short enough to need none stays bare ("May 4"). */
 export function pillLabel(date: string, today: string) {
   const label = dayLabel(date, today);
-  if (label === "Today" || label === "Yesterday") return label;
+  if (label === t("Today") || label === t("Yesterday")) return label;
+  // German short names carry their own period ("Mo., 28. Sept.").
+  if (UI_LOCALE === "de") return formatDay(date, { weekday: "short", day: "numeric", month: "short" });
   const month = formatDay(date, { month: "short" });
   const dot = month === formatDay(date, { month: "long" }) ? "" : ".";
   return `${formatDay(date, { weekday: "short" })}., ${month}${dot} ${formatDay(date, { day: "numeric" })}`;

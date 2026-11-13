@@ -4,8 +4,9 @@ import { coachAccess, groupChats, listChats } from "@/server/coach/store"
 import { userCtx } from "@/server/queries/common"
 import { DetailShell } from "@/components/shells/DetailShell"
 import { ChatList } from "../ChatList"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Chats" }
+export const metadata = { title: tr("Chats") }
 
 /** The coach's chats on phone and tablet `/coach/chats` (laptop shows the same list beside the conversation). */
 export default async function ChatsPage() {
@@ -15,5 +16,5 @@ export default async function ChatsPage() {
   if (!(await coachAccess(db, userId))) notFound()
   const { chats, next } = await listChats(db, userId)
   const groups = groupChats(chats, now, ctx.timeZone)
-  return <DetailShell title="Chats" backHref="/coach" primary={<ChatList groups={groups} next={next} current={null} className="mx-auto w-full max-w-[640px]" />} />
+  return <DetailShell title={tr("Chats")} backHref="/coach" primary={<ChatList groups={groups} next={next} current={null} className="mx-auto w-full max-w-[640px]" />} />
 }

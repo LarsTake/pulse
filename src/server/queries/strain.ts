@@ -26,6 +26,7 @@ import {
 } from "./common";
 import { ZONE_NAMES } from "@/core/scoring/zones";
 import type { HrChart, KeyStat, Metric, StrainVM, ZoneRow } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 /** The activity roll-ups the Strain summary shows after Steps (spec §11 EX1). */
 export const STRAIN_EXTRAS = ["distance", "floors", "active_minutes", "azm", "active_calories"] as const satisfies readonly ExtraKey[];
@@ -122,7 +123,7 @@ export function zoneRows(row: DayRow | undefined, seconds = row?.s1?.zoneSeconds
   if (!s1 || s1.hrCount === 0 || !seconds) return none(hrReason(s1 ?? null));
   const rows = zoneBounds(s1.zoneLower).map((z, i) => ({ ...z, seconds: Math.round(seconds[i]) }));
   // Zone 0: time under Zone 1, from the Zone 1 floor. Days stored before it was kept have no such row.
-  if (below != null) rows.push({ zone: 0, label: "Zone 0", min: 0, max: rows[0].min - 1, seconds: Math.round(below) });
+  if (below != null) rows.push({ zone: 0, label: tr("Zone 0"), min: 0, max: rows[0].min - 1, seconds: Math.round(below) });
   return ok(rows);
 }
 
