@@ -52,6 +52,10 @@ class MainViewController: CAPBridgeViewController {
         guard let bridge = bridge as? CapacitorBridge, let controller = bridge.webView?.configuration.userContentController else { return }
         controller.removeScriptMessageHandler(forName: "bridge")
         controller.add(BundledPagesOnly(bridge.webViewDelegationHandler, local: bridge.config.localURL), name: "bridge")
+        // Apple Health (HealthSync.swift): its own channel, answered only for the saved server's pages.
+        if let webView = bridge.webView {
+            controller.add(HealthMessages(webView: webView), name: "pulseHealth")
+        }
     }
 
     static func reload(in window: UIWindow?) {

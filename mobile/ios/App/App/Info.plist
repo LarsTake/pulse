@@ -4,6 +4,10 @@
 <dict>
   <key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Pulse reads blood pressure, weight, body fat and water from Apple Health and shows them next to your Fitbit data.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Pulse doesn't write to Apple Health.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleLocalizations</key>

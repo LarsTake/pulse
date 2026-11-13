@@ -28,7 +28,7 @@ export const scopeUrl = (type: LogType) => `https://www.googleapis.com/auth/goog
 export const READABLE: ReadonlySet<LogType> = new Set(["hydration-log", "nutrition-log", "weight", "body-fat"])
 
 /** Google's `dataSource.platform` values as people know them; anything else is shown title-cased. */
-const APPS: Record<string, string> = { FITBIT: tr("Fitbit"), HEALTH_CONNECT: "Health Connect", GOOGLE_WEB_API: "Another app" }
+const APPS: Record<string, string> = { FITBIT: tr("Fitbit"), HEALTH_CONNECT: "Health Connect", GOOGLE_WEB_API: "Another app", APPLE_HEALTH: "Apple Health" }
 
 /** Where an entry was logged: Pulse, or the app Google names for it. */
 export function appLabel(source: string, app: string | null): string {

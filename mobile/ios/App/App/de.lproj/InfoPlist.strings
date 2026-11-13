@@ -1,2 +1,4 @@
 /* Home-screen quick action */
 "Change server" = "Server wechseln";
+"NSHealthShareUsageDescription" = "Pulse liest Blutdruck, Gewicht, Körperfett und Wasser aus Apple Health und zeigt sie neben deinen Fitbit-Daten an.";
+"NSHealthUpdateUsageDescription" = "Pulse schreibt nicht in Apple Health.";

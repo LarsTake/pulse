@@ -1,2 +1,4 @@
 /* Home-screen quick action */
 "Change server" = "Change server";
+"NSHealthShareUsageDescription" = "Pulse reads blood pressure, weight, body fat and water from Apple Health and shows them next to your Fitbit data.";
+"NSHealthUpdateUsageDescription" = "Pulse doesn't write to Apple Health.";

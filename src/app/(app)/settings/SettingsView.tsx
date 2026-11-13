@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { GoogleFit } from "@/components/brand/GoogleFit"
 import { Mark } from "@/components/brand/Mark"
+import { AppleHealthCard } from "./AppleHealth"
 import { AppSettings, SignOutForm } from "./AppSettings"
 import { AvatarButtons, ChangePasswordButton, DeleteAccountButton, DisconnectButton, EditProfileButton, SwitchGoogleButton, ThemePicker } from "./SettingsClient"
 import { SettingsLayout, type SettingsSection } from "./SettingsLayout"
@@ -282,7 +283,16 @@ export function SettingsView({ vm, now, account, coach, pushKey = null, initial 
         </>
       ),
     },
-    { id: "source", label: tr("Data source"), node: <DataSource vm={vm} now={now} googleEmail={account.googleEmail} /> },
+    {
+      id: "source",
+      label: tr("Data source"),
+      node: (
+        <>
+          <DataSource vm={vm} now={now} googleEmail={account.googleEmail} />
+          <AppleHealthCard />
+        </>
+      ),
+    },
     {
       id: "app",
       label: tr("App"),
