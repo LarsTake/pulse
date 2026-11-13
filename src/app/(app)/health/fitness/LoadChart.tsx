@@ -5,11 +5,12 @@ import { DAY, formatDay, formatValue } from "@/lib/format"
 import type { FitnessVM } from "@/server/queries/types"
 import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { AXIS, ChartFigure, FadeGradient, GRID, LINE_CURSOR, TOOLTIP_CLASS, useSeriesAnimation } from "@/components/charts/ChartFrame"
+import { t as tr } from "@/lib/i18n"
 
 const CONFIG = {
-  ctl: { label: "Fitness", color: "var(--chart-1)" },
-  atl: { label: "Fatigue", color: "var(--chart-4)" },
-  tsb: { label: "Form", color: "var(--chart-2)" },
+  ctl: { label: tr("Fitness"), color: "var(--chart-1)" },
+  atl: { label: tr("Fatigue"), color: "var(--chart-4)" },
+  tsb: { label: tr("Form"), color: "var(--chart-2)" },
 }
 
 /** Fitness (CTL), fatigue (ATL) and form (TSB) over 90 days (spec §7.10). */
@@ -17,7 +18,7 @@ export function LoadChart({ load }: { load: FitnessVM["load"] }) {
   const anim = useSeriesAnimation()
   const last = [...load].reverse().find((p) => p.ctl !== null)
   const summary = last
-    ? `Training load over 90 days: fitness ${formatValue("int", last.ctl)}, fatigue ${formatValue("int", last.atl)}, form ${formatValue("signedInt", last.tsb)} today.`
+    ? tr("Training load over 90 days: fitness {0}, fatigue {1}, form {2} today.", [formatValue("int", last.ctl), formatValue("int", last.atl), formatValue("signedInt", last.tsb)])
     : "No training load data yet."
   const ticks = load.filter((p, i) => i > 0 && p.day.slice(0, 7) !== load[i - 1].day.slice(0, 7)).map((p) => p.day)
 

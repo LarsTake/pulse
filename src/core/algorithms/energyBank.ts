@@ -3,6 +3,7 @@
 // recharges in calm still minutes and naps.
 import { zoneWeight } from "../scoring/strain";
 import { stressConfig, type Interval } from "./stress";
+import { t as tr } from "@/lib/i18n"
 
 export const energyBankConfig = {
   /** Start-of-day weights on Recovery and sleep performance (spec). */
@@ -104,12 +105,12 @@ export function energyBank(input: EnergyBankInput): EnergyBankResult {
       const w = load[m] ?? 0;
       if (w > 0) {
         const workout = inAny(ts, input.workouts);
-        drain(workout ? workout.label : "Activity", workout ? "workout" : "activity", ts, c.k1 * w);
+        drain(workout ? workout.label : tr("Activity"), workout ? "workout" : "activity", ts, c.k1 * w);
         level -= c.k1 * w;
       }
       const s = stress[m];
       if (s != null && s >= stressConfig.highFrom) {
-        drain("Stress", "stress", ts, c.k2);
+        drain(tr("Stress"), "stress", ts, c.k2);
         level -= c.k2;
       } else if (s != null && s < stressConfig.mediumFrom) {
         level += c.k3;

@@ -6,11 +6,12 @@ import { getJournalInsights } from "@/server/queries/journal"
 import type { ImpactMetricKey, JournalInsightsVM } from "@/server/queries/types"
 import { DetailShell } from "@/components/shells/DetailShell"
 import { ImpactList, MetricToggle } from "./Impacts"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Behaviour insights" }
+export const metadata = { title: tr("Behaviour insights") }
 
-const WORD: Record<ImpactMetricKey, string> = { recovery: "Recovery", hrv: "HRV", sleep: "sleep performance" }
-const TITLE: Record<ImpactMetricKey, string> = { recovery: "Recovery", hrv: "HRV", sleep: "Sleep" }
+const WORD: Record<ImpactMetricKey, string> = { recovery: tr("Recovery"), hrv: tr("HRV"), sleep: "sleep performance" }
+const TITLE: Record<ImpactMetricKey, string> = { recovery: tr("Recovery"), hrv: tr("HRV"), sleep: tr("Sleep") }
 const parseMetric = (raw: string | string[] | undefined): ImpactMetricKey => {
   const v = Array.isArray(raw) ? raw[0] : raw
   return v === "hrv" || v === "sleep" ? v : "recovery"
@@ -23,16 +24,15 @@ export default async function JournalInsightsPage({ searchParams }: PageProps<"/
 
   return (
     <DetailShell
-      title="Behaviour insights"
+      title={tr("Behaviour insights")}
       hero={
         // Top-aligned beside the list on laptop (spec §7.12 wireframe), and no wider than the hero column.
         <div data-hero-align="start" className="w-full space-y-4 xl:w-[360px]">
           <div className="space-y-2">
-            <h2 className="text-[22px] leading-7 font-semibold tracking-[-0.01em] text-balance xl:text-2xl">{TITLE[metric]} impact analysis</h2>
+            <h2 className="text-[22px] leading-7 font-semibold tracking-[-0.01em] text-balance xl:text-2xl">{TITLE[metric]} {" "}{tr("impact analysis")}</h2>
             <p className="max-w-[65ch] text-[15px] leading-[22px] text-pretty text-foreground-secondary">
-              How each behaviour changed your next-day {WORD[metric]} over the last 90 days. Tap a behaviour for details.
-            </p>
-            <p className="text-xs leading-4 font-medium text-muted-foreground">Updated daily</p>
+              {tr("How each behaviour changed your next-day")}{" "}{WORD[metric]} {" "}{tr("over the last 90 days. Tap a behaviour for details.")}</p>
+            <p className="text-xs leading-4 font-medium text-muted-foreground">{tr("Updated daily")}</p>
           </div>
           <MetricToggle metric={metric} />
           {/* Laptop: "Keep logging to unlock" fills the hero column under the toggle instead of sitting alone in a half
@@ -46,8 +46,7 @@ export default async function JournalInsightsPage({ searchParams }: PageProps<"/
           {/* Phone and tablet: after the list, as before. Laptop shows it in the hero column instead. */}
           {vm.needsMore.length > 0 && <Unlock id="unlock" needsMore={vm.needsMore} word={WORD[metric]} className="xl:hidden" />}
           <p className="text-xs leading-4 font-medium text-pretty text-muted-foreground">
-            Effects are differences in averages, not proof of cause. Change one habit at a time to see what it really does.
-          </p>
+            {tr("Effects are differences in averages, not proof of cause. Change one habit at a time to see what it really does.")}</p>
         </>
       }
     />
@@ -60,10 +59,9 @@ function Unlock({ id, needsMore, word, className }: { id: string; needsMore: Jou
     <section aria-labelledby={`${id}-title`} className={cn("space-y-3", className)}>
       <div className="space-y-1">
         <h2 id={`${id}-title`} className="text-xs leading-4 font-bold tracking-[0.1em] uppercase">
-          Keep logging to unlock
-        </h2>
+          {tr("Keep logging to unlock")}</h2>
         <p className="max-w-[65ch] text-[15px] leading-[22px] text-pretty text-muted-foreground">
-          Log a behaviour as Yes on at least 5 days and No on at least 5 to see how it changes your next-day {word}.
+          {tr("Log a behaviour as Yes on at least 5 days and No on at least 5 to see how it changes your next-day")}{" "}{word}.
         </p>
       </div>
       <ul className="space-y-2">
@@ -75,10 +73,9 @@ function Unlock({ id, needsMore, word, className }: { id: string; needsMore: Jou
                 <p className="min-w-0 truncate text-xs leading-4 font-bold tracking-[0.1em] uppercase">{n.label}</p>
                 <p className="shrink-0 font-numeric text-[13px] leading-4 font-semibold text-foreground-secondary tabular-nums">{have}/10</p>
               </div>
-              <Progress value={(have / 10) * 100} aria-label={`${n.label}: ${have} of 10 days logged`} className="h-1.5 bg-muted" />
+              <Progress value={(have / 10) * 100} aria-label={tr("{0}: {1} of 10 days logged", [n.label, have])} className="h-1.5 bg-muted" />
               <p className="text-xs leading-4 font-medium text-muted-foreground tabular-nums">
-                {Math.min(5, n.yes)} of 5 days with, {Math.min(5, n.no)} of 5 without
-              </p>
+                {Math.min(5, n.yes)} {" "}{tr("of 5 days with,")}{" "}{Math.min(5, n.no)} {" "}{tr("of 5 without")}</p>
             </li>
           )
         })}

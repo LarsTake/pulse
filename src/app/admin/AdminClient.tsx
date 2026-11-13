@@ -10,10 +10,11 @@ import type { CoachMode } from "@/server/coach/store"
 import { cn } from "@/lib/utils"
 import { Switch } from "@/components/ui/switch"
 import { BTN } from "./ui"
+import { t as tr } from "@/lib/i18n"
 
 /** Runs an action and toasts its error; a dropped connection is an error too, never a thrown error screen. */
 export const run = async <T,>(p: Promise<ActionResult<T>>): Promise<{ data: T } | null> => {
-  const r = await p.catch((): ActionResult<T> => ({ ok: false, error: "Couldn’t reach Pulse. Try again." }))
+  const r = await p.catch((): ActionResult<T> => ({ ok: false, error: tr("Couldn’t reach Pulse. Try again.") }))
   if (r.ok) return r
   toast.error(r.error)
   return null
@@ -21,21 +22,21 @@ export const run = async <T,>(p: Promise<ActionResult<T>>): Promise<{ data: T } 
 
 const CHOICES = {
   signup: {
-    label: "Who can create an account",
+    label: tr("Who can create an account"),
     options: [
-      { value: "invite", title: "Invite only", body: "People need a link from Invites. Recommended." },
-      { value: "open", title: "Open to anyone", body: "Anyone who can reach this server can sign up." },
-      { value: "closed", title: "Closed", body: "No new accounts, not even with a link. Existing people still sign in." },
+      { value: "invite", title: tr("Invite only"), body: tr("People need a link from Invites. Recommended.") },
+      { value: "open", title: tr("Open to anyone"), body: tr("Anyone who can reach this server can sign up.") },
+      { value: "closed", title: tr("Closed"), body: tr("No new accounts, not even with a link. Existing people still sign in.") },
     ],
     save: (v: string) => setSignupModeAction(v as SignupMode),
     saved: "Sign-up updated.",
   },
   coach: {
-    label: "Who can use the AI coach",
+    label: tr("Who can use the AI coach"),
     options: [
-      { value: "off", title: "Off", body: "Nobody sees the coach. The round P button opens the check-in." },
-      { value: "everyone", title: "Everyone", body: "Every account can set it up with its own provider key." },
-      { value: "chosen", title: "Chosen people", body: "Only people you switch on in People, plus owners." },
+      { value: "off", title: tr("Off"), body: tr("Nobody sees the coach. The round P button opens the check-in.") },
+      { value: "everyone", title: tr("Everyone"), body: tr("Every account can set it up with its own provider key.") },
+      { value: "chosen", title: tr("Chosen people"), body: tr("Only people you switch on in People, plus owners.") },
     ],
     save: (v: string) => setCoachModeAction(v as CoachMode),
     saved: "Coach access updated.",
@@ -93,7 +94,7 @@ export function CoachSwitch({ id, name, allowed }: { id: number; name: string; a
     <Switch
       checked={on}
       disabled={pending}
-      aria-label={`Coach for ${name}`}
+      aria-label={tr("Coach for {0}", [name])}
       onCheckedChange={(v) => {
         setOn(v)
         start(async () => {

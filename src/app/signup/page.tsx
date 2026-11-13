@@ -9,9 +9,10 @@ import { getDb } from "@/server/db"
 import { SignupForm } from "@/components/auth/AuthForm"
 import { AUTH_FOOTNOTE, AUTH_LINK } from "@/components/auth/AuthHero"
 import { AuthShell } from "@/components/shells/AuthShell"
+import { t as tr } from "@/lib/i18n"
 
 // The invite token is in this page's URL: never send it on as a Referer.
-export const metadata: Metadata = { title: "Create account", referrer: "no-referrer" }
+export const metadata: Metadata = { title: tr("Create account"), referrer: "no-referrer" }
 
 /**
  * Create an account `/signup`. Closed on a demo instance. Otherwise by the sign-up mode (admin panel, else SIGNUP):
@@ -30,10 +31,9 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
 
   const signIn = (
     <p className={AUTH_FOOTNOTE}>
-      Already have an account?{" "}
+      {tr("Already have an account?")}{" "}
       <Link href="/login" className={AUTH_LINK}>
-        Sign in
-      </Link>
+        {tr("Sign in")}</Link>
     </p>
   )
   // No hero: on a phone the four fields and the button fit above the keyboard's fold.

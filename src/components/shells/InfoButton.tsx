@@ -4,6 +4,7 @@ import { Info } from "lucide-react"
 import { Dialog as DialogPrimitive } from "radix-ui"
 import { cn } from "@/lib/utils"
 import { InfoDialogContent, type InfoContent } from "./InfoDialog"
+import { t as tr } from "@/lib/i18n"
 
 export type { InfoContent }
 
@@ -16,7 +17,7 @@ export function InfoButton({ info, label, variant }: { info: InfoContent; label:
   return (
     <DialogPrimitive.Root>
       <DialogPrimitive.Trigger
-        aria-label={`About ${label}`}
+        aria-label={tr("About {0}", [label])}
         className={cn(
           "relative grid shrink-0 place-items-center rounded-full transition-[color,background-color,scale] duration-150 ease-standard outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]",
           header ? "size-11 text-foreground/80 hover:text-foreground" : "-my-1 -mr-2 size-8 text-muted-foreground after:absolute after:-inset-1.5 hover:text-foreground"

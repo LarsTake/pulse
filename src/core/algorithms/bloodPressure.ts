@@ -1,17 +1,18 @@
 // Blood pressure from readings the user logs by hand (an upper-arm cuff). Pure: no I/O.
 // Categories follow the 2017 ACC/AHA guideline (Whelton et al., Hypertension 2018;71:e13). Each reading is
 // classed by the worse of its two numbers; an average uses the same cut points on the mean.
+import { t as tr } from "@/lib/i18n";
 
 export type BpReading = { ts: number; systolic: number; diastolic: number; pulse: number | null };
 
 export type BpCategory = "normal" | "elevated" | "stage1" | "stage2" | "crisis";
 
 export const BP_CATEGORY_LABEL: Record<BpCategory, string> = {
-  normal: "Normal",
-  elevated: "Elevated",
-  stage1: "High, stage 1",
-  stage2: "High, stage 2",
-  crisis: "Very high",
+  normal: tr("Normal"),
+  elevated: tr("Elevated"),
+  stage1: tr("High, stage 1"),
+  stage2: tr("High, stage 2"),
+  crisis: tr("Very high"),
 };
 
 /** The ACC/AHA category of one reading or an average. */

@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ProviderForm } from "./CoachSetup"
+import { t as tr } from "@/lib/i18n"
 
 /** 7:00 AM: where the time starts when the brief is switched on. */
 const DEFAULT_BRIEF = 7 * 60
@@ -38,7 +39,7 @@ export function CoachSettings({ setup, providers, providerLabel, notifications }
   const saveBrief = (m: number | null) => {
     setBrief(m)
     void setPreferencesAction({ briefMinute: m })
-      .catch((): ActionResult => ({ ok: false, error: "Couldn’t reach Pulse. Try again." }))
+      .catch((): ActionResult => ({ ok: false, error: tr("Couldn’t reach Pulse. Try again.") }))
       .then((r) => {
         if (!r.ok) return (setBrief(setup.briefMinute), void toast.error(r.error))
         router.refresh()
@@ -46,37 +47,37 @@ export function CoachSettings({ setup, providers, providerLabel, notifications }
   }
   const act = (p: () => Promise<ActionResult>, ok: string, done?: () => void) =>
     start(async () => {
-      const r = await p().catch((): ActionResult => ({ ok: false, error: "Couldn’t reach Pulse. Try again." }))
+      const r = await p().catch((): ActionResult => ({ ok: false, error: tr("Couldn’t reach Pulse. Try again.") }))
       if (!r.ok) return void toast.error(r.error)
       done?.()
       toast.success(ok)
       router.refresh()
     })
   return (
-    <SectionShell variant="card" level={2} id="coach" title="Coach">
+    <SectionShell variant="card" level={2} id="coach" title={tr("Coach")}>
       {!setup.consent ? (
         <div className={ROW}>
-          <span className="text-[15px] leading-[22px] text-foreground-secondary">Off</span>
+          <span className="text-[15px] leading-[22px] text-foreground-secondary">{tr("Off")}</span>
           <Button asChild variant="secondary" size="touch">
-            <Link href="/coach">Set up</Link>
+            <Link href="/coach">{tr("Set up")}</Link>
           </Button>
         </div>
       ) : (
         <>
           <div className="divide-y divide-border">
             <div className={ROW}>
-              <span className="text-[15px] leading-[22px]">Provider</span>
-              <span className="truncate text-right text-[15px] leading-[22px] text-foreground-secondary">{(setup.provider && providers.find((p) => p.id === setup.provider)?.label) ?? (setup.provider ? providerLabel : "Not set")}</span>
+              <span className="text-[15px] leading-[22px]">{tr("Provider")}</span>
+              <span className="truncate text-right text-[15px] leading-[22px] text-foreground-secondary">{(setup.provider && providers.find((p) => p.id === setup.provider)?.label) ?? (setup.provider ? providerLabel : tr("Not set"))}</span>
             </div>
             {setup.model && (
               <div className={ROW}>
-                <span className="text-[15px] leading-[22px]">Model</span>
+                <span className="text-[15px] leading-[22px]">{tr("Model")}</span>
                 <span className="truncate text-right font-numeric text-[15px] leading-[22px] text-foreground-secondary">{setup.model}</span>
               </div>
             )}
             {setup.last4 && (
               <div className={ROW}>
-                <span className="text-[15px] leading-[22px]">API key</span>
+                <span className="text-[15px] leading-[22px]">{tr("API key")}</span>
                 <span className="flex items-center gap-3">
                   <span className="font-numeric text-[15px] leading-[22px] text-foreground-secondary tabular-nums">••••{setup.last4}</span>
                   <button
@@ -85,21 +86,19 @@ export function CoachSettings({ setup, providers, providerLabel, notifications }
                     onClick={() => act(removeProviderAction, "Key removed.")}
                     className="relative rounded-md text-[13px] font-semibold text-recovery-red-text outline-none after:absolute after:-inset-3 hover:underline focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
-                    Remove
-                  </button>
+                    {tr("Remove")}</button>
                 </span>
               </div>
             )}
             {notifications && (
               <div className={ROW}>
                 <label htmlFor="coach-brief-on" className="text-[15px] leading-[22px]">
-                  Morning brief
-                </label>
+                  {tr("Morning brief")}</label>
                 <span className="flex items-center gap-3">
                   {brief !== null && (
                     <Input
                       type="time"
-                      aria-label="Morning brief time"
+                      aria-label={tr("Morning brief time")}
                       className="w-28"
                       value={clock(brief)}
                       onChange={(e) => e.target.value && setBrief(toMinute(e.target.value))}
@@ -111,7 +110,7 @@ export function CoachSettings({ setup, providers, providerLabel, notifications }
               </div>
             )}
             <div className="py-2">
-              <label htmlFor="coach-notes" className="text-[15px] leading-[22px]">About you</label>
+              <label htmlFor="coach-notes" className="text-[15px] leading-[22px]">{tr("About you")}</label>
               <textarea
                 id="coach-notes"
                 value={notes}
@@ -119,10 +118,10 @@ export function CoachSettings({ setup, providers, providerLabel, notifications }
                 onBlur={() => notes.trim() !== (setup.instructions ?? "") && act(() => setPreferencesAction({ instructions: notes }), "Saved.")}
                 maxLength={500}
                 rows={3}
-                placeholder="Short and direct. I lift four days a week and I'm training for a half marathon."
+                placeholder={tr("Short and direct. I lift four days a week and I'm training for a half marathon.")}
                 className="mt-1 w-full resize-none rounded-lg border border-border bg-transparent px-3 py-2 text-[15px] leading-[22px] outline-none placeholder:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
               />
-              <p className="text-[13px] leading-[18px] text-muted-foreground">How you’d like the coach to talk and what it should know. It never changes the coach’s safety rules.</p>
+              <p className="text-[13px] leading-[18px] text-muted-foreground">{tr("How you’d like the coach to talk and what it should know. It never changes the coach’s safety rules.")}</p>
             </div>
           </div>
           {/* Change the provider full width; clear the chats or turn the coach off side by side, like the account card. */}
@@ -131,16 +130,14 @@ export function CoachSettings({ setup, providers, providerLabel, notifications }
               {setup.provider ? "Change provider" : "Add key"}
             </Button>
             <Button variant="outline" size="touch" disabled={pending} onClick={() => setConfirm("chats")}>
-              Delete chats
-            </Button>
+              {tr("Delete chats")}</Button>
             <Button variant="outline" size="touch" disabled={pending} onClick={() => setConfirm("off")}>
-              Turn off
-            </Button>
+              {tr("Turn off")}</Button>
           </div>
-          <p className="mt-3 text-[13px] leading-[18px] text-muted-foreground">Your key is encrypted on this server and never shown again. Admins can’t see it or your chats.</p>
+          <p className="mt-3 text-[13px] leading-[18px] text-muted-foreground">{tr("Your key is encrypted on this server and never shown again. Admins can’t see it or your chats.")}</p>
         </>
       )}
-      <ResponsiveSheet open={open} onOpenChange={setOpen} title="AI provider">
+      <ResponsiveSheet open={open} onOpenChange={setOpen} title={tr("AI provider")}>
         <ProviderForm providers={providers} current={setup} onSaved={() => (setOpen(false), toast.success("Provider saved."))} />
       </ResponsiveSheet>
       <Dialog open={confirm !== null} onOpenChange={(o) => !o && !pending && setConfirm(null)}>
@@ -155,8 +152,7 @@ export function CoachSettings({ setup, providers, providerLabel, notifications }
           </DialogHeader>
           <DialogFooter>
             <Button type="button" variant="secondary" size="touch" onClick={() => setConfirm(null)} disabled={pending}>
-              Cancel
-            </Button>
+              {tr("Cancel")}</Button>
             <Button
               type="button"
               variant="outline"

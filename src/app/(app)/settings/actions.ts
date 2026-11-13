@@ -9,16 +9,17 @@ import { getDb } from "@/server/db";
 import { syncState } from "@/server/db/schema";
 import { revokeGrant } from "@/server/sources/google/oauth";
 import type { ActionResult } from "@/server/actions/journal";
+import { t as tr } from "@/lib/i18n"
 
 export async function disconnectGoogle(): Promise<ActionResult> {
   const user = await currentUser();
   if (!user) return SIGNED_OUT;
-  if (!getConfig().google) return { ok: false, error: "Google is not enabled" };
+  if (!getConfig().google) return { ok: false, error: tr("Google is not enabled") };
   const db = getDb();
   try {
     await revokeGrant(db, user.userId);
   } catch {
-    return { ok: false, error: "Couldn’t reach Google to remove access. Try again." };
+    return { ok: false, error: tr("Couldn’t reach Google to remove access. Try again.") };
   }
   // The old grant's sync errors (revoked, not linked) no longer describe anything.
   await db.update(syncState).set({ lastError: null }).where(eq(syncState.userId, user.userId));

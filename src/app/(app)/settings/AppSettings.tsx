@@ -8,6 +8,7 @@ import { useInstall } from "@/lib/install"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { t as tr } from "@/lib/i18n"
 
 const ROW = "flex min-h-13 items-center justify-between gap-3 py-2"
 const LABEL = "text-[15px] leading-[22px]"
@@ -53,24 +54,23 @@ export function AppSettings({ pushKey }: { pushKey: string | null }) {
   const showPush = pushKey !== null && push !== null
   if (!showInstall && !showPush) return null
   return (
-    <SectionShell variant="card" level={2} id="app" title="App">
+    <SectionShell variant="card" level={2} id="app" title={tr("App")}>
       <div className="divide-y divide-border">
         {showInstall && (
           <div className={ROW}>
             <div className="min-w-0">
-              <p className={LABEL}>Install Pulse</p>
+              <p className={LABEL}>{tr("Install Pulse")}</p>
               <p className={HINT}>{canPrompt ? "Opens full screen, like an app." : "Tap Share, then Add to Home Screen."}</p>
             </div>
             {canPrompt && (
               <Button type="button" variant="secondary" size="touch" onClick={install}>
-                Install
-              </Button>
+                {tr("Install")}</Button>
             )}
           </div>
         )}
         {ready && installed && (
           <div className={ROW}>
-            <p className={LABEL}>Installed</p>
+            <p className={LABEL}>{tr("Installed")}</p>
             <Check aria-hidden className="size-5 text-muted-foreground" strokeWidth={2} />
           </div>
         )}
@@ -78,8 +78,7 @@ export function AppSettings({ pushKey }: { pushKey: string | null }) {
           <div className={ROW}>
             <div className="min-w-0">
               <p id="push-label" className={LABEL}>
-                Notifications
-              </p>
+                {tr("Notifications")}</p>
               <p className={HINT}>
                 {push === "unsupported"
                   ? ios && !installed

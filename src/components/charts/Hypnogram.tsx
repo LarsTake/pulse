@@ -12,6 +12,7 @@ import { MetricState } from "@/components/shells/MetricState"
 import { useClock, useOptionalShellCalendar } from "@/components/shells/ShellStatus"
 import { ReasonPlaceholder } from "@/components/metrics/ReasonPlaceholder"
 import { AXIS, ChartFigure, GRID, LINE_CURSOR, TOOLTIP_CLASS, TooltipLine, useSeriesAnimation } from "./ChartFrame"
+import { t as tr } from "@/lib/i18n"
 
 export type HypnogramNight = { bed: number; wake: number; segments: StageSegment[] }
 export type HypnogramProps = {
@@ -19,8 +20,8 @@ export type HypnogramProps = {
   data: Metric<HypnogramNight> | null | undefined
 }
 
-const STAGE_NAME: Record<Stage, string> = { awake: "Awake", rem: "REM", light: "Light", deep: "Deep" }
-const LANE_NAME = ["Deep", "Light", "REM", "Awake"]
+const STAGE_NAME: Record<Stage, string> = { awake: tr("Awake"), rem: tr("REM"), light: tr("Light"), deep: tr("Deep") }
+const LANE_NAME = [tr("Deep"), tr("Light"), tr("REM"), tr("Awake")]
 const LANE_STAGE: Stage[] = ["deep", "light", "rem", "awake"]
 
 /**
@@ -38,9 +39,9 @@ export function HypnogramChart({ night }: { night: HypnogramNight }) {
   const { connector, stages } = hypnogramSeries(night.segments)
   const total = night.segments.reduce((a, s) => a + (s.end - s.start), 0)
   const minutes = (st: Stage) => night.segments.filter((s) => s.stage === st).reduce((a, s) => a + s.end - s.start, 0) / 60_000
-  const summary = `Sleep stages from ${at(night.bed, tz)} to ${at(night.wake, tz)}, ${night.segments.length} stretches: ${STAGES.map(
-    (s) => `${STAGE_NAME[s]} ${durationWords(minutes(s))}, ${Math.round(((minutes(s) * 60_000) / (total || 1)) * 100)} percent`
-  ).join("; ")}.`
+  const summary = tr("Sleep stages from {0} to {1}, {2} stretches: {3}.", [at(night.bed, tz), at(night.wake, tz), night.segments.length, STAGES.map(
+    (s) => tr("{0} {1}, {2} percent", [STAGE_NAME[s], durationWords(minutes(s)), Math.round(((minutes(s) * 60_000) / (total || 1)) * 100)])
+  ).join("; ")])
   // The connector's last point is the wake time, the end of the last stretch: it reads as that stretch.
   const segAt = (t: number) => night.segments.find((s) => s.start <= t && t < s.end) ?? night.segments.findLast((s) => s.end === t)
 
@@ -92,7 +93,7 @@ export function HypnogramChart({ night }: { night: HypnogramNight }) {
               hideIndicator
               labelFormatter={(_, payload) => {
                 const s = segAt(Number(payload?.[0]?.payload?.t))
-                return s ? `${at(s.start, tz)} to ${at(s.end, tz)}` : ""
+                return s ? tr("{0} to {1}", [at(s.start, tz), at(s.end, tz)]) : ""
               }}
               formatter={(_, __, item) => {
                 const s = segAt(Number((item.payload as { t: number }).t))
@@ -137,7 +138,7 @@ export function HypnogramChart({ night }: { night: HypnogramNight }) {
 export function Hypnogram({ data }: HypnogramProps) {
   const empty = (
     <div className="grid place-items-center">
-      <EmptyState body="No stage data for this sleep. Fitbit only stages sleeps longer than about 3 hours." />
+      <EmptyState body={tr("No stage data for this sleep. Fitbit only stages sleeps longer than about 3 hours.")} />
     </div>
   )
   return (

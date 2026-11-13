@@ -25,6 +25,7 @@ import {
 } from "./common";
 import { TREND_METRICS } from "./trends";
 import type { GoodDirection, KeyStat, Metric } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 export type VitalDetailKey = "hrv" | "rhr" | "resp" | "spo2" | "skin";
 export type DetailKey = "steps" | "calories" | VitalDetailKey | BodyKey | ExtraKey;
@@ -59,7 +60,7 @@ const CONFIG: Record<DetailKey, Config> = {
   rhr: { group: "vitals", baseline: true, sections: ["outliers"], about: "Your resting heart rate from Google Health, or the sleeping heart rate from your main sleep session when the daily value is missing." },
   resp: { group: "vitals", baseline: true, sections: ["outliers"], about: "Breaths per minute during sleep, measured by your Fitbit." },
   spo2: { group: "vitals", baseline: true, sections: ["outliers"], about: "Estimated blood oxygen saturation during sleep, measured by your Fitbit." },
-  skin: { group: "vitals", baseline: true, sections: ["outliers"], reference: { y: 0, label: "Baseline" }, about: "Nightly skin temperature above or below your personal baseline, in degrees Celsius. This is a temperature difference, not your body temperature." },
+  skin: { group: "vitals", baseline: true, sections: ["outliers"], reference: { y: 0, label: tr("Baseline") }, about: "Nightly skin temperature above or below your personal baseline, in degrees Celsius. This is a temperature difference, not your body temperature." },
   steps: { group: "activity", total: true, sections: ["hourly", "goal", "weekday"], reference: { y: STEP_TARGET, label: "7,000" }, about: "Steps counted through the day." },
   calories: {
     group: "activity",
@@ -100,14 +101,14 @@ const CONFIG: Record<DetailKey, Config> = {
 
 const SOURCE: Record<Group, string> = {
   activity: "Google Health's daily roll-up, counted by your Fitbit or your phone and synced through the Google Health API. Pulse shows it as it comes and does not score it.",
-  body: "Readings synced from Google Health, plus any you log in Pulse. A day without a reading shows the latest one before it.",
+  body: tr("Readings synced from Google Health, plus any you log in Pulse. A day without a reading shows the latest one before it."),
   nutrition: "Google Health's daily total of your logs, synced through the Google Health API, plus entries made in Pulse since the last sync.",
   vitals: "Google Health's daily value, from your Fitbit or a connected device. Pulse shades your usual range from the last 90 days.",
 };
 
 const CALORIES = {
   key: "calories",
-  label: "Calories",
+  label: tr("Calories"),
   unit: "kcal",
   format: "grouped" as FormatKey,
   direction: "neutral" as GoodDirection,
@@ -390,8 +391,8 @@ const BUILD: Record<Exclude<SectionKind, "outliers">, (s: SectionCtx, key: Detai
         stat(s, "calories", "Burned", (x) => x.metrics?.calories, "none", opts),
         {
           key: "balance",
-          label: "Difference",
-          caption: "Eaten minus burned",
+          label: tr("Difference"),
+          caption: tr("Eaten minus burned"),
           metric: finite(eaten) && finite(burned) ? ok(eaten - burned) : none("no_data"),
           average: null,
           direction: "none",
@@ -406,7 +407,7 @@ const BUILD: Record<Exclude<SectionKind, "outliers">, (s: SectionCtx, key: Detai
     const r = s.rows.get(s.day);
     const g = { protein: r?.extra.protein, carbs: r?.extra.carbs, fat: r?.extra.fat };
     const kcal = (finite(g.protein) ? g.protein * 4 : 0) + (finite(g.carbs) ? g.carbs * 4 : 0) + (finite(g.fat) ? g.fat * 9 : 0);
-    const share = (v: number | undefined, per: number) => (finite(v) && kcal > 0 ? `${Math.round(((v * per) / kcal) * 100)}% of macro calories` : undefined);
+    const share = (v: number | undefined, per: number) => (finite(v) && kcal > 0 ? tr("{0}% of macro calories", [Math.round(((v * per) / kcal) * 100)]) : undefined);
     const row = (key: "protein" | "carbs" | "fat", label: string, per: number): KeyStat => ({
       ...stat(s, key, label, (x) => x.extra[key], "none", { unit: "g", format: "int" }),
       ...(share(g[key], per) && { caption: share(g[key], per) }),
@@ -418,8 +419,8 @@ const BUILD: Record<Exclude<SectionKind, "outliers">, (s: SectionCtx, key: Detai
     if (weight)
       rows.push({
         key: "protein_target",
-        label: "Protein reference",
-        caption: `${PROTEIN_G_PER_KG} g per kg at ${weight.toFixed(1)} kg`,
+        label: tr("Protein reference"),
+        caption: tr("{0} g per kg at {1} kg", [PROTEIN_G_PER_KG, weight.toFixed(1)]),
         metric: ok(weight * PROTEIN_G_PER_KG),
         average: null,
         direction: "none",
@@ -442,8 +443,8 @@ const BUILD: Record<Exclude<SectionKind, "outliers">, (s: SectionCtx, key: Detai
       const before = latest && items.find((x) => x.day <= addDays(latest.day, -n));
       return {
         key: `change${n}`,
-        label: `Change over ${n} days`,
-        ...(before && { caption: `Since ${formatDay(before.day, DAY.monthDay)}` }),
+        label: tr("Change over {0} days", [n]),
+        ...(before && { caption: tr("Since {0}", [formatDay(before.day, DAY.monthDay)]) }),
         metric: before ? ok(latest.value - before.value) : none("no_data"),
         average: null,
         direction: "none",

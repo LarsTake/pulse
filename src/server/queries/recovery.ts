@@ -21,6 +21,7 @@ import {
   vitalReason,
 } from "./common";
 import type { Contributor, KeyStat, Metric, RecoveryVM } from "./types";
+import { t as tr, UI_LOCALE } from "@/lib/i18n"
 
 const KEY_OF: Record<ChargeDriver["label"], Contributor["key"]> = {
   HEART_RATE_VARIABILITY: "hrv",
@@ -126,7 +127,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
   return [
     {
       key: "hrv",
-      label: "Heart rate variability",
+      label: tr("Heart rate variability"),
       unit: "ms",
       metric: metric("hrv", inputs?.hrv ?? row?.metrics?.hrvMs, r?.value != null ? "no_data" : vitalReason(row, isToday, true)),
       baseline: base(b?.hrv, usable(b?.hrv)),
@@ -135,7 +136,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
     },
     {
       key: "rhr",
-      label: "Resting heart rate",
+      label: tr("Resting heart rate"),
       unit: "bpm",
       metric: metric("rhr", inputs?.rhr ?? row?.sessionRhr, missing),
       baseline: base(b?.rhr, usable(b?.rhr)),
@@ -144,7 +145,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
     },
     {
       key: "resp",
-      label: "Respiratory rate",
+      label: tr("Respiratory rate"),
       unit: "rpm",
       metric: metric("resp", inputs?.resp ?? row?.metrics?.respBpm, missing),
       baseline: base(b?.resp, usable(b?.resp)),
@@ -154,7 +155,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
     },
     {
       key: "sleep",
-      label: "Sleep performance",
+      label: tr("Sleep performance"),
       unit: "%",
       metric: metric("sleep", inputs?.sleepPerf != null ? inputs.sleepPerf * 100 : null, missing),
       // The score centres sleep at 85% with a 12-point scale (noop's sleepPerfCenter / sleepPerfScale).
@@ -164,7 +165,7 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
     },
     {
       key: "skinTemp",
-      label: "Skin temperature",
+      label: tr("Skin temperature"),
       unit: "°C",
       metric: metric("skinTemp", inputs?.skinTempDev, row?.metrics?.nightlyTempC != null ? "calibrating" : missing),
       // Google's 30-night SD when it gives one, else Pulse's own baseline spread.
@@ -175,12 +176,28 @@ export function contributors(row: DayRow | undefined, isToday: boolean): Contrib
   ];
 }
 
-const SHORT: Record<Contributor["key"], string> = { hrv: "HRV", rhr: "RHR", resp: "respiratory rate", sleep: "Sleep Performance", skinTemp: "skin temperature" };
+const SHORT: Record<Contributor["key"], string> = { hrv: tr("HRV"), rhr: tr("RHR"), resp: "respiratory rate", sleep: tr("Sleep Performance"), skinTemp: tr("skin temperature") };
 const UNIT_TEXT: Record<Contributor["key"], string> = { hrv: " ms", rhr: " bpm", resp: " rpm", sleep: "%", skinTemp: " °C" };
 const ADVICE: Record<ReturnType<typeof recoveryBand>, string> = {
   green: "Your body is primed to take on strain today.",
-  yellow: "Today is a good day to stay active at a steady load.",
+  yellow: tr("Today is a good day to stay active at a steady load."),
   red: "Today is a day to take it easy and let your body recover.",
+};
+
+const DE_SHORT: Record<Contributor["key"], string> = { hrv: "Deine HRV", rhr: "Dein Ruhepuls", resp: "Deine Atemfrequenz", sleep: "Deine Schlafleistung", skinTemp: "Deine Hauttemperatur" };
+const DE_BAND: Record<ReturnType<typeof recoveryBand>, string> = { green: "grünen", yellow: "gelben", red: "roten" };
+const DE_BAND_PRED: Record<ReturnType<typeof recoveryBand>, string> = { green: "grün", yellow: "gelb", red: "rot" };
+const DE_ADVICE: Record<ReturnType<typeof recoveryBand>, string> = {
+  green: "Dein Körper ist heute bereit für Belastung.",
+  yellow: "Heute ist ein guter Tag, um bei gleichmäßiger Belastung aktiv zu bleiben.",
+  red: "Lass es heute ruhig angehen und gib deinem Körper Zeit zur Erholung.",
+};
+const DE_PHRASE: Record<ChargeDriver["label"], [string, string]> = {
+  HEART_RATE_VARIABILITY: ["deine HRV liegt über deiner Baseline", "deine HRV liegt unter deiner Baseline"],
+  RESTING_HEART_RATE: ["dein Ruhepuls ist niedriger als sonst", "dein Ruhepuls ist höher als sonst"],
+  RESPIRATORY_RATE: ["deine Atemfrequenz ist stabil", "deine Atemfrequenz ist erhöht"],
+  SLEEP_QUALITY: ["du hast gut geschlafen", "dein Schlaf war zu kurz"],
+  SKIN_TEMPERATURE: ["deine Hauttemperatur ist normal", "deine Hauttemperatur weicht vom Normalwert ab"],
 };
 
 /**
@@ -192,12 +209,16 @@ export function screenInsight(cs: Contributor[], score: number): string {
   const lead = cs
     .filter((c) => c.key !== "skinTemp" && c.metric.value !== null && c.baseline && c.points !== null)
     .sort((a, b) => Math.abs(b.points!) - Math.abs(a.points!))[0];
-  if (!lead) return `Your Recovery is ${band}. ${ADVICE[band]}`;
+  if (!lead) return UI_LOCALE === "de" ? `Deine Recovery ist ${DE_BAND_PRED[band]}. ${DE_ADVICE[band]}` : tr("Your Recovery is {0}. {1}", [band, ADVICE[band]]);
   const v = lead.metric.value!;
   const { mean, sd } = lead.baseline!;
   const fmt = (x: number) => `${lead.key === "resp" ? x.toFixed(1) : Math.round(x)}${UNIT_TEXT[lead.key]}`;
   const where = v < mean - sd ? "below" : v > mean + sd ? "above" : "within";
-  return `Your ${SHORT[lead.key]} (${fmt(v)}) is ${where} its typical range of ${fmt(mean - sd)} to ${fmt(mean + sd)}, which contributed to a ${band} Recovery. ${ADVICE[band]}`;
+  if (UI_LOCALE === "de") {
+    const wo = v < mean - sd ? "unterhalb" : v > mean + sd ? "oberhalb" : "innerhalb";
+    return `${DE_SHORT[lead.key]} (${fmt(v).trim()}) liegt ${wo} des typischen Bereichs von ${fmt(mean - sd).trim()} bis ${fmt(mean + sd).trim()} und hat zu einer ${DE_BAND[band]} Recovery beigetragen. ${DE_ADVICE[band]}`;
+  }
+  return tr("Your {0} ({1}) is {2} its typical range of {3} to {4}, which contributed to a {5} Recovery. {6}", [SHORT[lead.key], fmt(v), where, fmt(mean - sd), fmt(mean + sd), band, ADVICE[band]]);
 }
 
 /** One templated coach line from the biggest movers (spec §5.15 copy rules). */
@@ -213,8 +234,15 @@ export function insightOf(drivers: ChargeDriver[]): string {
       SKIN_TEMPERATURE: good ? "your skin temperature is normal" : "your skin temperature moved from your normal",
     })[l];
   const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
-  if (up.length && !down.length) return `${cap(phrase(up[0], true))}, which lifted Recovery today.`;
-  if (down.length && !up.length) return `${cap(phrase(down[0], false))}, which held Recovery back today.`;
-  if (up.length && down.length) return `${cap(phrase(up[0], true))}, but ${phrase(down[0], false)}. Together they shaped today’s Recovery.`;
+  if (UI_LOCALE === "de") {
+    const p = (l: ChargeDriver["label"], good: boolean) => DE_PHRASE[l][good ? 0 : 1];
+    if (up.length && !down.length) return `${cap(p(up[0], true))}, das hat deine Recovery heute gehoben.`;
+    if (down.length && !up.length) return `${cap(p(down[0], false))}, das hat deine Recovery heute gebremst.`;
+    if (up.length && down.length) return `${cap(p(up[0], true))}, aber ${p(down[0], false)}. Zusammen prägen sie deine heutige Recovery.`;
+    return "Deine Signale liegen nah an deiner Baseline, deine Recovery ist also etwa auf deinem üblichen Niveau.";
+  }
+  if (up.length && !down.length) return tr("{0}, which lifted Recovery today.", [cap(phrase(up[0], true))]);
+  if (down.length && !up.length) return tr("{0}, which held Recovery back today.", [cap(phrase(down[0], false))]);
+  if (up.length && down.length) return tr("{0}, but {1}. Together they shaped today’s Recovery.", [cap(phrase(up[0], true)), phrase(down[0], false)]);
   return "Your signals sit close to your baseline, so Recovery is near your usual level.";
 }

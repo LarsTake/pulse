@@ -2,6 +2,7 @@ import { Lightbulb } from "lucide-react"
 import type { BehaviorChip } from "@/core/algorithms/behaviorChips"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { StatusChip } from "./primitives"
+import { t as tr } from "@/lib/i18n"
 
 const TONE = { up: "optimal", down: "warning", neutral: "neutral" } as const
 const DIR = { up: "up", down: "down", neutral: "flat" } as const
@@ -14,14 +15,14 @@ const DIR = { up: "up", down: "down", neutral: "flat" } as const
 export function BehaviorInsights({ chips, href }: { chips: BehaviorChip[]; href: string }) {
   if (!chips.length) return null
   return (
-    <SectionShell variant="card" level={2} title="Behavior insights" info={false} href={href} icon={<Lightbulb />}>
-      <p className="text-[15px] leading-[22px] text-pretty text-foreground-secondary">Some of your behaviors from yesterday may have affected your Recovery score today.</p>
+    <SectionShell variant="card" level={2} title={tr("Behavior insights")} info={false} href={href} icon={<Lightbulb />}>
+      <p className="text-[15px] leading-[22px] text-pretty text-foreground-secondary">{tr("Some of your behaviors from yesterday may have affected your Recovery score today.")}</p>
       <ul className="mt-3 flex flex-wrap gap-2">
         {chips.map((c) => (
           <li key={c.key}>
             <StatusChip tone={TONE[c.effect]} delta={DIR[c.effect]} className="min-h-8 rounded-lg px-3 text-[13px]">
               {c.label}
-              <span className="sr-only">{c.effect === "up" ? ", went with higher Recovery" : c.effect === "down" ? ", went with lower Recovery" : ", no clear effect"}</span>
+              <span className="sr-only">{c.effect === "up" ? tr(", went with higher Recovery") : c.effect === "down" ? ", went with lower Recovery" : tr(", no clear effect")}</span>
             </StatusChip>
           </li>
         ))}

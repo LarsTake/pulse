@@ -20,29 +20,30 @@ import { BP_TONE, categoryTone, categoryWord, LAB_WORD, ordinal } from "./format
 import { BP_CATEGORY_LABEL } from "@/core/algorithms/bloodPressure"
 import { getBloodPressure, getLabs, type BloodPressureVM, type LabsVM } from "@/server/queries/bodyLogs"
 import { LastReading } from "./heart-rate/LiveHeartRate"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Health" }
+export const metadata = { title: tr("Health") }
 
 const TILE = "font-numeric text-4xl leading-10 font-bold tracking-[-0.01em]"
 const EMPTY = "text-[15px] leading-[22px] text-pretty text-foreground-secondary"
 
 const VITAL_ICON: Record<VitalKey, typeof Wind> = { resp: Wind, spo2: Droplet, restingHr: Heart, hrv: Activity, skinTempDev: Thermometer }
 const VITAL_ORDER: { key: VitalKey; short: string }[] = [
-  { key: "resp", short: "Resp" },
-  { key: "spo2", short: "SpO2" },
-  { key: "restingHr", short: "RHR" },
-  { key: "hrv", short: "HRV" },
-  { key: "skinTempDev", short: "Temp" },
+  { key: "resp", short: tr("Resp") },
+  { key: "spo2", short: tr("SpO2") },
+  { key: "restingHr", short: tr("RHR") },
+  { key: "hrv", short: tr("HRV") },
+  { key: "skinTempDev", short: tr("Temp") },
 ]
-const ACWR_WORD: Record<ChipTone, string> = { optimal: "Optimal", warning: "Pushing", alert: "High risk", neutral: "Detraining" }
+const ACWR_WORD: Record<ChipTone, string> = { optimal: tr("Optimal"), warning: "Pushing", alert: "High risk", neutral: "Detraining" }
 
 const skeleton = <Skeleton className="h-16 w-full" />
 
 /** "Slower vs. last week" / "Faster vs. last week" / "No change vs. last week" (spec §6), from the week-on-week pace change. */
 function paceChip(delta: number | null) {
   if (delta === null) return null
-  if (Math.abs(delta) < 0.05) return { tone: "neutral" as const, dir: "flat" as const, text: "No change vs. last week" }
-  return delta < 0 ? { tone: "optimal" as const, dir: "down" as const, text: "Slower vs. last week" } : { tone: "warning" as const, dir: "up" as const, text: "Faster vs. last week" }
+  if (Math.abs(delta) < 0.05) return { tone: "neutral" as const, dir: "flat" as const, text: tr("No change vs. last week") }
+  return delta < 0 ? { tone: "optimal" as const, dir: "down" as const, text: tr("Slower vs. last week") } : { tone: "warning" as const, dir: "up" as const, text: tr("Faster vs. last week") }
 }
 
 /**
@@ -55,8 +56,8 @@ function AgeBlock({ m }: { m: HealthHubVM["healthspan"] }) {
       metric={m}
       skeleton={skeleton}
       renderReason={() => (
-        <SectionShell variant="card" level={2} title="Healthspan" href="/health/healthspan">
-          <p className={EMPTY}>Healthspan needs 20 days of data.</p>
+        <SectionShell variant="card" level={2} title={tr("Healthspan")} href="/health/healthspan">
+          <p className={EMPTY}>{tr("Healthspan needs 20 days of data.")}</p>
         </SectionShell>
       )}
     >
@@ -70,7 +71,7 @@ function AgeBlock({ m }: { m: HealthHubVM["healthspan"] }) {
             <SectionShell
               variant="card"
               level={2}
-              title="Pace of Aging"
+              title={tr("Pace of Aging")}
               action={
                 chip && (
                   <StatusChip tone={chip.tone} delta={chip.dir}>
@@ -82,7 +83,7 @@ function AgeBlock({ m }: { m: HealthHubVM["healthspan"] }) {
               <div className="space-y-5">
                 <TickScale
                   variant="marker"
-                  label="Pace of Aging"
+                  label={tr("Pace of Aging")}
                   metric={{ value: v.pace, reason: null, provisional: meta.provisional }}
                   min={-1}
                   max={3}
@@ -92,18 +93,16 @@ function AgeBlock({ m }: { m: HealthHubVM["healthspan"] }) {
                   ends={["−1.0x", "1.0x", "3.0x"]}
                   leading={
                     <>
-                      <Turtle aria-hidden strokeWidth={1.75} /> Slow
-                    </>
+                      <Turtle aria-hidden strokeWidth={1.75} /> {" "}{tr("Slow")}</>
                   }
                   trailing={
                     <>
-                      Fast <Rabbit aria-hidden strokeWidth={1.75} />
+                      {tr("Fast")}{" "}<Rabbit aria-hidden strokeWidth={1.75} />
                     </>
                   }
                 />
                 <Link href="/health/healthspan" className={CARD_BUTTON}>
-                  Go to Healthspan
-                </Link>
+                  {tr("Go to Healthspan")}</Link>
               </div>
             </SectionShell>
           </div>
@@ -116,12 +115,12 @@ function AgeBlock({ m }: { m: HealthHubVM["healthspan"] }) {
 /** Blood Pressure card: the 7-day average (or the latest reading) and its category; opens /health/blood-pressure. */
 function BloodPressure({ bp }: { bp: BloodPressureVM }) {
   const head = bp.week ?? (bp.latest ? { systolic: bp.latest.systolic, diastolic: bp.latest.diastolic, category: bp.latest.category, count: 1 } : null)
-  if (!head) return <p className={EMPTY}>Log readings from your cuff to see your average and trend.</p>
+  if (!head) return <p className={EMPTY}>{tr("Log readings from your cuff to see your average and trend.")}</p>
   return (
     <div className="flex items-end justify-between gap-4">
       <div className="min-w-0 space-y-1">
-        <ValueUnit value={`${head.systolic}/${head.diastolic}`} unit="mmHg" className={cn(TILE, "block")} />
-        <p className={CAPTION}>{bp.week ? `7-day average · ${bp.week.count} readings` : "Latest reading"}</p>
+        <ValueUnit value={`${head.systolic}/${head.diastolic}`} unit={tr("mmHg")} className={cn(TILE, "block")} />
+        <p className={CAPTION}>{bp.week ? tr("7-day average · {0} readings", [bp.week.count]) : "Latest reading"}</p>
       </div>
       <StatusChip tone={BP_TONE[head.category]}>{BP_CATEGORY_LABEL[head.category]}</StatusChip>
     </div>
@@ -130,14 +129,14 @@ function BloodPressure({ bp }: { bp: BloodPressureVM }) {
 
 /** Labs card: markers out of range from the latest test of each. */
 function Labs({ labs }: { labs: LabsVM }) {
-  if (!labs.lastTest) return <p className={EMPTY}>Enter your blood test results to track each marker over time.</p>
+  if (!labs.lastTest) return <p className={EMPTY}>{tr("Enter your blood test results to track each marker over time.")}</p>
   const off = labs.groups.flatMap((g) => g.items).filter((i) => i.status === "low" || i.status === "high")
   const total = labs.groups.reduce((n, g) => n + g.items.length, 0)
   return (
     <div className="space-y-2">
       <p className="flex items-baseline gap-2">
         <span className={TILE}>{total - off.length}</span>
-        <span className={CAPTION}>of {total} markers in range</span>
+        <span className={CAPTION}>of {total} {" "}{tr("markers in range")}</span>
       </p>
       {off.length > 0 && (
         <ul className="flex flex-wrap gap-2">
@@ -161,7 +160,7 @@ function Monitor({ m }: { m: HealthHubVM["monitor"] }) {
         const Icon = VITAL_ICON[key]
         const status = v?.vitals.find((x) => x.key === key)?.status ?? "no_data"
         const ok = status === "in_range"
-        const label = `${short}: ${status === "no_data" ? "no reading" : ok ? "within range" : "out of range"}`
+        const label = `${short}: ${status === "no_data" ? "no reading" : ok ? tr("within range") : tr("out of range")}`
         return (
           <li key={key} className="flex min-w-0 flex-col items-center gap-2 px-1">
             <span className="sr-only">{label}</span>
@@ -196,7 +195,7 @@ function Monitor({ m }: { m: HealthHubVM["monitor"] }) {
       renderReason={() => (
         <div className="space-y-3">
           {readings()}
-          <p className={EMPTY}>No readings from last night</p>
+          <p className={EMPTY}>{tr("No readings from last night")}</p>
         </div>
       )}
     >
@@ -210,8 +209,7 @@ function Monitor({ m }: { m: HealthHubVM["monitor"] }) {
                 {all ? <Check aria-hidden className="size-3.5" strokeWidth={3} /> : <TriangleAlert aria-hidden className="size-3" strokeWidth={2.5} />}
               </span>
               <span className="text-[15px] leading-[22px] tabular-nums">
-                {v.inRange}/{v.total} within range
-              </span>
+                {v.inRange}/{v.total} {" "}{tr("within range")}</span>
             </div>
           </div>
         )
@@ -222,7 +220,7 @@ function Monitor({ m }: { m: HealthHubVM["monitor"] }) {
 
 function Stress({ m }: { m: HealthHubVM["stress"] }) {
   return (
-    <MetricState metric={m} skeleton={skeleton} renderReason={() => <p className={EMPTY}>No still minutes yet today</p>}>
+    <MetricState metric={m} skeleton={skeleton} renderReason={() => <p className={EMPTY}>{tr("No still minutes yet today")}</p>}>
       {(v, meta) => {
         const typical = v.typicalHighMin
         const dir = typical === null ? null : v.highMin < typical - 1 ? "down" : v.highMin > typical + 1 ? "up" : "flat"
@@ -231,11 +229,11 @@ function Stress({ m }: { m: HealthHubVM["stress"] }) {
         return (
           <div className="grid grid-cols-[auto_minmax(0,1fr)] items-end gap-4">
             <div className="space-y-2">
-              <p className={LABEL}>Today’s high stress</p>
+              <p className={LABEL}>{tr("Today’s high stress")}</p>
               <ValueUnit value={hmm(v.highMin)} unit="hrs" className={cn(TILE, "block")} />
               {dir && (
                 <StatusChip tone={tone} delta={dir}>
-                  vs. typical {v.weekday}
+                  {tr("vs. typical")}{" "}{v.weekday}
                 </StatusChip>
               )}
             </div>
@@ -252,18 +250,18 @@ function Fitness({ m }: { m: HealthHubVM["fitness"] }) {
     <MetricState
       metric={m}
       skeleton={skeleton}
-      renderReason={() => <p className={EMPTY}>No VO2 max yet. Fitbit estimates it from runs and resting heart rate.</p>}
+      renderReason={() => <p className={EMPTY}>{tr("No VO2 max yet. Fitbit estimates it from runs and resting heart rate.")}</p>}
     >
       {(v) => (
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 space-y-1">
             <ValueUnit value={formatValue("decimal1", v.vo2max)} unit="ml/kg/min" className={cn(TILE, "block")} />
             <p className={cn(LABEL, categoryTone(v.category))}>{categoryWord(v.category)}</p>
-            <p className={CAPTION}>{ordinal(v.percentile)} percentile for your age</p>
+            <p className={CAPTION}>{ordinal(v.percentile)} {" "}{tr("percentile for your age")}</p>
           </div>
           {v.acwr !== null && v.acwrTone && (
             <div className="flex shrink-0 flex-col items-end gap-1">
-              <p className={LABEL}>Training load</p>
+              <p className={LABEL}>{tr("Training load")}</p>
               <span className="font-numeric text-xl leading-6 font-bold tabular-nums">{formatValue("decimal2", v.acwr)}</span>
               <StatusChip tone={v.acwrTone}>{ACWR_WORD[v.acwrTone]}</StatusChip>
             </div>
@@ -275,7 +273,7 @@ function Fitness({ m }: { m: HealthHubVM["fitness"] }) {
 }
 
 function HeartRate({ hr }: { hr: HealthHubVM["heartRate"] }) {
-  if (!hr) return <p className={EMPTY}>No heart-rate readings yet. They show here once your band syncs.</p>
+  if (!hr) return <p className={EMPTY}>{tr("No heart-rate readings yet. They show here once your band syncs.")}</p>
   return (
     <div className="space-y-1">
       <ValueUnit value={String(hr.bpm)} unit="bpm" className={cn(TILE, "block")} />
@@ -290,37 +288,37 @@ export default async function HealthPage() {
   const ctx = await userCtx()
   const [vm, bp, labs] = await Promise.all([getHealthHub(ctx), getBloodPressure(ctx), getLabs(ctx)])
   return (
-    <PageShell title="Health">
+    <PageShell title={tr("Health")}>
       {/* The reference app's order (health-stress-card-upgrade-promo, health-whoop-age-hero, health-monitor-card-labs): Stress Monitor, the age block, then Health Monitor; Pulse's
           Fitness and Heart rate follow. */}
       <HealthCards>
-        <SectionShell variant="card" level={2} title="Stress Monitor" info={false} href="/health/stress" className="xl:col-span-2">
+        <SectionShell variant="card" level={2} title={tr("Stress Monitor")} info={false} href="/health/stress" className="xl:col-span-2">
           <Stress m={vm.stress} />
         </SectionShell>
         <div className="xl:col-span-2">
           <AgeBlock m={vm.healthspan} />
         </div>
         {FEATURES.bloodPressure && (
-          <SectionShell variant="card" level={2} title="Blood Pressure" info={false} href="/health/blood-pressure">
+          <SectionShell variant="card" level={2} title={tr("Blood Pressure")} info={false} href="/health/blood-pressure">
             <BloodPressure bp={bp} />
           </SectionShell>
         )}
         {FEATURES.labs && (
-          <SectionShell variant="card" level={2} title="Labs" info={false} href="/health/labs">
+          <SectionShell variant="card" level={2} title={tr("Labs")} info={false} href="/health/labs">
             <Labs labs={labs} />
           </SectionShell>
         )}
-        <SectionShell variant="card" level={2} title="Health Monitor" info={false} href="/health/monitor">
+        <SectionShell variant="card" level={2} title={tr("Health Monitor")} info={false} href="/health/monitor">
           <Monitor m={vm.monitor} />
         </SectionShell>
-        <SectionShell variant="card" level={2} title="Fitness" href="/health/fitness">
+        <SectionShell variant="card" level={2} title={tr("Fitness")} href="/health/fitness">
           <Fitness m={vm.fitness} />
         </SectionShell>
-        <SectionShell variant="card" level={2} title="Heart rate" href="/health/heart-rate">
+        <SectionShell variant="card" level={2} title={tr("Heart rate")} href="/health/heart-rate">
           <HeartRate hr={vm.heartRate} />
         </SectionShell>
       </HealthCards>
-      <p className={cn(CAPTION, "text-center")}>Estimates for personal insight, not medical advice.</p>
+      <p className={cn(CAPTION, "text-center")}>{tr("Estimates for personal insight, not medical advice.")}</p>
     </PageShell>
   )
 }

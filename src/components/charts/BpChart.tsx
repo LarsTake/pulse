@@ -4,6 +4,7 @@ import { CartesianGrid, ComposedChart, Line, ReferenceArea, XAxis, YAxis } from 
 import { DAY, formatDay } from "@/lib/format"
 import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { AXIS, ChartFigure, GRID, LINE_CURSOR, TOOLTIP_CLASS, TooltipLine, useSeriesAnimation } from "./ChartFrame"
+import { t as tr } from "@/lib/i18n"
 
 const SYS = "var(--recovery-red)"
 const DIA = "var(--strain)"
@@ -17,8 +18,8 @@ export function BpChart({ data }: { data: { day: string; systolic: number; diast
   const ticks = Array.from({ length: (hi - lo) / 20 + 1 }, (_, i) => lo + i * 20)
   return (
     <ChartFigure
-      summary={`Blood pressure, ${data.length} days with readings`}
-      config={{ systolic: { label: "Systolic", color: SYS }, diastolic: { label: "Diastolic", color: DIA } }}
+      summary={tr("Blood pressure, {0} days with readings", [data.length])}
+      config={{ systolic: { label: tr("Systolic"), color: SYS }, diastolic: { label: tr("Diastolic"), color: DIA } }}
       className="h-52"
     >
       <ComposedChart data={data} accessibilityLayer margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
@@ -37,8 +38,7 @@ export function BpChart({ data }: { data: { day: string; systolic: number; diast
               labelFormatter={(_, p) => (p?.[0]?.payload ? formatDay((p[0].payload as { day: string }).day, DAY.short) : "")}
               formatter={(v, name) => (
                 <TooltipLine color={name === "systolic" ? SYS : DIA}>
-                  {name === "systolic" ? "Systolic" : "Diastolic"} {String(v)} mmHg
-                </TooltipLine>
+                  {name === "systolic" ? "Systolic" : "Diastolic"} {String(v)} {" "}{tr("mmHg")}</TooltipLine>
               )}
             />
           }

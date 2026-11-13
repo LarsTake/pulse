@@ -14,6 +14,7 @@ import { useClock, useOptionalShellCalendar } from "@/components/shells/ShellSta
 import { ReasonPlaceholder } from "@/components/metrics/ReasonPlaceholder"
 import { AXIS, BandGradient, bandPaint, ChartFigure, FadeGradient, GlowDot, GRID, LINE_CURSOR, TOOLTIP_CLASS, TooltipLine, useSeriesAnimation, type Band } from "./ChartFrame"
 import { spanAreas, type ChartSpan } from "./IntradayHrChart"
+import { t as tr } from "@/lib/i18n"
 
 export type StressSeries = {
   /** 0-3 per still minute; moving minutes are null (gaps). */
@@ -46,11 +47,11 @@ function Chart({ s, variant }: { s: StressSeries; variant: "full" | "spark" }) {
   const latest = [...s.points].reverse().find((p) => p.value !== null)
   const full = variant === "full"
   const summary = latest?.value != null
-    ? `Stress through the day, latest ${formatValue("decimal1", latest.value)}, ${STRESS_WORD[stressLevel(latest.value)].toLowerCase()}, at ${at(latest.t, tz)}.`
+    ? tr("Stress through the day, latest {0}, {1}, at {2}.", [formatValue("decimal1", latest.value), STRESS_WORD[stressLevel(latest.value)].toLowerCase(), at(latest.t, tz)])
     : "Stress through the day."
 
   return (
-    <ChartFigure summary={summary} config={{ all: { label: "Stress", color: "var(--stress-medium)" } }} className={full ? "h-[200px]" : "h-11"}>
+    <ChartFigure summary={summary} config={{ all: { label: tr("Stress"), color: "var(--stress-medium)" } }} className={full ? "h-[200px]" : "h-11"}>
       <ComposedChart data={data} accessibilityLayer={full} margin={full ? { top: 16, right: 8, bottom: 0, left: 0 } : { top: 4, right: 4, bottom: 4, left: 4 }}>
         <defs>
           <BandGradient id={`stress-${id}`} top={top} bottom={bottom} bands={BANDS} />
@@ -133,10 +134,10 @@ export function StressChart({ data, variant }: StressChartProps) {
   const empty =
     variant === "full" ? (
       <div className="grid place-items-center">
-        <EmptyState body="No still minutes to score yet today. Stress is measured only while you are not moving." />
+        <EmptyState body={tr("No still minutes to score yet today. Stress is measured only while you are not moving.")} />
       </div>
     ) : (
-      <p className="flex h-11 items-center text-xs leading-4 font-medium text-muted-foreground">No still minutes yet</p>
+      <p className="flex h-11 items-center text-xs leading-4 font-medium text-muted-foreground">{tr("No still minutes yet")}</p>
     )
   return (
     <MetricState

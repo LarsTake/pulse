@@ -1,5 +1,6 @@
 "use client"
 
+import { LOCALE } from "@/lib/format"
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { CalendarHeart, Droplet, FlaskConical, Plus, Scale, Smile, Thermometer, Utensils, type LucideIcon } from "lucide-react"
@@ -31,6 +32,7 @@ import { CARD_MATERIAL } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { t as tr } from "@/lib/i18n"
 
 export const ICON: Record<LogKind, LucideIcon> = {
   water: Droplet,
@@ -153,26 +155,26 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 
 export type LogProps = { vm: LogVM }
 
-const n = (v: number) => v.toLocaleString("en-US")
+const n = (v: number) => v.toLocaleString(LOCALE)
 const MOOD_LABEL = Object.fromEntries([...MOODS, ...VALENCES].map(([v, l]) => [v, l]))
 
 /** Each tile's figure for the day shown: a total, the latest reading, or nothing yet. */
 function tileValue(k: LogKind, vm: LogVM): { value: string; sub?: string } | null {
   switch (k) {
     case "water":
-      return vm.water.total ? { value: `${n(vm.water.total)} ml` } : { value: "None" }
+      return vm.water.total ? { value: tr("{0} ml", [n(vm.water.total)]) } : { value: tr("None") }
     case "food":
-      return vm.food.total ? { value: `${n(vm.food.total.kcal)} kcal` } : { value: "None" }
+      return vm.food.total ? { value: `${n(vm.food.total.kcal)} kcal` } : { value: tr("None") }
     case "weight": {
       const w = vm.body.latest
-      return w ? { value: `${w.kg} kg`, sub: w.day === vm.day ? undefined : formatDay(w.day, DAY.monthDay) } : null
+      return w ? { value: tr("{0} kg", [w.kg]), sub: w.day === vm.day ? undefined : formatDay(w.day, DAY.monthDay) } : null
     }
     case "mood": {
       const m = vm.moods.at(-1)?.data as LogData["moods"] | undefined
       return m ? { value: MOOD_LABEL[m.moods[0] ?? m.valence ?? ""] ?? "Logged" } : null
     }
     case "symptoms":
-      return { value: vm.symptoms.length ? `${vm.symptoms.length} logged` : "None" }
+      return { value: vm.symptoms.length ? tr("{0} logged", [vm.symptoms.length]) : tr("None") }
     default:
       return null
   }
@@ -223,7 +225,7 @@ export function Log({ vm }: LogProps) {
   const send = async (input: LogInput, close = true) => {
     setSaving(true)
     setError(null)
-    const r = await logEntry(input).catch(() => ({ ok: false as const, error: "Couldn’t save. Check your connection and try again." }))
+    const r = await logEntry(input).catch(() => ({ ok: false as const, error: tr("Couldn’t save. Check your connection and try again.") }))
     setSaving(false)
     if (!r.ok) {
       if (r.error === RECONNECT) setReconnect(true)
@@ -231,7 +233,7 @@ export function Log({ vm }: LogProps) {
       return
     }
     if (close) shut()
-    toast.success(r.data.demo ? `${KIND_LABEL[input.kind]} saved in Pulse (demo)` : `${KIND_LABEL[input.kind]} saved to Google Health`)
+    toast.success(r.data.demo ? tr("{0} saved in Pulse (demo)", [KIND_LABEL[input.kind]]) : tr("{0} saved to Google Health", [KIND_LABEL[input.kind]]))
     router.refresh()
   }
 
@@ -244,7 +246,7 @@ export function Log({ vm }: LogProps) {
   const access = vm.access[shown]
   const blocked = reconnect || access === "not_connected"
   const timeField = shown !== "period" && (
-    <Field id="log-at" label="Time">
+    <Field id="log-at" label={tr("Time")}>
       <Input id="log-at" type="datetime-local" value={at} max={wallNow(vm.timeZone)} onChange={(e) => setAt(e.target.value)} className={FIELD} />
     </Field>
   )
@@ -252,7 +254,7 @@ export function Log({ vm }: LogProps) {
   return (
     <>
       {/* Phone: one row that scrolls edge to edge, as the day strip above it; from 768 px every tile fits in one row. */}
-      <ul aria-label="Log" className="-mx-4 flex snap-x scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:grid md:grid-flow-col md:auto-cols-fr md:overflow-visible md:px-0">
+      <ul aria-label={tr("Log")} className="-mx-4 flex snap-x scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:grid md:grid-flow-col md:auto-cols-fr md:overflow-visible md:px-0">
         {vm.kinds.map((k) => {
           const Icon = ICON[k]
           const t = tileValue(k, vm)
@@ -263,7 +265,7 @@ export function Log({ vm }: LogProps) {
                 type="button"
                 aria-haspopup="dialog"
                 onClick={() => openSheet("log", k)}
-                aria-label={t ? `${label}, ${t.value}${t.sub ? ` on ${t.sub}` : ""}. Log ${label.toLowerCase()}` : `Log ${label.toLowerCase()}`}
+                aria-label={t ? tr("{0}, {1}{2}. Log {3}", [label, t.value, t.sub ? tr(" on {0}", [t.sub]) : "", label.toLowerCase()]) : tr("Log {0}", [label.toLowerCase()])}
                 className={cn(
                   CARD_MATERIAL,
                   "flex h-24 w-24 flex-col items-start justify-between p-3 text-left md:px-2.5 transition-[scale,--tw-gradient-from] duration-150 ease-standard outline-none hover:from-card-hover focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96] md:w-full"
@@ -288,12 +290,12 @@ export function Log({ vm }: LogProps) {
         })}
       </ul>
 
-      {demo && <p className={cn(CAPTION, "mt-3")}>Demo: what you log stays in Pulse and never reaches Google.</p>}
+      {demo && <p className={cn(CAPTION, "mt-3")}>{tr("Demo: what you log stays in Pulse and never reaches Google.")}</p>}
 
       <ResponsiveSheet
         open={kind !== null}
         onOpenChange={(o) => !o && !saving && shut()}
-        title={`Log ${KIND_LABEL[shown].toLowerCase()}`}
+        title={tr("Log {0}", [KIND_LABEL[shown].toLowerCase()])}
         description={blocked ? undefined : demo ? "Demo: saved in Pulse only" : "Saved to Google Health"}
         footer={
           blocked ? null : (
@@ -333,7 +335,7 @@ export function Log({ vm }: LogProps) {
           >
             {shown === "water" && (
               <>
-                <Section title="Add">
+                <Section title={tr("Add")}>
                   <div className="grid grid-cols-2 gap-2">
                     {WATER_STEPS.map((ml) => (
                       <Button key={ml} type="button" variant="secondary" size="touch" disabled={saving} className="h-14 text-[15px]" onClick={() => void send({ kind: "water", ml, at }, false)}>
@@ -342,11 +344,11 @@ export function Log({ vm }: LogProps) {
                     ))}
                   </div>
                   <p className={cn(CAPTION, "tabular-nums")} aria-live="polite">
-                    {dayLabel(vm.day, vm.today)}: {vm.water.total.toLocaleString("en-US")} ml
+                    {dayLabel(vm.day, vm.today)}: {vm.water.total.toLocaleString(LOCALE)} ml
                   </p>
                 </Section>
-                <Section title="Other amount">
-                  <Field id="log-ml" label="Amount" hint="(ml)">
+                <Section title={tr("Other amount")}>
+                  <Field id="log-ml" label={tr("Amount")} hint="(ml)">
                     <Input id="log-ml" inputMode="numeric" autoComplete="off" placeholder="e.g. 330" value={form.ml as string} onChange={(e) => set("ml")(e.target.value)} className={FIELD} />
                   </Field>
                   {timeField}
@@ -356,14 +358,14 @@ export function Log({ vm }: LogProps) {
 
             {shown === "food" && (
               <>
-                <Section title="Meal">
-                  <Chips label="Meal" options={MEALS} value={form.meal as string} onChange={set("meal")} />
+                <Section title={tr("Meal")}>
+                  <Chips label={tr("Meal")} options={MEALS} value={form.meal as string} onChange={set("meal")} />
                 </Section>
-                <Section title="What you ate">
-                  <Field id="log-name" label="Name" hint="(optional)">
-                    <Input id="log-name" autoComplete="off" maxLength={80} placeholder="e.g. Dal and rice" value={form.name as string} onChange={(e) => set("name")(e.target.value)} className="h-11 text-base" />
+                <Section title={tr("What you ate")}>
+                  <Field id="log-name" label={tr("Name")} hint="(optional)">
+                    <Input id="log-name" autoComplete="off" maxLength={80} placeholder={tr("e.g. Dal and rice")} value={form.name as string} onChange={(e) => set("name")(e.target.value)} className="h-11 text-base" />
                   </Field>
-                  <Field id="log-kcal" label="Calories" hint="(kcal)">
+                  <Field id="log-kcal" label={tr("Calories")} hint="(kcal)">
                     <Input id="log-kcal" inputMode="numeric" autoComplete="off" value={form.kcal as string} onChange={(e) => set("kcal")(e.target.value)} className={FIELD} />
                   </Field>
                   <div className="grid grid-cols-3 gap-2">
@@ -379,13 +381,13 @@ export function Log({ vm }: LogProps) {
             )}
 
             {shown === "weight" && (
-              <Section title="Measurement">
+              <Section title={tr("Measurement")}>
                 <div className="grid grid-cols-2 gap-2">
-                  <Field id="log-kg" label="Weight" hint="(kg)">
+                  <Field id="log-kg" label={tr("Weight")} hint="(kg)">
                     <Input id="log-kg" inputMode="decimal" autoComplete="off" value={form.kg as string} onChange={(e) => set("kg")(e.target.value)} className={FIELD} />
                   </Field>
-                  <Field id="log-fat" label="Body fat" hint="(%)">
-                    <Input id="log-fat" inputMode="decimal" autoComplete="off" placeholder="Optional" value={form.fat as string} onChange={(e) => set("fat")(e.target.value)} className={FIELD} />
+                  <Field id="log-fat" label={tr("Body fat")} hint="(%)">
+                    <Input id="log-fat" inputMode="decimal" autoComplete="off" placeholder={tr("Optional")} value={form.fat as string} onChange={(e) => set("fat")(e.target.value)} className={FIELD} />
                   </Field>
                 </div>
                 {timeField}
@@ -394,55 +396,55 @@ export function Log({ vm }: LogProps) {
 
             {shown === "mood" && (
               <>
-                <Section title="Overall">
-                  <Chips label="Overall" options={VALENCES} value={form.valence as string} onChange={set("valence")} />
+                <Section title={tr("Overall")}>
+                  <Chips label={tr("Overall")} options={VALENCES} value={form.valence as string} onChange={set("valence")} />
                 </Section>
-                <Section title="Feelings">
-                  <Chips label="Feelings" options={MOODS} value={form.moods as string[]} onChange={set("moods")} />
+                <Section title={tr("Feelings")}>
+                  <Chips label={tr("Feelings")} options={MOODS} value={form.moods as string[]} onChange={set("moods")} />
                 </Section>
-                <Section title="When">{timeField}</Section>
+                <Section title={tr("When")}>{timeField}</Section>
               </>
             )}
 
             {shown === "symptoms" && (
               <>
-                <Section title="Symptoms">
+                <Section title={tr("Symptoms")}>
                   <Chips
-                    label="Symptoms"
+                    label={tr("Symptoms")}
                     options={SYMPTOMS.filter((s) => vm.kinds.includes("period") || !CYCLE_SYMPTOMS.has(s[0]))}
                     value={form.symptoms as string[]}
                     onChange={set("symptoms")}
                   />
                 </Section>
-                <Section title="When">{timeField}</Section>
+                <Section title={tr("When")}>{timeField}</Section>
               </>
             )}
 
             {shown === "period" && (
               <>
-                <Section title="Days">
+                <Section title={tr("Days")}>
                   <div className="grid grid-cols-2 gap-2">
-                    <Field id="log-start" label="First day">
+                    <Field id="log-start" label={tr("First day")}>
                       <Input id="log-start" type="date" max={vm.today} value={form.start as string} onChange={(e) => set("start")(e.target.value)} className={FIELD} />
                     </Field>
-                    <Field id="log-end" label="Last day">
+                    <Field id="log-end" label={tr("Last day")}>
                       <Input id="log-end" type="date" max={vm.today} min={(form.start as string) || undefined} value={form.end as string} onChange={(e) => set("end")(e.target.value)} className={FIELD} />
                     </Field>
                   </div>
-                  <p className={CAPTION}>Still going? Use today as the last day, and log it again once it ends.</p>
+                  <p className={CAPTION}>{tr("Still going? Use today as the last day, and log it again once it ends.")}</p>
                 </Section>
-                <Section title="Flow">
-                  <Chips label="Flow" options={FLOWS} value={form.flow as string} onChange={set("flow")} />
+                <Section title={tr("Flow")}>
+                  <Chips label={tr("Flow")} options={FLOWS} value={form.flow as string} onChange={set("flow")} />
                 </Section>
               </>
             )}
 
             {shown === "ovulation" && (
               <>
-                <Section title="Result">
-                  <Chips label="Result" options={OVULATION_RESULTS} value={form.result as string} onChange={set("result")} />
+                <Section title={tr("Result")}>
+                  <Chips label={tr("Result")} options={OVULATION_RESULTS} value={form.result as string} onChange={set("result")} />
                 </Section>
-                <Section title="When">{timeField}</Section>
+                <Section title={tr("When")}>{timeField}</Section>
               </>
             )}
             {/* Enter in a field submits; the visible Save lives in the sheet footer. */}

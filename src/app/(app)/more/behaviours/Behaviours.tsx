@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { BehaviorPicker, saveSelection, shownOf } from "./SelectBehaviors"
+import { t as tr } from "@/lib/i18n"
 
 /**
  * More › Behaviours (U21, journal-behavior-picker-*): choose what the journal asks from the catalogue and your own behaviours,
@@ -60,15 +61,14 @@ export function Behaviours({ vm }: { vm: BehavioursVM }) {
     if (!r.ok) return invalid(r.error.startsWith("Tag already exists") ? "That behaviour already exists." : r.error.startsWith("Too many") ? "You’ve reached the behaviour limit." : "Couldn’t add it. Try again.")
     setAddError(null)
     setLabel("")
-    toast.success(`${name} added`)
+    toast.success(tr("{0} added", [name]))
     router.refresh()
   }
 
   return (
     <div className="mx-auto flex w-full max-w-[640px] flex-col gap-6">
       <p className="max-w-[65ch] text-[15px] leading-[22px] text-pretty text-foreground-secondary">
-        Choose what your journal asks. A behaviour you leave out keeps its past answers, and they still count in your insights.
-      </p>
+        {tr("Choose what your journal asks. A behaviour you leave out keeps its past answers, and they still count in your insights.")}</p>
       <BehaviorPicker tags={vm.tags} initial={initial} selected={selected} onChange={setSelected} />
       {/* Pinned over the list once something changed, clear of the round action at the phone's foot. */}
       {(dirty || saving) && (
@@ -78,11 +78,10 @@ export function Behaviours({ vm }: { vm: BehavioursVM }) {
           </Button>
         </div>
       )}
-      <SectionShell variant="card" level={2} title="Your own">
+      <SectionShell variant="card" level={2} title={tr("Your own")}>
         <form onSubmit={add} className="space-y-2" noValidate>
           <Label htmlFor="new-behaviour" className="text-[15px] leading-[22px] font-medium">
-            Add a behaviour
-          </Label>
+            {tr("Add a behaviour")}</Label>
           <div className="flex gap-2">
             <Input
               ref={input}
@@ -94,7 +93,7 @@ export function Behaviours({ vm }: { vm: BehavioursVM }) {
                 setLabel(e.target.value)
                 setAddError(null)
               }}
-              placeholder="e.g. Cold shower…"
+              placeholder={tr("e.g. Cold shower…")}
               autoComplete="off"
               maxLength={32}
               aria-invalid={!!addError}
@@ -102,8 +101,8 @@ export function Behaviours({ vm }: { vm: BehavioursVM }) {
               className="h-11 min-w-0 flex-1 text-base"
             />
             {/* "Add" fits beside the field on a phone; the name says what it adds (label in name). */}
-            <Button type="submit" variant="secondary" size="touch" disabled={adding || !label.trim()} aria-label={adding ? undefined : "Add behaviour"}>
-              {adding ? "Adding…" : "Add"}
+            <Button type="submit" variant="secondary" size="touch" disabled={adding || !label.trim()} aria-label={adding ? undefined : tr("Add behaviour")}>
+              {adding ? "Adding…" : tr("Add")}
             </Button>
           </div>
           {addError && (

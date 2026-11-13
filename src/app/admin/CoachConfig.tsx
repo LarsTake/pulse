@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { run } from "./AdminClient"
 import { Pill, relative } from "./ui"
+import { t as tr } from "@/lib/i18n"
 
 export type TextField = { key: string; label: string; current: string; def: string; max: number }
 
@@ -45,7 +46,7 @@ export function TextEditor({ field, versions, now, rows = 3, mono, hint }: { fie
           {field.label}
         </label>
         <span className="flex min-w-0 items-center gap-1">
-          {isDefault ? <Pill>Default</Pill> : <Pill tone="coach">Edited{latest ? ` ${relative(latest.createdAt * 1000, now).toLowerCase()}${latest.by ? ` by ${latest.by}` : ""}` : ""}</Pill>}
+          {isDefault ? <Pill>{tr("Default")}</Pill> : <Pill tone="coach">{tr("Edited")}{latest ? ` ${relative(latest.createdAt * 1000, now).toLowerCase()}${latest.by ? tr(" by {0}", [latest.by]) : ""}` : ""}</Pill>}
           {versions.length > 0 && (
             <Button type="button" variant="ghost" onClick={() => setHistory(true)} className="h-8 gap-1.5 rounded-lg px-2 text-[13px] font-medium text-muted-foreground hover:text-foreground pointer-coarse:h-10">
               <History aria-hidden className="size-4" />
@@ -79,18 +80,15 @@ export function TextEditor({ field, versions, now, rows = 3, mono, hint }: { fie
           {!isDefault && !dirty && (
             <Button type="button" variant="ghost" disabled={pending} onClick={() => save(field.def, "Back to the default.")} className="h-9 gap-1.5 rounded-lg px-3 text-[13px] font-medium text-muted-foreground hover:text-foreground pointer-coarse:h-10">
               <RotateCcw aria-hidden className="size-3.5" />
-              Reset to default
-            </Button>
+              {tr("Reset to default")}</Button>
           )}
           {dirty && (
             <>
               <Button type="button" variant="ghost" disabled={pending} onClick={() => setValue(field.current)} className="h-9 rounded-lg px-3 text-[13px] font-medium pointer-coarse:h-10">
-                Discard
-              </Button>
+                {tr("Discard")}</Button>
               <Button type="button" disabled={pending || over || !value.trim()} onClick={() => save(value.trim(), "Saved. The coach uses it from the next message.")} className="h-9 rounded-lg px-4 text-[13px] font-semibold pointer-coarse:h-10">
                 {pending && <LoaderCircle aria-hidden className="animate-spin motion-reduce:animate-none" />}
-                Save
-              </Button>
+                {tr("Save")}</Button>
             </>
           )}
         </span>
@@ -99,8 +97,8 @@ export function TextEditor({ field, versions, now, rows = 3, mono, hint }: { fie
       <Dialog open={history} onOpenChange={setHistory}>
         <DialogContent className="max-h-[85svh] overflow-y-auto ring-1 ring-border sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{field.label}: versions</DialogTitle>
-            <DialogDescription>Newest first. Restoring saves that text again as the newest version.</DialogDescription>
+            <DialogTitle>{field.label}{tr(": versions")}</DialogTitle>
+            <DialogDescription>{tr("Newest first. Restoring saves that text again as the newest version.")}</DialogDescription>
           </DialogHeader>
           <ol className="grid gap-3">
             {versions.map((v, i) => (
@@ -113,8 +111,7 @@ export function TextEditor({ field, versions, now, rows = 3, mono, hint }: { fie
                   </span>
                   {i > 0 && v.body !== field.current && (
                     <Button type="button" variant="secondary" disabled={pending} onClick={() => save(v.body, "Version restored.")} className="h-8 rounded-lg px-3 text-[13px] font-medium pointer-coarse:h-10">
-                      Restore
-                    </Button>
+                      {tr("Restore")}</Button>
                   )}
                 </div>
                 <p className={cn("max-h-48 overflow-y-auto text-[13px] leading-5 whitespace-pre-wrap text-foreground-secondary", mono && "font-mono")}>{v.body}</p>

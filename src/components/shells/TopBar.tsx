@@ -15,6 +15,7 @@ import { useNow } from "@/hooks/use-now"
 import { DateSwitcher, type DateSwitcherProps } from "./DateSwitcher"
 import { SyncNowButton } from "./SyncNowButton"
 import { useClock, useShellStatus, type ShellStatus } from "./ShellStatus"
+import { t as tr } from "@/lib/i18n"
 
 // The pieces every header shares (spec §4.3, §4.4): the ground fill, the 24 px fade, sync status.
 
@@ -33,11 +34,11 @@ function syncView(s: ShellStatus, nowMs: number | null, formatClock: (ms: number
   const rel = last && nowMs ? ago(last, nowMs) : null
   const at = last ? formatClock(last, s.timeZone) : null
   if (s.connection === "auth_revoked" || s.sync.state === "error")
-    return { dot: "bg-recovery-red", label: "Sync failed", line: at ? `Sync failed. Last success ${at}` : "Sync failed" }
-  if (s.sync.state === "syncing") return { dot: "bg-coach animate-pulse motion-reduce:animate-none", label: "Syncing…", line: "Syncing now…" }
+    return { dot: "bg-recovery-red", label: tr("Sync failed"), line: at ? tr("Sync failed. Last success {0}", [at]) : "Sync failed" }
+  if (s.sync.state === "syncing") return { dot: "bg-coach animate-pulse motion-reduce:animate-none", label: tr("Syncing…"), line: tr("Syncing now…") }
   if (s.sync.state === "stale")
-    return { dot: "bg-warning", label: rel ? `Last sync ${rel}` : "Sync is behind", line: at ? `Last sync ${at}` : "Sync is behind" }
-  return { dot: "bg-optimal", label: rel ? `Synced ${rel}` : "Synced", line: at ? `Last sync ${at}` : "Synced" }
+    return { dot: "bg-warning", label: rel ? tr("Last sync {0}", [rel]) : "Sync is behind", line: at ? tr("Last sync {0}", [at]) : "Sync is behind" }
+  return { dot: "bg-optimal", label: rel ? tr("Synced {0}", [rel]) : tr("Synced"), line: at ? tr("Last sync {0}", [at]) : tr("Synced") }
 }
 
 /**
@@ -75,11 +76,11 @@ export function SyncStatus() {
   const nowMs = useNow()
   const syncing = useSyncing() || s.sync.state === "syncing"
   const v = syncView(syncing ? { ...s, sync: { ...s.sync, state: "syncing" } } : s, nowMs, formatClock)
-  const short = s.mode === "demo" ? "Demo" : s.sync.lastSuccessAt && nowMs ? agoShort(s.sync.lastSuccessAt, nowMs) : ""
+  const short = s.mode === "demo" ? tr("Demo") : s.sync.lastSuccessAt && nowMs ? agoShort(s.sync.lastSuccessAt, nowMs) : ""
   return (
     <Popover>
       <PopoverTrigger
-        aria-label={s.mode === "demo" ? `Demo data. ${v.label}` : v.label}
+        aria-label={s.mode === "demo" ? tr("Demo data. {0}", [v.label]) : v.label}
         className={cn(SYNC_TRIGGER, "h-11 min-w-11 justify-end pr-0.5 pl-2")}
       >
         {/* Reserves the text width before hydration fills in the relative age.
@@ -107,7 +108,7 @@ export function SyncStatus() {
             <BandIcon className="size-5" strokeWidth={1.4} />
           </span>
           <div className="min-w-0">
-            <p className="text-[15px] leading-5 font-semibold">{s.mode === "demo" ? "Demo data" : "Google Health"}</p>
+            <p className="text-[15px] leading-5 font-semibold">{s.mode === "demo" ? tr("Demo data") : "Google Health"}</p>
             <p className="flex items-center gap-1.5 text-[13px] leading-[18px] text-muted-foreground tabular-nums">
               <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", v.dot)} />
               {v.line}
@@ -115,7 +116,7 @@ export function SyncStatus() {
           </div>
           <ChevronRight aria-hidden className="ml-auto size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />
         </Link>
-        {s.mode === "demo" && <p className="-mt-2 px-4 pb-3 text-[13px] leading-[18px] text-muted-foreground">Generated data, not from a device.</p>}
+        {s.mode === "demo" && <p className="-mt-2 px-4 pb-3 text-[13px] leading-[18px] text-muted-foreground">{tr("Generated data, not from a device.")}</p>}
         {/* Settings is one tap away in the sidebar and in More; the popover only does the one thing. */}
         <div className="border-t border-foreground/[0.06] p-3">
           <SyncNowButton size="sm" className="w-full" />
@@ -138,10 +139,9 @@ export function DemoChip() {
           className="h-6 gap-1 rounded-full border-border px-2.5 text-[11px] font-bold tracking-[0.1em] text-foreground-secondary uppercase outline-none hover:bg-foreground/8 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <FlaskConical aria-hidden strokeWidth={1.75} className="size-3!" />
-          Demo data
-        </Badge>
+          {tr("Demo data")}</Badge>
       </TooltipTrigger>
-      <TooltipContent side="top">You’re looking at generated demo data.</TooltipContent>
+      <TooltipContent side="top">{tr("You’re looking at generated demo data.")}</TooltipContent>
     </Tooltip>
   )
 }

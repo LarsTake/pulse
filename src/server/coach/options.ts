@@ -1,6 +1,7 @@
 // What the coach setup offers the browser: provider ids, labels and default models, never keys or URLs.
 import { getConfig } from "../config";
 import { PROVIDERS, providerOf } from "./providers";
+import { t as tr } from "@/lib/i18n"
 
 export type ProviderOption = { id: string; label: string; model: string; keyUrl: string | null; needsKey: boolean };
 
@@ -8,8 +9,8 @@ export type ProviderOption = { id: string; label: string; model: string; keyUrl:
 export function providerOptions(): ProviderOption[] {
   const cfg = getConfig();
   return [
-    ...(cfg.coachLocal ? [{ id: "local", label: "This server’s model", model: cfg.coachLocal.model, keyUrl: null, needsKey: false }] : []),
-    ...(cfg.coachMock ? [{ id: "mock", label: "Test model", model: "mock", keyUrl: null, needsKey: false }] : []),
+    ...(cfg.coachLocal ? [{ id: "local", label: tr("This server’s model"), model: cfg.coachLocal.model, keyUrl: null, needsKey: false }] : []),
+    ...(cfg.coachMock ? [{ id: "mock", label: tr("Test model"), model: "mock", keyUrl: null, needsKey: false }] : []),
     ...PROVIDERS.map((p) => ({ id: p.id, label: p.label, model: p.model, keyUrl: p.keyUrl, needsKey: true })),
   ];
 }

@@ -19,13 +19,14 @@ import { HashScroll } from "../_lib/HashScroll"
 import { SLEEP_INFO, TONIGHT_INFO } from "../_lib/info"
 import { CAPTION, LABEL, LEGEND, statProps } from "../_lib/view"
 import { HoursVsNeed, SleepConsistency, SleepEfficiency, SleepStress } from "./SleepCards"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Sleep", description: "Sleep performance, stages, need and debt, plus tonight’s bedtime plan." }
+export const metadata = { title: tr("Sleep"), description: tr("Sleep performance, stages, need and debt, plus tonight’s bedtime plan.") }
 
 const STATUS_LEGEND = [
-  ["bg-warning", "Poor"],
-  ["bg-foreground-secondary", "Sufficient"],
-  ["bg-optimal", "Optimal"],
+  ["bg-warning", tr("Poor")],
+  ["bg-foreground-secondary", tr("Sufficient")],
+  ["bg-optimal", tr("Optimal")],
 ] as const
 
 /** Weekly Trends, in the reference app's order (sleep-weekly-trends-*). */
@@ -38,7 +39,7 @@ export default async function SleepPage({ searchParams }: PageProps<"/sleep">) {
 
   return (
     <DetailShell
-      title="Sleep"
+      title={tr("Sleep")}
       info={SLEEP_INFO}
       dateSwitcher={{ mode: "day", placement: "header", steppers: false }}
       notch
@@ -71,28 +72,28 @@ export default async function SleepPage({ searchParams }: PageProps<"/sleep">) {
           </p>
         </Card>
       }
-      insight={vm.insight && <InsightCard body={vm.insight} action={{ label: "Explore your sleep insights", href: trendHref("sleep", { d, today }) }} />}
+      insight={vm.insight && <InsightCard body={vm.insight} action={{ label: tr("Explore your sleep insights"), href: trendHref("sleep", { d, today }) }} />}
       primary={
-        <SectionShell variant="card" title="Last night’s sleep" aside="vs. prior 30 days" level={2}>
+        <SectionShell variant="card" title={tr("Last night’s sleep")} aside={tr("vs. prior 30 days")} level={2}>
           <SleepStages hours={vm.hours} hr={vm.nightHr} data={vm.stages} restorative={vm.restorative} />
         </SectionShell>
       }
       secondary={[
-        <SectionShell key="need" variant="card" title="Hours vs. needed" level={2}>
+        <SectionShell key="need" variant="card" title={tr("Hours vs. needed")} level={2}>
           <HoursVsNeed vm={vm} />
         </SectionShell>,
-        <SectionShell key="consistency" variant="card" title="Sleep consistency" level={2}>
+        <SectionShell key="consistency" variant="card" title={tr("Sleep consistency")} level={2}>
           <SleepConsistency vm={vm} />
         </SectionShell>,
-        <SectionShell key="efficiency" variant="card" title="Sleep efficiency" level={2}>
+        <SectionShell key="efficiency" variant="card" title={tr("Sleep efficiency")} level={2}>
           <SleepEfficiency vm={vm} />
         </SectionShell>,
         FEATURES.sleepStress && (
-          <SectionShell key="stress" variant="card" title="Sleep stress" level={2}>
+          <SectionShell key="stress" variant="card" title={tr("Sleep stress")} level={2}>
             <SleepStress vm={vm} />
           </SectionShell>
         ),
-        <SectionShell key="planner" variant="card" title="Tonight’s sleep" id="planner" info={TONIGHT_INFO} level={2}>
+        <SectionShell key="planner" variant="card" title={tr("Tonight’s sleep")} id="planner" info={TONIGHT_INFO} level={2}>
           <Planner vm={vm} timeZone={timeZone} timeFormat={timeFormat} />
           <HashScroll />
         </SectionShell>,
@@ -126,11 +127,11 @@ function Planner({ vm, timeZone, timeFormat }: { vm: SleepVM; timeZone: string; 
   return (
     <div className="space-y-2">
       <div className="divide-y divide-border">
-        {plan.plans.map((p) => row(p.label, `${Math.round(p.share * 100)}% of need`, clock(p.bedtimeAt, timeZone, timeFormat)))}
-        {row("Typical wake", plan.weekdayWake ? "Weekday wake time" : "Weekend wake time", clock(plan.wakeAt, timeZone, timeFormat))}
+        {plan.plans.map((p) => row(tr(p.label), tr("{0}% of need", [Math.round(p.share * 100)]), clock(p.bedtimeAt, timeZone, timeFormat)))}
+        {row(tr("Typical wake"), plan.weekdayWake ? tr("Weekday wake time") : tr("Weekend wake time"), clock(plan.wakeAt, timeZone, timeFormat))}
       </div>
       <p className={CAPTION}>
-        Need tonight: <span className="font-numeric tabular-nums">{hmm(plan.needMin)}</span>
+        {tr("Need tonight:")}{" "}<span className="font-numeric tabular-nums">{hmm(plan.needMin)}</span>
       </p>
     </div>
   )

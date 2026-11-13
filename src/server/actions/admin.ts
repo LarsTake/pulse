@@ -12,9 +12,10 @@ import { getConfig } from "../config";
 import { getDb } from "../db";
 import { user } from "../db/schema";
 import type { ActionResult } from "./journal";
+import { t as tr } from "@/lib/i18n"
 
-const NOT_ADMIN = { ok: false as const, error: "Only an admin can do this." };
-const UNKNOWN = { ok: false as const, error: "Unknown account." };
+const NOT_ADMIN = { ok: false as const, error: tr("Only an admin can do this.") };
+const UNKNOWN = { ok: false as const, error: tr("Unknown account.") };
 const DONE = { ok: true as const, data: undefined };
 const Id = z.number().int().positive();
 
@@ -36,7 +37,7 @@ async function changeable(id: number): Promise<boolean> {
 export async function setSignupModeAction(mode: SignupMode): Promise<ActionResult> {
   const me = await admin();
   if (typeof me !== "number") return me;
-  if (!SIGNUP_MODES.includes(mode)) return { ok: false, error: "Unknown sign-up mode." };
+  if (!SIGNUP_MODES.includes(mode)) return { ok: false, error: tr("Unknown sign-up mode.") };
   await setSignupMode(getDb(), mode);
   revalidatePath("/admin");
   return DONE;
@@ -46,7 +47,7 @@ export async function setSignupModeAction(mode: SignupMode): Promise<ActionResul
 export async function setCoachModeAction(mode: CoachMode): Promise<ActionResult> {
   const me = await admin();
   if (typeof me !== "number") return me;
-  if (!COACH_MODES.includes(mode)) return { ok: false, error: "Unknown coach setting." };
+  if (!COACH_MODES.includes(mode)) return { ok: false, error: tr("Unknown coach setting.") };
   await setCoachMode(getDb(), mode);
   revalidatePath("/", "layout"); // the round P button follows access on every screen
   return DONE;
@@ -69,10 +70,10 @@ export async function setCoachAllowedAction(userId: number, allowed: boolean): P
 export async function saveCoachTextAction(key: string, body: string): Promise<ActionResult> {
   const me = await admin();
   if (typeof me !== "number") return me;
-  if (!Object.hasOwn(DEFAULTS, key)) return { ok: false, error: "Unknown text." };
+  if (!Object.hasOwn(DEFAULTS, key)) return { ok: false, error: tr("Unknown text.") };
   const text = String(body).replace(/\r\n/g, "\n").trim();
-  if (!text) return { ok: false, error: "Write something, or reset to the default." };
-  if (text.length > maxFor(key)) return { ok: false, error: `Keep it under ${maxFor(key)} characters.` };
+  if (!text) return { ok: false, error: tr("Write something, or reset to the default.") };
+  if (text.length > maxFor(key)) return { ok: false, error: tr("Keep it under {0} characters.", [maxFor(key)]) };
   await saveText(getDb(), key, text, me);
   revalidatePath("/admin/coach");
   return DONE;
@@ -90,7 +91,7 @@ export async function createInviteAction(label: string): Promise<ActionResult<st
 export async function revokeInviteAction(id: number): Promise<ActionResult> {
   const me = await admin();
   if (typeof me !== "number") return me;
-  if (!Id.safeParse(id).success) return { ok: false, error: "Unknown invite." };
+  if (!Id.safeParse(id).success) return { ok: false, error: tr("Unknown invite.") };
   await revokeInvite(getDb(), id);
   revalidatePath("/admin");
   return DONE;
@@ -109,7 +110,7 @@ export async function setRoleAction(userId: number, role: "user" | "admin"): Pro
 export async function signOutEverywhereAction(userId: number): Promise<ActionResult<number>> {
   const me = await admin();
   if (typeof me !== "number") return me;
-  if (userId === me) return { ok: false, error: "Sign yourself out from Settings." };
+  if (userId === me) return { ok: false, error: tr("Sign yourself out from Settings.") };
   if (!(await changeable(userId))) return UNKNOWN;
   const n = await signOutEverywhere(getDb(), userId);
   revalidatePath("/admin/people");
@@ -125,8 +126,8 @@ export async function resetPasswordAction(userId: number): Promise<ActionResult<
   const me = await admin();
   if (typeof me !== "number") return me;
   const caller = await currentUser();
-  if (!caller || !isOwnerEmail(caller.email)) return { ok: false, error: "Only an owner (ADMIN_EMAILS) can reset passwords." };
-  if (userId === me) return { ok: false, error: "Change your own password from Settings." };
+  if (!caller || !isOwnerEmail(caller.email)) return { ok: false, error: tr("Only an owner (ADMIN_EMAILS) can reset passwords.") };
+  if (userId === me) return { ok: false, error: tr("Change your own password from Settings.") };
   if (!(await changeable(userId))) return UNKNOWN;
   const temp = await resetPassword(getDb(), userId);
   revalidatePath("/admin/people");
@@ -137,9 +138,9 @@ export async function resetPasswordAction(userId: number): Promise<ActionResult<
 export async function deleteAccountAction(userId: number): Promise<ActionResult> {
   const me = await admin();
   if (typeof me !== "number") return me;
-  if (userId === me) return { ok: false, error: "Delete your own account from Settings." };
+  if (userId === me) return { ok: false, error: tr("Delete your own account from Settings.") };
   if (!(await changeable(userId))) return UNKNOWN;
-  if ((await deleteAccount(getDb(), userId)) === "admin") return { ok: false, error: "Remove admin from this account first." };
+  if ((await deleteAccount(getDb(), userId)) === "admin") return { ok: false, error: tr("Remove admin from this account first.") };
   revalidatePath("/admin");
   return DONE;
 }

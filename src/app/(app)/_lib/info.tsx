@@ -1,6 +1,7 @@
 // Info-sheet copy for the half-A screens (spec §7.2, §7.3, §7.5, §7.15). Final copy: do not reword. The three score sheets
 // end with SOURCE_NOTE (user, 2026-10-04).
 import type { InfoContent } from "@/components/shells/InfoButton"
+import { t as tr } from "@/lib/i18n"
 
 function Rows({ rows }: { rows: [swatch: string | null, text: string][] }) {
   return (
@@ -16,16 +17,14 @@ function Rows({ rows }: { rows: [swatch: string | null, text: string][] }) {
 }
 
 /** Under each score's explainer: these are Pulse's own scores, not the reference app's (brand guidelines audit). */
-const SOURCE_NOTE = <p className="text-[13px] leading-[18px] text-muted-foreground">Pulse scores, computed from your Fitbit data.</p>
+const SOURCE_NOTE = <p className="text-[13px] leading-[18px] text-muted-foreground">{tr("Pulse scores, computed from your Fitbit data.")}</p>
 
 export const RECOVERY_INFO: InfoContent = {
-  title: "How Recovery works",
+  title: tr("How Recovery works"),
   body: (
     <>
       <p>
-        Recovery shows how ready your body is to take on strain, from 0 to 100%. Pulse scores it each morning from last night’s heart rate
-        variability, resting heart rate, respiratory rate, sleep performance and skin temperature, each compared with your own baseline.
-      </p>
+        {tr("Recovery shows how ready your body is to take on strain, from 0 to 100%. Pulse scores it each morning from last night’s heart rate variability, resting heart rate, respiratory rate, sleep performance and skin temperature, each compared with your own baseline.")}</p>
       <Rows
         rows={[
           ["bg-recovery-green", "Green, 67-100%: your body is primed for strain."],
@@ -34,22 +33,18 @@ export const RECOVERY_INFO: InfoContent = {
         ]}
       />
       <p>
-        Recovery needs 7&nbsp;nights of HRV before the first score and stays provisional until 14. A day without HRV or processed sleep gets no score
-        rather than a guess.
-      </p>
+        {tr("Recovery needs 7\u00a0nights of HRV before the first score and stays provisional until 14. A day without HRV or processed sleep gets no score rather than a guess.")}</p>
       {SOURCE_NOTE}
     </>
   ),
 }
 
 export const STRAIN_INFO: InfoContent = {
-  title: "How Strain works",
+  title: tr("How Strain works"),
   body: (
     <>
       <p>
-        Strain measures the cardiovascular load of your day on a 0 to 21 scale, from the time you spend at higher heart rates. The scale is
-        non-linear: each point is harder to earn than the last.
-      </p>
+        {tr("Strain measures the cardiovascular load of your day on a 0 to 21 scale, from the time you spend at higher heart rates. The scale is non-linear: each point is harder to earn than the last.")}</p>
       <Rows
         rows={[
           [null, "Light: up to 10.0"],
@@ -59,60 +54,47 @@ export const STRAIN_INFO: InfoContent = {
         ]}
       />
       <p>
-        Your Strain Target is a range for today, set from your Recovery and your recent training load. Today’s Strain is a running total
-        until midnight.
-      </p>
+        {tr("Your Strain Target is a range for today, set from your Recovery and your recent training load. Today’s Strain is a running total until midnight.")}</p>
       {SOURCE_NOTE}
     </>
   ),
 }
 
 export const STRAIN_TARGET_INFO: InfoContent = {
-  title: "Strain Target",
+  title: tr("Strain Target"),
   body: (
     <p>
-      Your Strain Target is a range for today, set from your Recovery and your training load over the last 28&nbsp;days. Inside it, training builds
-      fitness without digging a recovery hole.
-    </p>
+      {tr("Your Strain Target is a range for today, set from your Recovery and your training load over the last 28\u00a0days. Inside it, training builds fitness without digging a recovery hole.")}</p>
   ),
 }
 
 export const SLEEP_INFO: InfoContent = {
-  title: "How Sleep works",
+  title: tr("How Sleep works"),
   body: (
     <>
       <p>
-        Sleep Performance compares the sleep you got with the sleep you needed, adjusted for consistency, efficiency and restorative sleep. Your
-        need is your personal baseline: the upper quartile of your last 28&nbsp;nights, between 8 and 9.5&nbsp;hours. Strain, sleep debt and naps change
-        tonight’s need in the sleep planner, not this score.
-      </p>
+        {tr("Sleep Performance compares the sleep you got with the sleep you needed, adjusted for consistency, efficiency and restorative sleep. Your need is your personal baseline: the upper quartile of your last 28\u00a0nights, between 8 and 9.5\u00a0hours. Strain, sleep debt and naps change tonight’s need in the sleep planner, not this score.")}</p>
       <p>
-        Sleep consistency is the Sleep Regularity Index: how closely your sleep and wake times match from one day to the next, over the last 7
-        days.
-      </p>
+        {tr("Sleep consistency is the Sleep Regularity Index: how closely your sleep and wake times match from one day to the next, over the last 7 days.")}</p>
       {SOURCE_NOTE}
     </>
   ),
 }
 
 export const TONIGHT_INFO: InfoContent = {
-  title: "Tonight’s sleep",
+  title: tr("Tonight’s sleep"),
   body: (
     <p>
-      Bedtimes are worked back from your typical wake time and how efficiently you sleep. Peak gets you 100% of tonight’s need, Perform 85%,
-      Get by 70%.
-    </p>
+      {tr("Bedtimes are worked back from your typical wake time and how efficiently you sleep. Peak gets you 100% of tonight’s need, Perform 85%, Get by 70%.")}</p>
   ),
 }
 
 export const ENERGY_INFO: InfoContent = {
-  title: "Energy Bank",
+  title: tr("Energy Bank"),
   body: (
     <>
       <p>
-        Energy Bank estimates how much energy you have left today, from 0 to 100. It starts each morning from your Recovery and Sleep, drains
-        with exertion and stressful stretches, and recharges during calm, still periods and naps. It is an estimate, not a measurement.
-      </p>
+        {tr("Energy Bank estimates how much energy you have left today, from 0 to 100. It starts each morning from your Recovery and Sleep, drains with exertion and stressful stretches, and recharges during calm, still periods and naps. It is an estimate, not a measurement.")}</p>
       <Rows
         rows={[
           ["bg-recovery-green", "67-100: plenty in reserve."],
@@ -125,22 +107,22 @@ export const ENERGY_INFO: InfoContent = {
 }
 
 export const STRAIN_RECOVERY_INFO: InfoContent = {
-  title: "Strain & recovery",
+  title: tr("Strain & recovery"),
   body: (
     <>
-      <p>Your last 7&nbsp;days side by side: Day Strain in blue on the left scale, from 0 to 21, and Recovery on the right scale, from 0 to 100%.</p>
-      <p>High strain on one day often shows up as lower Recovery the next morning. Days without a score are left as gaps.</p>
+      <p>{tr("Your last 7\u00a0days side by side: Day Strain in blue on the left scale, from 0 to 21, and Recovery on the right scale, from 0 to 100%.")}</p>
+      <p>{tr("High strain on one day often shows up as lower Recovery the next morning. Days without a score are left as gaps.")}</p>
     </>
   ),
 }
 
 /** "Add activity" (Home's card button and the "+" menu): Pulse imports workouts, so this explains where they come from (§11 R2). */
 export const ADD_ACTIVITY_INFO: InfoContent = {
-  title: "Add an activity",
+  title: tr("Add an activity"),
   body: (
     <>
-      <p>Pulse reads your workouts from Fitbit through Google Health, so it cannot add one here.</p>
-      <p>Start or log the workout in the Fitbit app. It appears in your activities after the next sync, with its Strain.</p>
+      <p>{tr("Pulse reads your workouts from Fitbit through Google Health, so it cannot add one here.")}</p>
+      <p>{tr("Start or log the workout in the Fitbit app. It appears in your activities after the next sync, with its Strain.")}</p>
     </>
   ),
 }

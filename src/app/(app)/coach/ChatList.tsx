@@ -12,6 +12,7 @@ import { replaceUnder } from "@/components/shells/AppNavigation"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { t as tr } from "@/lib/i18n"
 
 /** One chat: the link fills the row; its menu (Delete) shows on hover or focus, and always on touch screens. */
 /**
@@ -32,7 +33,7 @@ function ChatItem({ chat, current }: { chat: ChatRow; current: boolean }) {
   const [pending, start] = React.useTransition()
   const remove = () =>
     start(async () => {
-      const r = await deleteChatAction(chat.id).catch(() => ({ ok: false as const, error: "Couldn’t reach Pulse. Try again." }))
+      const r = await deleteChatAction(chat.id).catch(() => ({ ok: false as const, error: tr("Couldn’t reach Pulse. Try again.") }))
       if (!r.ok) return void toast.error(r.error)
       setConfirm(false)
       toast.success("Chat deleted.")
@@ -65,7 +66,7 @@ function ChatItem({ chat, current }: { chat: ChatRow; current: boolean }) {
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            aria-label={`Options for “${chat.title}”`}
+            aria-label={tr("Options for “{0}”", [chat.title])}
             className="absolute top-1/2 right-1 grid size-8 -translate-y-1/2 place-items-center rounded-full pointer-coarse:size-10 text-muted-foreground opacity-100 outline-none transition-[opacity,background-color] duration-150 ease-standard hover:bg-foreground/[0.06] hover:text-foreground focus-visible:opacity-100 focus-visible:ring-3 focus-visible:ring-ring/50 aria-expanded:opacity-100 pointer-fine:opacity-0 pointer-fine:group-hover/chat:opacity-100"
           >
             <Ellipsis aria-hidden className="size-4" />
@@ -73,20 +74,18 @@ function ChatItem({ chat, current }: { chat: ChatRow; current: boolean }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem variant="destructive" onSelect={() => setConfirm(true)}>
-            Delete chat
-          </DropdownMenuItem>
+            {tr("Delete chat")}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={confirm} onOpenChange={(o) => !pending && setConfirm(o)}>
         <DialogContent showCloseButton={false} className="ring-1 ring-border">
           <DialogHeader>
-            <DialogTitle>Delete this chat?</DialogTitle>
-            <DialogDescription>“{chat.title}” and its answers are removed from this server. This can’t be undone.</DialogDescription>
+            <DialogTitle>{tr("Delete this chat?")}</DialogTitle>
+            <DialogDescription>“{chat.title}{tr("” and its answers are removed from this server. This can’t be undone.")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button type="button" variant="secondary" size="touch" onClick={() => setConfirm(false)} disabled={pending}>
-              Cancel
-            </Button>
+              {tr("Cancel")}</Button>
             <Button type="button" variant="outline" size="touch" className="text-recovery-red-text" onClick={remove} disabled={pending} aria-busy={pending || undefined}>
               {pending ? "Deleting…" : "Delete chat"}
             </Button>
@@ -117,10 +116,9 @@ export function NewChatButton({ label, className }: { label?: boolean; className
       )}
     >
       <MessageSquarePlus aria-hidden className="size-6" strokeWidth={1.6} />
-      New chat
-    </Button>
+      {tr("New chat")}</Button>
   ) : (
-    <Button type="button" variant="ghost" size="icon-touch" aria-label="New chat" onClick={start} className={cn("text-foreground-secondary hover:text-foreground", className)}>
+    <Button type="button" variant="ghost" size="icon-touch" aria-label={tr("New chat")} onClick={start} className={cn("text-foreground-secondary hover:text-foreground", className)}>
       <MessageSquarePlus aria-hidden strokeWidth={1.75} />
     </Button>
   )
@@ -149,19 +147,19 @@ export function ChatList({ groups: first, next: firstNext, current, className, s
   const loadMore = () =>
     start(async () => {
       if (!next) return
-      const r = await moreChatsAction(next).catch(() => ({ ok: false as const, error: "Couldn’t reach Pulse. Try again." }))
+      const r = await moreChatsAction(next).catch(() => ({ ok: false as const, error: tr("Couldn’t reach Pulse. Try again.") }))
       if (!r.ok) return void toast.error(r.error)
       setMore({ groups: merge(more?.groups ?? [], r.data.groups), next: r.data.next })
     })
   return (
-    <nav aria-label="Chats" className={cn("flex flex-col gap-5", className)}>
+    <nav aria-label={tr("Chats")} className={cn("flex flex-col gap-5", className)}>
       {showNew && <NewChatButton label />}
       {groups.length === 0 ? (
-        <p className="px-4 py-1 text-[13px] leading-[18px] text-pretty text-muted-foreground">Your chats appear here. They’re saved on this server, visible only to you.</p>
+        <p className="px-4 py-1 text-[13px] leading-[18px] text-pretty text-muted-foreground">{tr("Your chats appear here. They’re saved on this server, visible only to you.")}</p>
       ) : (
         groups.map((g, i) => (
-          <section key={`${g.label}-${i}`} aria-label={g.label}>
-            <h2 className="px-4 pb-1.5 text-[11px] leading-4 font-bold tracking-[0.1em] text-muted-foreground/80 uppercase">{g.label}</h2>
+          <section key={`${g.label}-${i}`} aria-label={tr(g.label)}>
+            <h2 className="px-4 pb-1.5 text-[11px] leading-4 font-bold tracking-[0.1em] text-muted-foreground/80 uppercase">{tr(g.label)}</h2>
             <ul className="space-y-px">
               {g.chats.map((c) => (
                 <ChatItem key={c.id} chat={c} current={c.id === current} />

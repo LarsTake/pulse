@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FIELD, nowLocal, parseNum, Section } from "../_lib/forms"
+import { t as tr } from "@/lib/i18n"
 
 type SetRow = { reps: string; kg: string }
 type Ex = { key: string; sets: SetRow[] }
@@ -32,7 +33,7 @@ function Picker({ onPick, used }: { onPick: (key: string) => void; used: Set<str
     <div className="flex flex-col gap-2">
       <div className="relative">
         <Search aria-hidden strokeWidth={1.75} className="pointer-events-none absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground" />
-        <Input aria-label="Find an exercise" placeholder="Exercise or muscle" value={q} onChange={(e) => setQ(e.target.value)} className="h-11 pl-10 text-base" />
+        <Input aria-label={tr("Find an exercise")} placeholder={tr("Exercise or muscle")} value={q} onChange={(e) => setQ(e.target.value)} className="h-11 pl-10 text-base" />
       </div>
       <ul className="max-h-64 overflow-y-auto rounded-xl bg-secondary/40 p-1">
         {list.map((e) => (
@@ -50,7 +51,7 @@ function Picker({ onPick, used }: { onPick: (key: string) => void; used: Set<str
             </button>
           </li>
         ))}
-        {!list.length && <li className={cn(CAPTION, "px-3 py-3")}>No exercise matches.</li>}
+        {!list.length && <li className={cn(CAPTION, "px-3 py-3")}>{tr("No exercise matches.")}</li>}
       </ul>
     </div>
   )
@@ -96,7 +97,7 @@ export function StrengthSheet() {
         const reps = parseNum(s.reps)
         const kg = parseNum(s.kg) ?? 0
         if (reps === null && !s.kg.trim()) continue
-        if (reps === null || Number.isNaN(reps) || Number.isNaN(kg)) return setError(`${exerciseDef(e.key)?.label}: enter reps and weight as numbers.`)
+        if (reps === null || Number.isNaN(reps) || Number.isNaN(kg)) return setError(tr("{0}: enter reps and weight as numbers.", [exerciseDef(e.key)?.label]))
         sets.push({ reps, kg })
       }
       if (sets.length) exercises.push({ key: e.key, sets })
@@ -117,8 +118,8 @@ export function StrengthSheet() {
     <ResponsiveSheet
       open={open}
       onOpenChange={(o) => !o && !saving && closeSheet("strength")}
-      title="Strength trainer"
-      description="Saved in Pulse only"
+      title={tr("Strength trainer")}
+      description={tr("Saved in Pulse only")}
       size="tall"
       footer={
         <>
@@ -147,28 +148,28 @@ export function StrengthSheet() {
               key={`${e.key}-${i}`}
               title={def.label}
               action={
-                <Button type="button" variant="ghost" size="icon-touch" aria-label={`Remove ${def.label}`} onClick={() => setExs((xs) => xs.filter((_, j) => j !== i))}>
+                <Button type="button" variant="ghost" size="icon-touch" aria-label={tr("Remove {0}", [def.label])} onClick={() => setExs((xs) => xs.filter((_, j) => j !== i))}>
                   <Trash2 aria-hidden strokeWidth={1.75} />
                 </Button>
               }
             >
               <div className="grid grid-cols-[2rem_1fr_1fr_2.75rem] items-center gap-2">
-                <span className={cn(LABEL, "text-muted-foreground")}>Set</span>
-                <span className={cn(LABEL, "text-center text-muted-foreground")}>Reps</span>
+                <span className={cn(LABEL, "text-muted-foreground")}>{tr("Set")}</span>
+                <span className={cn(LABEL, "text-center text-muted-foreground")}>{tr("Reps")}</span>
                 <span className={cn(LABEL, "text-center text-muted-foreground")}>{def.bodyweight ? "+kg" : "kg"}</span>
                 <span />
                 {e.sets.map((s, k) => (
                   <React.Fragment key={k}>
                     <span className="font-numeric text-[15px] font-bold tabular-nums">{k + 1}</span>
                     <Input
-                      aria-label={`${def.label} set ${k + 1} reps`}
+                      aria-label={tr("{0} set {1} reps", [def.label, k + 1])}
                       inputMode="numeric"
                       value={s.reps}
                       onChange={(ev) => update(i, (x) => ({ ...x, sets: x.sets.map((y, m) => (m === k ? { ...y, reps: ev.target.value } : y)) }))}
                       className={SET_INPUT}
                     />
                     <Input
-                      aria-label={`${def.label} set ${k + 1} weight in kg`}
+                      aria-label={tr("{0} set {1} weight in kg", [def.label, k + 1])}
                       inputMode="decimal"
                       placeholder={def.bodyweight ? "0" : ""}
                       value={s.kg}
@@ -179,7 +180,7 @@ export function StrengthSheet() {
                       type="button"
                       variant="ghost"
                       size="icon-touch"
-                      aria-label={`Remove set ${k + 1}`}
+                      aria-label={tr("Remove set {0}", [k + 1])}
                       disabled={e.sets.length === 1}
                       onClick={() => update(i, (x) => ({ ...x, sets: x.sets.filter((_, m) => m !== k) }))}
                     >
@@ -195,8 +196,7 @@ export function StrengthSheet() {
                 onClick={() => update(i, (x) => ({ ...x, sets: [...x.sets, { ...(x.sets.at(-1) ?? { reps: "", kg: "" }) }] }))}
               >
                 <Copy aria-hidden strokeWidth={1.75} />
-                Add set
-              </Button>
+                {tr("Add set")}</Button>
             </Section>
           )
         })}
@@ -214,17 +214,16 @@ export function StrengthSheet() {
         ) : (
           <Button type="button" variant="secondary" size="touch" className="mt-6 w-full" onClick={() => setPicking(true)}>
             <Plus aria-hidden strokeWidth={1.75} />
-            Add exercise
-          </Button>
+            {tr("Add exercise")}</Button>
         )}
 
-        <Section title="Session">
+        <Section title={tr("Session")}>
           <div className="grid grid-cols-2 gap-2">
-            <Field id="strength-at" label="Started" hint="(empty: now)">
+            <Field id="strength-at" label={tr("Started")} hint={tr("(empty: now)")}>
               <Input id="strength-at" type="datetime-local" max={nowLocal()} value={at} onChange={(e) => setAt(e.target.value)} className={FIELD} />
             </Field>
-            <Field id="strength-min" label="Duration" hint="(min)">
-              <Input id="strength-min" inputMode="numeric" placeholder="Optional" value={duration} onChange={(e) => setDuration(e.target.value)} className={FIELD} />
+            <Field id="strength-min" label={tr("Duration")} hint="(min)">
+              <Input id="strength-min" inputMode="numeric" placeholder={tr("Optional")} value={duration} onChange={(e) => setDuration(e.target.value)} className={FIELD} />
             </Field>
           </div>
         </Section>

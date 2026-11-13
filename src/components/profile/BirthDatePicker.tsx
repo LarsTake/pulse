@@ -5,6 +5,7 @@ import { CalendarDays } from "lucide-react"
 import { DAY, formatDay } from "@/lib/format"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { t as tr } from "@/lib/i18n"
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => formatDay(`2026-${String(i + 1).padStart(2, "0")}`, { month: "long" }))
 const OLDEST = 1920
@@ -112,19 +113,19 @@ export function BirthDatePicker({ id, name, defaultValue, invalid, describedBy }
         <div
           id={`${id}-wheels`}
           role="group"
-          aria-label="Birth date"
+          aria-label={tr("Birth date")}
           style={{ "--wheel": `${ROW * VISIBLE}px` } as React.CSSProperties}
           className="overflow-hidden rounded-xl bg-field motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-top-1"
         >
           <div className="relative grid grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1.2fr)] gap-1 px-2 pt-1">
             {/* The selection band behind the centre row. */}
             <div aria-hidden className="pointer-events-none absolute inset-x-2 top-[calc(50%+2px)] h-10 -translate-y-1/2 rounded-lg bg-foreground/8" />
-            <Wheel label="Month" items={MONTHS} index={m - 1} onIndex={(i) => set(y, i + 1, d)} />
-            <Wheel label="Day" items={days} index={Math.min(d, days.length) - 1} onIndex={(i) => set(y, m, i + 1)} />
-            <Wheel label="Year" items={years} index={Math.max(0, years.indexOf(String(y)))} onIndex={(i) => set(OLDEST + i, m, d)} />
+            <Wheel label={tr("Month")} items={MONTHS} index={m - 1} onIndex={(i) => set(y, i + 1, d)} />
+            <Wheel label={tr("Day")} items={days} index={Math.min(d, days.length) - 1} onIndex={(i) => set(y, m, i + 1)} />
+            <Wheel label={tr("Year")} items={years} index={Math.max(0, years.indexOf(String(y)))} onIndex={(i) => set(OLDEST + i, m, d)} />
           </div>
           <div className="flex items-center justify-between gap-3 border-t border-foreground/6 py-1.5 pr-1.5 pl-4">
-            <span className="truncate text-[13px] leading-[18px] text-muted-foreground">Scroll or tap to pick</span>
+            <span className="truncate text-[13px] leading-[18px] text-muted-foreground">{tr("Scroll or tap to pick")}</span>
             <Button
               type="button"
               size="sm"
@@ -136,8 +137,7 @@ export function BirthDatePicker({ id, name, defaultValue, invalid, describedBy }
                 field.current?.focus()
               }}
             >
-              Done
-            </Button>
+              {tr("Done")}</Button>
           </div>
         </div>
       )}

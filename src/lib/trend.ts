@@ -1,5 +1,6 @@
 import { formatDay } from "./format";
 import { addDays } from "./url";
+import { t as tr, UI_LOCALE } from "@/lib/i18n"
 
 // The Trend View's arithmetic (spec §11 R29): period windows, the relative change, 6M month segments, weekly
 // totals, the breakdown counts and the verdict sentence. Pure, so the query and the tests share it.
@@ -123,20 +124,47 @@ export function verdict(o: {
   typical?: [number, number] | null;
 }) {
   const { label, range, now, prior, fmt } = o;
-  if (now === null) return `No ${label} data ${WORD[range].this}.`;
+  if (UI_LOCALE === "de") return verdictDe(o);
+  if (now === null) return tr("No {0} data {1}.", [label, WORD[range].this]);
   if (o.typical && range === "w") {
     const [lo, hi] = o.typical;
     const where = now < lo ? "below" : now > hi ? "above" : "within";
-    return `Your average ${label} during this 7-day period was ${where} its typical range (${fmt(lo)} - ${fmt(hi)}).`;
+    return tr("Your average {0} during this 7-day period was {1} its typical range ({2} - {3}).", [label, where, fmt(lo), fmt(hi)]);
   }
   const change = prior === null ? null : relativeChange(now, prior);
   const cmp = change === 0 || change === null ? "consistent with" : change > 0 ? "above" : "below";
   if (o.agg === "weekly") {
-    const lead = range === "w" ? `During this 7-day period, your total ${label} (${fmt(now)})` : `Your average weekly ${label} ${WEEKS[range]} (${fmt(now)})`;
+    const lead = range === "w" ? tr("During this 7-day period, your total {0} ({1})", [label, fmt(now)]) : tr("Your average weekly {0} {1} ({2})", [label, WEEKS[range], fmt(now)]);
     if (prior === null) return `${lead}.`;
-    return `${lead} was ${cmp} your ${range === "w" ? "previous 7-day total" : WEEKS_PRIOR[range]} of ${fmt(prior)}.`;
+    return tr("{0} was {1} your {2} of {3}.", [lead, cmp, range === "w" ? tr("previous 7-day total") : WEEKS_PRIOR[range], fmt(prior)]);
   }
-  const lead = `Your average ${label} ${WORD[range].this} (${fmt(now)})`;
+  const lead = tr("Your average {0} {1} ({2})", [label, WORD[range].this, fmt(now)]);
   if (prior === null) return `${lead}.`;
-  return `${lead} was ${cmp} your ${WORD[range].prior} average of ${fmt(prior)}.`;
+  return tr("{0} was {1} your {2} average of {3}.", [lead, cmp, WORD[range].prior, fmt(prior)]);
+}
+
+const DE_THIS: Record<TrendViewRange, string> = { w: "diese Woche", m: "diesen Monat", "6m": "in diesem Zeitraum" };
+const DE_PRIOR: Record<TrendViewRange, string> = { w: "der vorherigen 7 Tage", m: "der vorherigen 30 Tage", "6m": "der vorherigen 6 Monate" };
+
+/** The German verdict: whole sentences, since the English one is assembled from fragments. */
+function verdictDe(o: Parameters<typeof verdict>[0]) {
+  const { label, range, now, prior, fmt } = o;
+  if (now === null) return `Keine Daten zu ${label} ${DE_THIS[range]}.`;
+  if (o.typical && range === "w") {
+    const [lo, hi] = o.typical;
+    const where = now < lo ? "unterhalb" : now > hi ? "oberhalb" : "innerhalb";
+    return `Dein Durchschnitt für ${label} lag in diesem 7-Tage-Zeitraum ${where} des typischen Bereichs (${fmt(lo)} - ${fmt(hi)}).`;
+  }
+  const change = prior === null ? null : relativeChange(now, prior);
+  const cmp = change === 0 || change === null ? "gleichauf mit" : change > 0 ? "über" : "unter";
+  if (o.agg === "weekly") {
+    const lead =
+      range === "w" ? `Dein Gesamtwert für ${label} in diesem 7-Tage-Zeitraum (${fmt(now)})` : `Dein wöchentlicher Durchschnitt für ${label} ${range === "m" ? "in diesen vier Wochen" : "in diesem Zeitraum"} (${fmt(now)})`;
+    if (prior === null) return `${lead}.`;
+    const ref = range === "w" ? "deinem Gesamtwert der vorherigen 7 Tage" : range === "m" ? "deinem Durchschnitt der vorherigen vier Wochen" : "deinem Durchschnitt der vorherigen 6 Monate";
+    return `${lead} lag ${cmp} ${ref} von ${fmt(prior)}.`;
+  }
+  const lead = `Dein Durchschnitt für ${label} ${DE_THIS[range]} (${fmt(now)})`;
+  if (prior === null) return `${lead}.`;
+  return `${lead} lag ${cmp} deinem Durchschnitt ${DE_PRIOR[range]} von ${fmt(prior)}.`;
 }

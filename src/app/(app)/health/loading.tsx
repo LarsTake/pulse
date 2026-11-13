@@ -4,6 +4,7 @@ import { PageShell } from "@/components/shells/PageShell"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { CAPTION, LABEL } from "@/components/metrics/primitives"
+import { t as tr } from "@/lib/i18n"
 
 const TILE = "font-numeric text-4xl leading-10 font-bold"
 const Chip = () => <Skeleton className="h-6 w-24 rounded-md" />
@@ -14,12 +15,12 @@ const Chip = () => <Skeleton className="h-6 w-24 rounded-md" />
  */
 export default function Loading() {
   return (
-    <PageShell loading title="Health">
+    <PageShell loading title={tr("Health")}>
       <div className="grid grid-cols-1 gap-3 xl:grid-cols-2 xl:gap-4">
-        <SectionShell variant="card" level={2} title="Stress Monitor" info={false} href="/health/stress" className="xl:col-span-2">
+        <SectionShell variant="card" level={2} title={tr("Stress Monitor")} info={false} href="/health/stress" className="xl:col-span-2">
           <div aria-hidden className="grid grid-cols-[auto_minmax(0,1fr)] items-end gap-4">
             <div className="space-y-2">
-              <p className={LABEL}>Today’s high stress</p>
+              <p className={LABEL}>{tr("Today’s high stress")}</p>
               <SkeletonText className={`${TILE} w-[4ch]`} />
               <Chip />
             </div>
@@ -32,14 +33,14 @@ export default function Loading() {
               <SkeletonText className="w-[4ch] font-numeric text-[40px] leading-none font-bold" />
             </div>
           </div>
-          <SectionShell variant="card" level={2} title="Pace of Aging" action={<Chip />}>
+          <SectionShell variant="card" level={2} title={tr("Pace of Aging")} action={<Chip />}>
             <div className="space-y-5">
               <TickScaleSkeleton variant="marker" />
               <Skeleton className="h-12 w-full rounded-xl" />
             </div>
           </SectionShell>
         </div>
-        <SectionShell variant="card" level={2} title="Health Monitor" info={false} href="/health/monitor">
+        <SectionShell variant="card" level={2} title={tr("Health Monitor")} info={false} href="/health/monitor">
           <div aria-hidden className="space-y-4">
             <ul className="grid grid-cols-5 divide-x divide-border">
               {Array.from({ length: 5 }, (_, i) => (
@@ -56,7 +57,7 @@ export default function Loading() {
             </div>
           </div>
         </SectionShell>
-        <SectionShell variant="card" level={2} title="Fitness" href="/health/fitness">
+        <SectionShell variant="card" level={2} title={tr("Fitness")} href="/health/fitness">
           <div aria-hidden className="flex items-start justify-between gap-4">
             <div className="space-y-1">
               <SkeletonText className={`${TILE} w-[4ch]`} />
@@ -64,20 +65,20 @@ export default function Loading() {
               <SkeletonText className={`${CAPTION} w-40`} />
             </div>
             <div className="flex flex-col items-end gap-1">
-              <p className={LABEL}>Training load</p>
+              <p className={LABEL}>{tr("Training load")}</p>
               <SkeletonText className="w-[4ch] font-numeric text-xl leading-6 font-bold" />
               <Chip />
             </div>
           </div>
         </SectionShell>
-        <SectionShell variant="card" level={2} title="Heart rate" href="/health/heart-rate">
+        <SectionShell variant="card" level={2} title={tr("Heart rate")} href="/health/heart-rate">
           <div aria-hidden className="space-y-1">
             <SkeletonText className={`${TILE} w-[4ch]`} />
             <SkeletonText className={`${CAPTION} w-28`} />
           </div>
         </SectionShell>
       </div>
-      <p className={`${CAPTION} text-center`}>Estimates for personal insight, not medical advice.</p>
+      <p className={`${CAPTION} text-center`}>{tr("Estimates for personal insight, not medical advice.")}</p>
     </PageShell>
   )
 }

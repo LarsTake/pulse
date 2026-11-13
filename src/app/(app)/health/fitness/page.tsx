@@ -13,8 +13,9 @@ import { EmptyState } from "@/components/shells/EmptyState"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { categoryTone, categoryWord, ordinal } from "../format"
 import { LoadChart } from "./LoadChart"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Fitness" }
+export const metadata = { title: tr("Fitness") }
 
 const BODY = "text-[15px] leading-[22px] text-pretty text-foreground-secondary"
 // Both thresholds follow the pipeline: ACWR shows after 14 days of strain (readiness `minChronic`), fitness and fatigue
@@ -23,34 +24,32 @@ const NO_LOAD = "Training load needs 14 days of strain."
 const NO_FFS = "Fitness, fatigue and form need 14 days of strain in a row."
 
 const INFO = {
-  title: "About Fitness",
+  title: tr("About Fitness"),
   body: (
     <p>
-      VO2 max is the most oxygen your body can use during hard exercise. Pulse ranks it against people of your age and sex from the FRIEND registry.
-      Training load compares your last 7 days of strain with your last 28 (the acute to chronic ratio); 0.8 to 1.3 is the usual sweet spot.
-    </p>
+      {tr("VO2 max is the most oxygen your body can use during hard exercise. Pulse ranks it against people of your age and sex from the FRIEND registry. Training load compares your last 7 days of strain with your last 28 (the acute to chronic ratio); 0.8 to 1.3 is the usual sweet spot.")}</p>
   ),
 }
 
 const STATUS: Record<NonNullable<FitnessVM["trainingLoad"]["value"]>["status"], { word: string; body: string }> = {
-  detraining: { word: "Detraining", body: "Detraining: your recent load is well below your usual. Fitness slowly drops if this lasts." },
-  optimal: { word: "Optimal", body: "Optimal: your recent load matches what you are used to." },
-  pushing: { word: "Pushing", body: "Pushing: load is rising faster than usual. Watch your Recovery." },
-  high_risk: { word: "High risk", body: "High risk: load jumped well above your usual. Injury and illness risk rise." },
+  detraining: { word: tr("Detraining"), body: tr("Detraining: your recent load is well below your usual. Fitness slowly drops if this lasts.") },
+  optimal: { word: tr("Optimal"), body: tr("Optimal: your recent load matches what you are used to.") },
+  pushing: { word: tr("Pushing"), body: tr("Pushing: load is rising faster than usual. Watch your Recovery.") },
+  high_risk: { word: tr("High risk"), body: tr("High risk: load jumped well above your usual. Injury and illness risk rise.") },
 }
-const CATEGORIES = ["Poor", "Fair", "Good", "Excellent", "Superior"]
+const CATEGORIES = [tr("Poor"), tr("Fair"), tr("Good"), tr("Excellent"), tr("Superior")]
 
 function Hero({ vo2 }: { vo2: FitnessVM["vo2"] }) {
   const v = vo2.value
-  if (!v) return <EmptyState body="No VO2 max yet. Fitbit estimates it from runs and resting heart rate." />
+  if (!v) return <EmptyState body={tr("No VO2 max yet. Fitbit estimates it from runs and resting heart rate.")} />
   return (
     <div className="flex flex-col items-center gap-2 py-4 text-center">
       <ValueUnit value={formatValue("decimal1", v.value)} unit="ml/kg/min" className="font-numeric text-[64px] leading-none font-bold tracking-[-0.01em] md:text-[72px]" />
       <p className="flex items-center gap-3">
-        <span className={LABEL}>VO2 max</span>
+        <span className={LABEL}>{tr("VO2 max")}</span>
         <span className={cn(LABEL, categoryTone(v.category))}>{categoryWord(v.category)}</span>
       </p>
-      <p className={CAPTION}>{v.source === "run" ? `From a run on ${formatDay(v.sourceDay, DAY.monthDay)}` : "Daily estimate from Fitbit"}</p>
+      <p className={CAPTION}>{v.source === "run" ? tr("From a run on {0}", [formatDay(v.sourceDay, DAY.monthDay)]) : "Daily estimate from Fitbit"}</p>
       {vo2.provisional && <MetricTags extra={["estimate"]} />}
     </div>
   )
@@ -65,20 +64,20 @@ export default async function FitnessPage() {
 
   return (
     <DetailShell
-      title="Fitness"
+      title={tr("Fitness")}
       info={INFO}
       hero={<Hero vo2={vm.vo2} />}
       summary={
         v && (
-          <SectionShell variant="card" title="Percentile">
+          <SectionShell variant="card" title={tr("Percentile")}>
             <TickScale
               variant="marker"
-              label="VO2 max percentile"
+              label={tr("VO2 max percentile")}
               metric={{ value: v.percentile, reason: null, provisional: false }}
               min={0}
               max={100}
               format="int"
-              describe={`${categoryWord(v.category)} for ${v.sex === "male" ? "men" : "women"} ${v.ageBand}`}
+              describe={tr("{0} for {1} {2}", [categoryWord(v.category), v.sex === "male" ? tr("men") : tr("women"), v.ageBand])}
               bands={[
                 { from: 0, to: 39.9, tone: "warning" },
                 { from: 60, to: 100, tone: "optimal" },
@@ -93,15 +92,14 @@ export default async function FitnessPage() {
               ))}
             </div>
             <p className={cn(CAPTION, "mt-3")}>
-              {ordinal(v.percentile)} percentile for {v.sex === "male" ? "men" : "women"} {v.ageBand} (FRIEND registry).
-            </p>
+              {ordinal(v.percentile)} {" "}{tr("percentile for")}{" "}{v.sex === "male" ? "men" : "women"} {v.ageBand} {" "}{tr("(FRIEND registry).")}</p>
           </SectionShell>
         )
       }
       primary={
-        <SectionShell variant="card" title="VO2 max trend">
+        <SectionShell variant="card" title={tr("VO2 max trend")}>
           <TrendChart
-            label="VO2 max"
+            label={tr("VO2 max")}
             data={{ value: vm.trend.points.map((p) => ({ date: p.day, value: p.value })), reason: null, provisional: false }}
             unit="ml/kg/min"
             format="decimal1"
@@ -112,7 +110,7 @@ export default async function FitnessPage() {
         </SectionShell>
       }
       secondary={[
-        <SectionShell key="load" variant="card" title="Training load">
+        <SectionShell key="load" variant="card" title={tr("Training load")}>
           {tl ? (
             <div className="space-y-4">
               <p className="flex items-center gap-3">
@@ -121,7 +119,7 @@ export default async function FitnessPage() {
               </p>
               <TickScale
                 variant="marker"
-                label="Training load"
+                label={tr("Training load")}
                 metric={vm.trainingLoad.value ? { value: tl.acwr, reason: null, provisional: false } : null}
                 min={0.5}
                 max={2}
@@ -138,13 +136,13 @@ export default async function FitnessPage() {
             <ReasonPlaceholder reason="calibrating" size="md" copy={NO_LOAD} />
           )}
         </SectionShell>,
-        <SectionShell key="ffs" variant="card" title="Fitness, fatigue and form">
+        <SectionShell key="ffs" variant="card" title={tr("Fitness, fatigue and form")}>
           {vm.loadReason ? (
             <ReasonPlaceholder reason={vm.loadReason.reason} size="md" copy={NO_FFS} />
           ) : (
             <>
               <LoadChart load={vm.load} />
-              <p className={cn(CAPTION, "mt-2")}>Fitness is your 42-day load, fatigue your 7-day load, form the difference.</p>
+              <p className={cn(CAPTION, "mt-2")}>{tr("Fitness is your 42-day load, fatigue your 7-day load, form the difference.")}</p>
             </>
           )}
         </SectionShell>,

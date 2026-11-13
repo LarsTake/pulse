@@ -41,13 +41,14 @@ import {
   toStrain,
 } from "./common";
 import type { ActivityKind, EnergyBankVM, HomeVM, KeyStat, Metric, VitalKey } from "./types";
+import { t as tr } from "@/lib/i18n"
 
 export const VITAL_LABEL: Record<VitalKey, string> = {
-  resp: "Respiratory rate",
-  spo2: "Blood oxygen",
-  restingHr: "Resting heart rate",
-  hrv: "Heart rate variability",
-  skinTempDev: "Skin temperature",
+  resp: tr("Respiratory rate"),
+  spo2: tr("Blood oxygen"),
+  restingHr: tr("Resting heart rate"),
+  hrv: tr("Heart rate variability"),
+  skinTempDev: tr("Skin temperature"),
 };
 
 export async function getHome(day: string, ctx: QueryCtx): Promise<HomeVM> {
@@ -143,7 +144,7 @@ export function outlookOf(ctx: QueryCtx, row: DayRow | undefined, s: DayScores, 
     if (st && st.average != null) parts.push(`You spent ${hmm(st.highMin)} in high stress.`);
   }
   if (!parts.length) return null;
-  return { kind: review ? "review" : "outlook", title: review ? "Your day in review" : "Your daily outlook", body: parts.join(" ") };
+  return { kind: review ? "review" : "outlook", title: review ? tr("Your day in review") : "Your daily outlook", body: parts.join(" ") };
 }
 
 const RECOVERY_TITLE = { green: "Ready for strain", yellow: "A steady day", red: "Time to recover" } as const;
@@ -155,13 +156,13 @@ function insightsOf(ctx: QueryCtx, rows: Map<string, DayRow>, row: DayRow | unde
   if (c && target && s.strain.value != null) {
     const v = s.strain.value;
     const red = row?.recovery?.value != null && row.recovery.value < 34;
-    const title = red ? "Keep strain light" : v < target.low ? "Room for more strain" : v <= target.high ? "Reaching optimal strain" : "Past your target";
+    const title = red ? "Keep strain light" : v < target.low ? tr("Room for more strain") : v <= target.high ? "Reaching optimal strain" : "Past your target";
     out.push({ key: "strain", title, body: c, href: "/strain" });
   }
   const r = row?.recovery;
-  if (r?.value != null) out.push({ key: "recovery", title: RECOVERY_TITLE[recoveryBand(r.value)], body: recoveryInsight(r.drivers), href: "/recovery" });
+  if (r?.value != null) out.push({ key: "recovery", title: tr(RECOVERY_TITLE[recoveryBand(r.value)]), body: recoveryInsight(r.drivers), href: "/recovery" });
   const sl = sleepInsight(rows, day, ctx.timeZone);
-  if (sl) out.push({ key: "sleep", title: "Last night’s sleep", body: sl, href: "/sleep" });
+  if (sl) out.push({ key: "sleep", title: tr("Last night’s sleep"), body: sl, href: "/sleep" });
   return out;
 }
 

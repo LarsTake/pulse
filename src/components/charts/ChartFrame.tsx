@@ -1,5 +1,6 @@
 "use client"
 
+import { LOCALE } from "@/lib/format"
 import { cn } from "@/lib/utils"
 import { bandColor, bandStops, type Band } from "@/lib/charts"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
@@ -95,7 +96,7 @@ export const gutterLabel = (value: string, color = "var(--foreground-secondary)"
   }
 
 /** Tick text for a numeric axis: whole numbers drop their ".0" (48, not 48.0); others keep the metric's format. */
-export const wholeTick = (fmt: (v: number) => string) => (v: number) => (Number.isInteger(v) ? Math.round(v).toLocaleString("en-US") : fmt(v))
+export const wholeTick = (fmt: (v: number) => string) => (v: number) => (Number.isInteger(v) ? Math.round(v).toLocaleString(LOCALE) : fmt(v))
 
 /**
  * A vertical gradient that colours each height by the band of its value: the line or area takes the band colour where

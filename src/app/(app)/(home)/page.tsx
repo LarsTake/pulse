@@ -37,24 +37,25 @@ import { AddActivityTrigger } from "../_lib/AddActivity"
 import { ENERGY_INFO, STRAIN_RECOVERY_INFO, TONIGHT_INFO } from "../_lib/info"
 import { TonightPlan } from "../_lib/TonightPlan"
 import { CAPTION, energySeries, LABEL, statProps, stressSeries } from "../_lib/view"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Today", description: "Today’s Sleep, Recovery and Strain at a glance." }
+export const metadata = { title: tr("Today"), description: tr("Today’s Sleep, Recovery and Strain at a glance.") }
 
 const STRESS_TONE: Record<StressLevel, { chip: string; text: string; word: string }> = {
-  low: { chip: "bg-stress-low/15 text-stress-low-text", text: "text-stress-low-text", word: "Low" },
-  medium: { chip: "bg-stress-medium/15 text-stress-medium-text", text: "text-stress-medium-text", word: "Medium" },
-  high: { chip: "bg-stress-high/15 text-stress-high-text", text: "text-stress-high-text", word: "High" },
+  low: { chip: "bg-stress-low/15 text-stress-low-text", text: "text-stress-low-text", word: tr("Low") },
+  medium: { chip: "bg-stress-medium/15 text-stress-medium-text", text: "text-stress-medium-text", word: tr("Medium") },
+  high: { chip: "bg-stress-high/15 text-stress-high-text", text: "text-stress-high-text", word: tr("High") },
 }
 const CHIP_BOX = "grid h-7 min-w-7 shrink-0 place-items-center rounded-md px-1"
 /** The 56 px gradient banner rows: day outlook / review and week in review (spec §7.1 7a, 10). */
 const BANNER =
   "flex h-14 w-full items-center gap-3 rounded-2xl px-4 text-left shadow-card transition-[filter,scale] duration-150 ease-standard outline-none hover:brightness-110 focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
 const NO_BAND_INFO = {
-  title: "No band data yet",
+  title: tr("No band data yet"),
   body: (
     <>
-      <p>Sleep, Recovery and Strain are scored from your Fitbit’s heart rate, which your phone can’t measure.</p>
-      <p>Until your Fitbit syncs, Home shows what your phone counts: steps, distance, calories and active minutes.</p>
+      <p>{tr("Sleep, Recovery and Strain are scored from your Fitbit’s heart rate, which your phone can’t measure.")}</p>
+      <p>{tr("Until your Fitbit syncs, Home shows what your phone counts: steps, distance, calories and active minutes.")}</p>
     </>
   ),
 }
@@ -71,7 +72,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
 
   return (
     <PageShell
-      title="Home"
+      title={tr("Home")}
       layout="home"
       rings={{
         sleep: { value: dials.sleep.value, href: at("/sleep") },
@@ -162,18 +163,18 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
           // last card (the Energy Bank / Tonight's sleep pair, or the Strain & recovery chart), never a blank (SYM4).
           <SectionShell
             variant="section"
-            title="My Day"
+            title={tr("My Day")}
             className="xl:flex xl:h-full xl:flex-col"
             // The action menu for the day on screen: add an activity, complete the journal (the reference app, home-plus-menu-open).
-            action={<PlusMenu label={vm.isToday ? "Add to today" : `Add to ${formatDay(d, DAY.short)}`} />}
+            action={<PlusMenu label={vm.isToday ? tr("Add to today") : tr("Add to {0}", [formatDay(d, DAY.short)])} />}
           >
             <div className="flex flex-col gap-3 xl:flex-1 xl:gap-4">
               {vm.outlook && <DayBanner outlook={vm.outlook} />}
               <SectionShell
                 variant="card"
-                title={vm.activities.title}
+                title={tr(vm.activities.title)}
                 action={
-                  <Link href="/activities" aria-label="All activities" className={ICON_LINK}>
+                  <Link href="/activities" aria-label={tr("All activities")} className={ICON_LINK}>
                     <Maximize2 aria-hidden className="size-[18px]" strokeWidth={1.75} />
                   </Link>
                 }
@@ -196,13 +197,11 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
                 <div className={cn("mt-3 grid gap-3", startActivity && "grid-cols-2")}>
                   <AddActivityTrigger className={CARD_BUTTON}>
                     <Plus aria-hidden className="size-5" strokeWidth={2} />
-                    Add activity
-                  </AddActivityTrigger>
+                    {tr("Add activity")}</AddActivityTrigger>
                   {startActivity && (
                     <SheetTrigger sheet="start-activity" className={CARD_BUTTON}>
                       <Timer aria-hidden className="size-5" strokeWidth={2} />
-                      Start activity
-                    </SheetTrigger>
+                      {tr("Start activity")}</SheetTrigger>
                   )}
                 </div>
               </SectionShell>
@@ -213,12 +212,12 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
                 {vm.isToday && (
                 <SectionShell
                   variant="card"
-                  title="Tonight’s sleep"
+                  title={tr("Tonight’s sleep")}
                   info={TONIGHT_INFO}
                   fill
                   className="xl:order-last"
                   action={
-                    <Link href={at("/sleep#planner")} aria-label="Open Sleep Planner" className={ICON_LINK}>
+                    <Link href={at("/sleep#planner")} aria-label={tr("Open Sleep Planner")} className={ICON_LINK}>
                       <ChevronRight aria-hidden className="size-[18px]" strokeWidth={1.75} />
                     </Link>
                   }
@@ -252,7 +251,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
           {FEATURES.myPlan && vm.plan && <MyPlan plan={vm.plan} />}
           <SectionShell
             variant="section"
-            title="My Dashboard"
+            title={tr("My Dashboard")}
             // the reference app's pencil on the right of the section header opens the metric picker (spec §11 CD1).
             action={<EditDashboard keys={vm.keyStats.map((s) => s.key).filter(isDashboardKey)} empty={vm.dashboard.empty} />}
             className="xl:flex xl:h-full xl:flex-col"
@@ -271,7 +270,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
             </ul>
             {/* Hidden with fewer than two scored days: one point is not a trend (spec §7.1 row 9). */}
             {vm.strainRecovery.filter((p) => p.strain !== null || p.recovery !== null).length >= 2 && (
-              <SectionShell variant="card" title="Strain & recovery" info={STRAIN_RECOVERY_INFO} fill className="mt-3 xl:mt-4 xl:flex-1">
+              <SectionShell variant="card" title={tr("Strain & recovery")} info={STRAIN_RECOVERY_INFO} fill className="mt-3 xl:mt-4 xl:flex-1">
                 <StrainRecoveryChart points={vm.strainRecovery} today={d} grow />
               </SectionShell>
             )}
@@ -281,7 +280,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
         bottom: vm.weeklyTeaser && (
           <Link href={`/reports/${vm.weeklyTeaser.period}`} className={cn(BANNER, "bg-linear-to-r from-banner-from to-banner-to")}>
             <CalendarRange aria-hidden className="size-[22px] shrink-0" strokeWidth={1.5} />
-            <span className="min-w-0 flex-1 text-base leading-[22px] font-semibold text-balance">Your week in review</span>
+            <span className="min-w-0 flex-1 text-base leading-[22px] font-semibold text-balance">{tr("Your week in review")}</span>
             <span className="shrink-0 font-numeric text-xs leading-4 font-medium text-foreground-secondary tabular-nums">
               {rangeLabel(vm.weeklyTeaser.start, vm.weeklyTeaser.end)}
             </span>
@@ -314,10 +313,10 @@ function JournalWeek({ vm, at, className }: { vm: HomeVM; at: (href: string) => 
   return (
     <SectionShell
       variant="card"
-      title="My journal"
+      title={tr("My journal")}
       className={className}
       action={
-        <Link href={at("/journal")} aria-label="Open Journal" className={ICON_LINK}>
+        <Link href={at("/journal")} aria-label={tr("Open Journal")} className={ICON_LINK}>
           <ChevronRight aria-hidden className="size-[18px]" strokeWidth={1.75} />
         </Link>
       }
@@ -329,7 +328,7 @@ function JournalWeek({ vm, at, className }: { vm: HomeVM; at: (href: string) => 
             <li key={w.day}>
               <Link
                 href={dayHref("/journal", w.day, vm.today)}
-                aria-label={`${formatDay(w.day, DAY.long)}: ${w.done ? "checked in" : "no check-in"}`}
+                aria-label={`${formatDay(w.day, DAY.long)}: ${w.done ? tr("checked in") : tr("no check-in")}`}
                 aria-current={current ? "date" : undefined}
                 className="flex min-h-16 flex-col items-center justify-center gap-2 rounded-lg transition-[background-color] duration-150 ease-standard outline-none hover:bg-foreground/5 focus-visible:ring-3 focus-visible:ring-ring/50 active:bg-accent"
               >
@@ -349,15 +348,14 @@ function JournalWeek({ vm, at, className }: { vm: HomeVM; at: (href: string) => 
       </ol>
       <Link href="/journal/insights" className={cn(CARD_BUTTON, "mt-3")}>
         <Lightbulb aria-hidden className="size-5" strokeWidth={2} />
-        Behaviour insights
-      </Link>
+        {tr("Behaviour insights")}</Link>
     </SectionShell>
   )
 }
 
 function MonitorAlert({ alert, href }: { alert: NonNullable<HomeVM["monitorAlert"]>; href: string }) {
   const illness = alert.kind === "illness"
-  const names = alert.names.length > 1 ? `${alert.names.slice(0, -1).join(", ")} and ${alert.names.at(-1)}` : (alert.names[0] ?? "Some vitals")
+  const names = alert.names.length > 1 ? tr("{0} and {1}", [alert.names.slice(0, -1).join(", "), alert.names.at(-1)]) : (alert.names[0] ?? "Some vitals")
   return (
     <Alert
       className={cn(
@@ -368,20 +366,19 @@ function MonitorAlert({ alert, href }: { alert: NonNullable<HomeVM["monitorAlert
     >
       {illness ? <CircleAlert className="text-recovery-red-text" strokeWidth={1.75} /> : <TriangleAlert className="text-warning-text" strokeWidth={1.75} />}
       <AlertTitle className="text-base leading-[22px] font-semibold text-balance">
-        {illness ? "Your body may be fighting something" : `${alert.count} ${alert.count === 1 ? "vital" : "vitals"} outside your normal range`}
+        {illness ? "Your body may be fighting something" : tr("{0} {1} outside your normal range", [alert.count, alert.count === 1 ? "vital" : "vitals"])}
       </AlertTitle>
       <AlertDescription className="col-start-2 space-y-2 text-[15px] leading-[22px] text-pretty text-foreground-secondary md:text-pretty">
         <p>
           {illness
             ? "Several vitals moved away from your normal range together, a pattern that often comes before feeling unwell. Consider an easier day."
-            : `${names} ${alert.names.length === 1 ? "is" : "are"} outside your usual range. This can be an early sign of illness or heavy strain.`}
+            : tr("{0} {1} outside your usual range. This can be an early sign of illness or heavy strain.", [names, alert.names.length === 1 ? "is" : "are"])}
         </p>
         <Link
           href={href}
           className="relative inline-flex items-center gap-0.5 rounded-md text-xs leading-4 font-bold tracking-[0.1em] text-foreground uppercase no-underline! outline-none after:absolute after:-inset-x-2 after:-inset-y-3.5 hover:text-foreground-secondary focus-visible:ring-3 focus-visible:ring-ring/50"
         >
-          View Health Monitor
-          <ChevronRight aria-hidden className="size-3.5" strokeWidth={2} />
+          {tr("View Health Monitor")}<ChevronRight aria-hidden className="size-3.5" strokeWidth={2} />
         </Link>
       </AlertDescription>
     </Alert>
@@ -394,7 +391,7 @@ function MonitorAlert({ alert, href }: { alert: NonNullable<HomeVM["monitorAlert
  */
 function PhoneActivity({ stats, link }: { stats: KeyStat[]; link: { d: string; today: string } }) {
   return (
-    <SectionShell variant="section" title="From your phone" aside={<span className="whitespace-nowrap">vs. 30-day avg</span>}>
+    <SectionShell variant="section" title={tr("From your phone")} aside={<span className="whitespace-nowrap">{tr("vs. 30-day avg")}</span>}>
       <ul className="grid grid-cols-2 gap-3 xl:gap-4">
         {stats.map((s, i) => (
           // An odd count lets the first tile (steps) span the row as a wide strip that spells out its comparison.
@@ -424,7 +421,7 @@ function MonitorLine({ chip, chipClass, top, topClass, bottom }: { chip: React.R
 function MonitorCard({ vm, href }: { vm: HomeVM; href: string }) {
   const m = vm.monitor
   return (
-    <SectionShell variant="card" title="Health Monitor" info={false} href={href} level={2}>
+    <SectionShell variant="card" title={tr("Health Monitor")} info={false} href={href} level={2}>
       {m.value === null || m.value.inRange + m.value.flagged === 0 ? (
         // No vital judged yet (no readings, or every baseline still calibrating): never "Within range".
         <MonitorLine
@@ -438,9 +435,9 @@ function MonitorCard({ vm, href }: { vm: HomeVM; href: string }) {
         <MonitorLine
           chip={<Check aria-hidden className="size-4" strokeWidth={2.5} />}
           chipClass="bg-optimal/15 text-optimal-text"
-          top="Within range"
+          top={tr("Within range")}
           topClass="text-optimal-text"
-          bottom={`${m.value.inRange}/${m.value.total} Metrics`}
+          bottom={tr("{0}/{1} Metrics", [m.value.inRange, m.value.total])}
         />
       ) : (
         <MonitorLine
@@ -448,7 +445,7 @@ function MonitorCard({ vm, href }: { vm: HomeVM; href: string }) {
           chipClass="bg-warning/15 text-warning-text"
           top="Out of range"
           topClass="text-warning-text"
-          bottom={`${m.value.inRange}/${m.value.total} Metrics`}
+          bottom={tr("{0}/{1} Metrics", [m.value.inRange, m.value.total])}
         />
       )}
     </SectionShell>
@@ -459,25 +456,25 @@ function StressCard({ vm, href, timeZone, timeFormat }: { vm: HomeVM; href: stri
   const s = vm.stress
   if (s.value === null)
     return (
-      <SectionShell variant="card" title="Stress Monitor" info={false} href={href} level={2}>
+      <SectionShell variant="card" title={tr("Stress Monitor")} info={false} href={href} level={2}>
         <MonitorLine
           chip={MISSING}
           chipClass="bg-secondary font-numeric text-base font-bold text-muted-foreground"
           top={s.reason === "band_not_worn" ? "Not worn" : "No still minutes yet"}
           topClass="text-foreground-secondary"
-          bottom={vm.isToday ? "Today" : "This day"}
+          bottom={vm.isToday ? tr("Today") : "This day"}
         />
       </SectionShell>
     )
   const tone = STRESS_TONE[s.value.level]
   return (
-    <SectionShell variant="card" title="Stress Monitor" info={false} href={href} level={2}>
+    <SectionShell variant="card" title={tr("Stress Monitor")} info={false} href={href} level={2}>
       <MonitorLine
         chip={formatValue("decimal1", s.value.value)}
         chipClass={cn("font-numeric text-lg font-bold tabular-nums", tone.chip)}
         top={tone.word}
         topClass={tone.text}
-        bottom={s.value.at !== null ? clock(s.value.at, timeZone, timeFormat) : "Day average"}
+        bottom={s.value.at !== null ? clock(s.value.at, timeZone, timeFormat) : tr("Day average")}
       />
     </SectionShell>
   )
@@ -488,13 +485,13 @@ function StressTile({ vm, href, timeZone, timeFormat }: { vm: HomeVM; href: stri
   const s = vm.stress.value
   const tone = s && STRESS_TONE[s.level]
   return (
-    <SectionShell variant="card" title="Stress Monitor" info={false} href={href}>
+    <SectionShell variant="card" title={tr("Stress Monitor")} info={false} href={href}>
       {s && tone && (
         <div className="-mt-1 mb-3 flex items-baseline justify-between gap-3">
           <p className={cn(CAPTION, "text-foreground-secondary")}>
             {s.at !== null ? (
               <>
-                Last updated <span className="font-numeric tabular-nums">{clock(s.at, timeZone, timeFormat)}</span>
+                {tr("Last updated")}{" "}<span className="font-numeric tabular-nums">{clock(s.at, timeZone, timeFormat)}</span>
               </>
             ) : (
               "Day average"
@@ -514,7 +511,7 @@ function StressTile({ vm, href, timeZone, timeFormat }: { vm: HomeVM; href: stri
 function EnergyCard({ vm, timeZone, timeFormat, className }: { vm: HomeVM; timeZone: string; timeFormat: TimeFormat; className?: string }) {
   const e = vm.energyBank
   return (
-    <SectionShell variant="card" title="Energy Bank" info={ENERGY_INFO} aside={e.value && e.provisional ? <MetricTags provisional /> : undefined} fill className={className}>
+    <SectionShell variant="card" title={tr("Energy Bank")} info={ENERGY_INFO} aside={e.value && e.provisional ? <MetricTags provisional /> : undefined} fill className={className}>
       <MetricState
         metric={e}
         skeleton={null}
@@ -528,22 +525,22 @@ function EnergyCard({ vm, timeZone, timeFormat, className }: { vm: HomeVM; timeZ
         {(eb) => (
           <div className="flex flex-1 flex-col gap-4">
             <div className="space-y-1.5">
-              <TickScale variant="meter" label="Energy" metric={{ value: eb.current, reason: null, provisional: false }} min={0} max={100} format="int" unit="%" />
+              <TickScale variant="meter" label={tr("Energy")} metric={{ value: eb.current, reason: null, provisional: false }} min={0} max={100} format="int" unit="%" />
               <p className={CAPTION}>
-                Started at <span className="font-numeric tabular-nums">{formatValue("int", eb.startLevel)}%</span> at{" "}
+                {tr("Started at")}{" "}<span className="font-numeric tabular-nums">{formatValue("int", eb.startLevel)}%</span> at{" "}
                 <span className="font-numeric tabular-nums">{clock(eb.startAt, timeZone, timeFormat)}</span>
               </p>
             </div>
             <EnergyBankChart data={{ value: energySeries(eb), reason: null, provisional: false }} />
             <div className="mt-auto grid grid-cols-2 gap-3">
-              <MiniStat label="Charged" value={formatValue("signedInt", eb.charged)} className="text-optimal-text" />
-              <MiniStat label="Drained" value={formatValue("signedInt", eb.drained)} className="text-warning-text" />
+              <MiniStat label={tr("Charged")} value={formatValue("signedInt", eb.charged)} className="text-optimal-text" />
+              <MiniStat label={tr("Drained")} value={formatValue("signedInt", eb.drained)} className="text-warning-text" />
             </div>
             {eb.drains.length > 0 && (
               <ul className="space-y-1">
                 {eb.drains.slice(0, 3).map((dr) => (
                   <li key={`${dr.label}-${dr.start}`} className={cn(CAPTION, "text-foreground-secondary")}>
-                    {dr.label} at <span className="font-numeric tabular-nums">{clock(dr.start, timeZone, timeFormat)}</span> ·{" "}
+                    {dr.label} {tr("at")} <span className="font-numeric tabular-nums">{clock(dr.start, timeZone, timeFormat)}</span> ·{" "}
                     <span className="font-numeric tabular-nums">{formatValue("signedInt", -Math.abs(dr.amount))}</span>
                   </li>
                 ))}

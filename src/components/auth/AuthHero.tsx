@@ -1,6 +1,7 @@
 import { CircleAlert } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Mark } from "@/components/brand/Mark"
+import { t as tr } from "@/lib/i18n"
 
 /** The heartbeat mark in its breathing glow, a headline and one line under it. `compact` for the form screens. */
 export function AuthHero({ title, body, compact = false }: { title: string; body: React.ReactNode; compact?: boolean }) {
@@ -12,7 +13,7 @@ export function AuthHero({ title, body, compact = false }: { title: string; body
           aria-hidden
           className="absolute inset-0 rounded-full bg-[radial-gradient(closest-side,var(--optimal),color-mix(in_oklch,var(--strain-text),transparent_40%)_55%,transparent)] opacity-35 blur-2xl motion-safe:animate-beat-glow"
         />
-        <Mark animated className={cn("relative", compact ? "size-16" : "size-24")} title="Pulse" />
+        <Mark animated className={cn("relative", compact ? "size-16" : "size-24")} title={tr("Pulse")} />
       </div>
       <h1 className={cn("font-bold tracking-[-0.02em] text-balance", compact ? "text-[28px] leading-[34px]" : "text-[32px] leading-[38px]")}>{title}</h1>
       <p className="mt-3 max-w-[34ch] text-[16px] leading-6 text-pretty text-foreground-secondary">{body}</p>

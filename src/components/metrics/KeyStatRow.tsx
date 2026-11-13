@@ -9,6 +9,7 @@ import { SkeletonText } from "@/components/ui/skeleton"
 import { MetricState, type MetricMeta } from "@/components/shells/MetricState"
 import { CAPTION, DeltaMark, LABEL, MetricTags, StatusChip, ValueUnit } from "./primitives"
 import { Sparkline } from "./Sparkline"
+import { t as tr } from "@/lib/i18n"
 
 export type SleepStatus = "poor" | "sufficient" | "optimal"
 
@@ -242,8 +243,7 @@ function Tile({ p, c }: { p: KeyStatRowProps; c: Computed }) {
                 {c.diffText && (
                   <span className={cn("font-numeric text-xs leading-4 font-bold tabular-nums", c.tone === "good" ? "text-optimal-text" : c.tone === "bad" ? "text-warning-text" : "text-foreground-secondary")}>
                     {c.diffText}
-                    {p.unit && (p.unit === "%" ? "%" : `\u00a0${p.unit}`)} vs avg
-                  </span>
+                    {p.unit && (p.unit === "%" ? "%" : `\u00a0${p.unit}`)} {" "}{tr("vs avg")}</span>
                 )}
               </>
             )}

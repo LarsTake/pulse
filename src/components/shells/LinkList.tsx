@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { CARD_MATERIAL } from "@/components/ui/card"
 import { SkeletonText } from "@/components/ui/skeleton"
 import { CARD_LINK } from "./SectionShell"
+import { t as tr } from "@/lib/i18n"
 
 export type LinkListRow = {
   label: string
@@ -62,7 +63,7 @@ export function LinkList({ title, rows, columns, className }: { title: string; r
               ) : (
                 <ChevronRight aria-hidden className="size-5 shrink-0 text-muted-foreground" strokeWidth={1.75} />
               )}
-              {r.external && <span className="sr-only">(opens in a new tab)</span>}
+              {r.external && <span className="sr-only">{tr("(opens in a new tab)")}</span>}
             </Link>
           </li>
         ))}

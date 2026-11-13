@@ -6,6 +6,7 @@ import { Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { deleteBodyLogEntry } from "@/server/actions/bodyLogs"
 import { Button } from "@/components/ui/button"
+import { t as tr } from "@/lib/i18n"
 
 /** A trash key that asks once more ("Tap again to delete") before deleting a blood pressure, lab or strength entry. */
 export function DeleteEntry({ kind, id, label }: { kind: "bp" | "lab" | "strength"; id: string; label: string }) {
@@ -23,7 +24,7 @@ export function DeleteEntry({ kind, id, label }: { kind: "bp" | "lab" | "strengt
       variant={armed ? "destructive" : "ghost"}
       size={armed ? "touch" : "icon-touch"}
       disabled={busy}
-      aria-label={armed ? `Confirm: delete ${label}` : `Delete ${label}`}
+      aria-label={armed ? tr("Confirm: delete {0}", [label]) : tr("Delete {0}", [label])}
       onClick={async () => {
         if (!armed) return setArmed(true)
         setBusy(true)
@@ -35,7 +36,7 @@ export function DeleteEntry({ kind, id, label }: { kind: "bp" | "lab" | "strengt
       }}
     >
       <Trash2 aria-hidden strokeWidth={1.75} />
-      {armed && "Delete"}
+      {armed && tr("Delete")}
     </Button>
   )
 }

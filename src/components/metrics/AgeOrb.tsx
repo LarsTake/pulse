@@ -1,5 +1,6 @@
 "use client"
 
+import { t as tr } from "@/lib/i18n";
 import { useEffect, useRef } from "react"
 import { useTheme } from "@/hooks/use-theme"
 import { cn } from "@/lib/utils"
@@ -81,7 +82,7 @@ export function AgeOrb({ age, deltaYears, provisional = false, size: sizeProp, r
   const r = reasonCopy(reason)
 
   const label = has
-    ? `${AGE_LABEL} ${formatValue("decimal1", age)}, ${same ? "same as your age" : `${d!.text} than your age`}${provisional ? ", provisional" : ""}`
+    ? `${AGE_LABEL} ${formatValue("decimal1", age)}, ${same ? "same as your age" : tr("{0} than your age", [d!.text])}${provisional ? ", provisional" : ""}`
     : `${AGE_LABEL} unavailable. ${r.long}`
 
   useEffect(() => {

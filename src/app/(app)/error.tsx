@@ -5,6 +5,7 @@ import { CircleAlert } from "lucide-react"
 import { EmptyState } from "@/components/shells/EmptyState"
 import { CONTENT_COLUMN } from "@/components/shells/PageShell"
 import { TitleHeader } from "@/components/shells/TopBar"
+import { t as tr } from "@/lib/i18n"
 
 const RELOAD_FLAG = "pulse:access-reload"
 
@@ -47,10 +48,10 @@ export default function AppError({ error, retry }: { error: Error & { digest?: s
 
   return (
     <>
-      <TitleHeader title="Pulse" />
+      <TitleHeader title={tr("Pulse")} />
       <div className={CONTENT_COLUMN}>
         <div role="alert" className="pt-16">
-          <EmptyState icon={CircleAlert} body="Couldn’t load this screen." action={{ label: "Try again", onClick: () => retry() }} />
+          <EmptyState icon={CircleAlert} body={tr("Couldn’t load this screen.")} action={{ label: tr("Try again"), onClick: () => retry() }} />
         </div>
       </div>
     </>

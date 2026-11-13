@@ -12,20 +12,19 @@ import { SectionShell } from "@/components/shells/SectionShell"
 import { SheetTrigger } from "@/components/shells/SheetTrigger"
 import { DeleteEntry } from "../../_lib/DeleteEntry"
 import { BP_TONE } from "../format"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Blood Pressure" }
+export const metadata = { title: tr("Blood Pressure") }
 
 
 const INFO = {
-  title: "About Blood Pressure",
+  title: tr("About Blood Pressure"),
   body: (
     <>
-      <p>Readings you type in from an upper-arm cuff. Pulse averages them by week and month and classes each against the 2017 ACC/AHA guideline.</p>
+      <p>{tr("Readings you type in from an upper-arm cuff. Pulse averages them by week and month and classes each against the 2017 ACC/AHA guideline.")}</p>
       <p>
-        Normal is under 120 / 80. Elevated: systolic 120 to 129. High stage 1: 130 to 139 or 80 to 89. High stage 2: 140 / 90 or more. Over 180 / 120,
-        sit for five minutes and measure again; if it stays there, get care.
-      </p>
-      <p>Not a diagnosis. Your doctor decides what your numbers mean for you.</p>
+        {tr("Normal is under 120 / 80. Elevated: systolic 120 to 129. High stage 1: 130 to 139 or 80 to 89. High stage 2: 140 / 90 or more. Over 180 / 120, sit for five minutes and measure again; if it stays there, get care.")}</p>
+      <p>{tr("Not a diagnosis. Your doctor decides what your numbers mean for you.")}</p>
     </>
   ),
 }
@@ -38,8 +37,7 @@ function LogButton() {
       sheet="bp"
       className="inline-flex h-14 w-full items-center justify-center rounded-full bg-primary px-6 text-[15px] font-bold tracking-[0.1em] text-primary-foreground uppercase outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
     >
-      Log reading
-    </SheetTrigger>
+      {tr("Log reading")}</SheetTrigger>
   )
 }
 
@@ -52,7 +50,7 @@ export default async function BloodPressurePage() {
 
   return (
     <DetailShell
-      title="Blood Pressure"
+      title={tr("Blood Pressure")}
       info={INFO}
       backHref="/health"
       action={<Tag kind="beta" />}
@@ -65,47 +63,46 @@ export default async function BloodPressurePage() {
               {head.diastolic}
             </p>
             <p className="flex items-center gap-3">
-              <span className={LABEL}>{vm.week ? "7-day average" : "Latest"} · mmHg</span>
+              <span className={LABEL}>{vm.week ? tr("7-day average") : tr("Latest")} {" "}{tr("· mmHg")}</span>
             </p>
             <StatusChip tone={BP_TONE[head.category]}>{BP_CATEGORY_LABEL[head.category]}</StatusChip>
             {vm.weekDelta && (
               <p className={CAPTION}>
                 {vm.weekDelta.systolic >= 0 ? "+" : "−"}
                 {Math.abs(vm.weekDelta.systolic)} / {vm.weekDelta.diastolic >= 0 ? "+" : "−"}
-                {Math.abs(vm.weekDelta.diastolic)} vs. the week before
-              </p>
+                {Math.abs(vm.weekDelta.diastolic)} {" "}{tr("vs. the week before")}</p>
             )}
           </div>
         ) : (
-          <EmptyState body="No readings yet. Log one from your cuff; a week of morning and evening readings gives a fair average." />
+          <EmptyState body={tr("No readings yet. Log one from your cuff; a week of morning and evening readings gives a fair average.")} />
         )
       }
       summary={<LogButton />}
       primary={
         vm.daily.length > 1 ? (
-          <SectionShell variant="card" title="Last 90 days">
+          <SectionShell variant="card" title={tr("Last 90 days")}>
             <BpChart data={vm.daily} />
-            <p className={cn(CAPTION, "mt-3")}>Red: systolic. Blue: diastolic. Shaded: under 120.</p>
+            <p className={cn(CAPTION, "mt-3")}>{tr("Red: systolic. Blue: diastolic. Shaded: under 120.")}</p>
           </SectionShell>
         ) : null
       }
       secondary={[
         vm.month && (
-          <SectionShell key="m" variant="card" title="30-day average">
+          <SectionShell key="m" variant="card" title={tr("30-day average")}>
             <div className="flex items-baseline justify-between gap-3">
               <p className="font-numeric text-3xl font-bold tabular-nums">
                 {vm.month.systolic}/{vm.month.diastolic}
-                <span className="ml-1 text-sm font-medium text-muted-foreground">mmHg</span>
+                <span className="ml-1 text-sm font-medium text-muted-foreground">{tr("mmHg")}</span>
               </p>
               <StatusChip tone={BP_TONE[vm.month.category]}>{BP_CATEGORY_LABEL[vm.month.category]}</StatusChip>
             </div>
             <p className={cn(CAPTION, "mt-2")}>
-              {vm.month.count} readings{vm.month.pulse ? ` · pulse ${vm.month.pulse} bpm` : ""}
+              {vm.month.count} readings{vm.month.pulse ? tr(" · pulse {0} bpm", [vm.month.pulse]) : ""}
             </p>
           </SectionShell>
         ),
         vm.readings.length > 0 && (
-          <SectionShell key="r" variant="section" title="Recent readings">
+          <SectionShell key="r" variant="section" title={tr("Recent readings")}>
             <ul className="divide-y divide-border">
               {vm.readings.slice(0, 20).map((r) => (
                 <li key={r.id} className="flex items-center gap-3 py-2">
@@ -119,7 +116,7 @@ export default async function BloodPressurePage() {
                     </p>
                   </div>
                   <StatusChip tone={BP_TONE[r.category]}>{BP_CATEGORY_LABEL[r.category]}</StatusChip>
-                  <DeleteEntry kind="bp" id={r.id} label={`reading ${r.systolic} over ${r.diastolic}`} />
+                  <DeleteEntry kind="bp" id={r.id} label={tr("reading {0} over {1}", [r.systolic, r.diastolic])} />
                 </li>
               ))}
             </ul>

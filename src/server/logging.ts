@@ -11,6 +11,7 @@ import { getProfile } from "./profile";
 import { createGoogleClient } from "./sources/google/client";
 import { addDays, fromWall, localDay } from "./time";
 import { requestSync } from "./worker";
+import { t as tr } from "@/lib/i18n"
 
 const keys = <T extends readonly (readonly [string, ...unknown[]])[]>(list: T) => list.map((x) => x[0]) as unknown as [T[number][0], ...T[number][0][]];
 /** Local wall time `YYYY-MM-DDTHH:mm`; omitted means now. */
@@ -68,19 +69,19 @@ export async function logFor(userId: number, input: LogInput): Promise<ActionRes
   const db = getDb();
   const { dataSource } = getConfig();
   const p = await getProfile(db, userId);
-  if (!p) return { ok: false, error: "Finish setting up your profile first" };
+  if (!p) return { ok: false, error: tr("Finish setting up your profile first") };
   const tz = p.timeZone;
   const female = p.sex === "female";
   // Cycle tracking never exists on a male profile, whatever a request says.
   if (!female && (isCycleKind(v.kind) || (v.kind === "symptoms" && v.symptoms.some((s) => CYCLE_SYMPTOMS.has(s))))) {
-    return { ok: false, error: "Not available for this profile" };
+    return { ok: false, error: tr("Not available for this profile") };
   }
 
   const now = Math.floor(Date.now() / 1000);
   const today = localDay(now, tz);
   const ts = "at" in v && v.at ? fromWall(v.at, tz) : now;
-  if (ts > now + 60) return { ok: false, error: "Can’t log the future" };
-  if (ts < now - 366 * 86_400) return { ok: false, error: "Can’t log more than a year back" };
+  if (ts > now + 60) return { ok: false, error: tr("Can’t log the future") };
+  if (ts < now - 366 * 86_400) return { ok: false, error: tr("Can’t log more than a year back") };
 
   let entries: NewEntry[];
   switch (v.kind) {
@@ -104,10 +105,10 @@ export async function logFor(userId: number, input: LogInput): Promise<ActionRes
       entries = [{ type: "symptoms", ts, data: { symptoms: v.symptoms } }];
       break;
     case "period": {
-      if (v.end < v.start) return { ok: false, error: "The last day is before the first" };
-      if (v.end > today) return { ok: false, error: "Can’t log a future day" };
-      if (v.start < addDays(today, -366)) return { ok: false, error: "Can’t log more than a year back" };
-      if (v.end > addDays(v.start, 14)) return { ok: false, error: "A period is 15 days at most" };
+      if (v.end < v.start) return { ok: false, error: tr("The last day is before the first") };
+      if (v.end > today) return { ok: false, error: tr("Can’t log a future day") };
+      if (v.start < addDays(today, -366)) return { ok: false, error: tr("Can’t log more than a year back") };
+      if (v.end > addDays(v.start, 14)) return { ok: false, error: tr("A period is 15 days at most") };
       entries = [{ type: "menstrual-period", ts: fromWall(`${v.start}T00:00`, tz), data: { start: v.start, end: v.end, flow: v.flow } }];
       break;
     }

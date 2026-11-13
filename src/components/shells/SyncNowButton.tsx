@@ -9,6 +9,7 @@ import { syncNow } from "@/lib/sync-activity"
 import { haptic } from "@/lib/haptics"
 import { useOnline } from "@/hooks/use-online"
 import { Button } from "@/components/ui/button"
+import { t as tr } from "@/lib/i18n"
 
 /**
  * "Sync now": runs a sync past the worker's 5-minute gate and waits for it, then refreshes the screen.
@@ -25,7 +26,7 @@ export function SyncNowButton({ className, size = "touch" }: { className?: strin
     router.refresh()
     if (r.ok) {
       haptic()
-      toast.success("Synced", { id: "sync-now" })
+      toast.success(tr("Synced"), { id: "sync-now" })
     } else toast.error(r.error, { id: "sync-now" })
   }
   return (

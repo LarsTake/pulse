@@ -13,21 +13,22 @@ import { SectionShell } from "@/components/shells/SectionShell"
 import { stressSeries } from "../../_lib/view"
 import { Skeleton } from "@/components/ui/skeleton"
 import { pageDay, type SearchParams } from "../../_lib/day"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Stress Monitor" }
+export const metadata = { title: tr("Stress Monitor") }
 
 const EMPTY = "No still minutes to score yet today."
 const LEVELS = [
-  { swatch: "bg-stress-low", text: "Low, 0.0 - 0.9: you might be feeling calm, relaxed or sleepy." },
-  { swatch: "bg-stress-medium", text: "Medium, 1.0 - 1.9: neutral, alert or mildly activated." },
-  { swatch: "bg-stress-high", text: "High, 2.0 - 3.0: excited, stressed or highly activated." },
+  { swatch: "bg-stress-low", text: tr("Low, 0.0 - 0.9: you might be feeling calm, relaxed or sleepy.") },
+  { swatch: "bg-stress-medium", text: tr("Medium, 1.0 - 1.9: neutral, alert or mildly activated.") },
+  { swatch: "bg-stress-high", text: tr("High, 2.0 - 3.0: excited, stressed or highly activated.") },
 ]
 
 const INFO = {
-  title: "About Stress Monitor",
+  title: tr("About Stress Monitor"),
   body: (
     <>
-      <p>Stress Monitor scores how activated your body is, from 0 to 3, by comparing your heart rate with your daytime resting baseline.</p>
+      <p>{tr("Stress Monitor scores how activated your body is, from 0 to 3, by comparing your heart rate with your daytime resting baseline.")}</p>
       <ul className="space-y-2">
         {LEVELS.map((l) => (
           <li key={l.swatch} className="flex items-start gap-3">
@@ -36,15 +37,15 @@ const INFO = {
           </li>
         ))}
       </ul>
-      <p>Pulse only scores still minutes. Movement, workouts and sleep are left out, so a walk never counts as stress.</p>
+      <p>{tr("Pulse only scores still minutes. Movement, workouts and sleep are left out, so a walk never counts as stress.")}</p>
     </>
   ),
 }
 
 const LEVEL_KEYS = [
-  { key: "lowMin", word: "Low", bar: "bg-stress-low", text: "text-stress-low-text" },
-  { key: "mediumMin", word: "Medium", bar: "bg-stress-medium", text: "text-stress-medium-text" },
-  { key: "highMin", word: "High", bar: "bg-stress-high", text: "text-stress-high-text" },
+  { key: "lowMin", word: tr("Low"), bar: "bg-stress-low", text: "text-stress-low-text" },
+  { key: "mediumMin", word: tr("Medium"), bar: "bg-stress-medium", text: "text-stress-medium-text" },
+  { key: "highMin", word: tr("High"), bar: "bg-stress-high", text: "text-stress-high-text" },
 ] as const
 
 function LevelBar({ m, className }: { m: { lowMin: number; mediumMin: number; highMin: number }; className: string }) {
@@ -61,7 +62,7 @@ function TotalDay({ l, day }: { l: NonNullable<StressVM["levels"]["value"]>; day
   return (
     <div className="space-y-4">
       <p className="text-xs leading-4 font-bold tracking-[0.1em] uppercase">
-        {day} stress{l.typical && <span className="text-muted-foreground"> vs. typical {l.weekday}</span>}
+        {day} stress{l.typical && <span className="text-muted-foreground"> {" "}{tr("vs. typical")}{" "}{l.weekday}</span>}
       </p>
       <div className="space-y-1.5">
         <LevelBar m={l} className="h-3" />
@@ -69,7 +70,7 @@ function TotalDay({ l, day }: { l: NonNullable<StressVM["levels"]["value"]>; day
       </div>
       <ul className="grid grid-cols-3 gap-3">
         {LEVEL_KEYS.map((k) => (
-          <li key={k.key} aria-label={`${k.word}: ${durationWords(Math.round(l[k.key]))}${l.typical ? `, typical ${durationWords(Math.round(l.typical[k.key]))}` : ""}`}>
+          <li key={k.key} aria-label={`${k.word}: ${durationWords(Math.round(l[k.key]))}${l.typical ? tr(", typical {0}", [durationWords(Math.round(l.typical[k.key]))]) : ""}`}>
             <p aria-hidden className={cn("font-numeric text-xl leading-6 font-bold tabular-nums", k.text)}>
               {hmm(l[k.key])}
             </p>
@@ -92,8 +93,8 @@ function TotalDay({ l, day }: { l: NonNullable<StressVM["levels"]["value"]>; day
 function typicalLine(l: NonNullable<StressVM["levels"]["value"]>) {
   if (l.typicalDeltaMin === null) return null
   const m = Math.round(l.typicalDeltaMin)
-  const delta = Math.abs(m) < 1 ? "about the same high stress" : `${durationWords(Math.abs(m))} ${m > 0 ? "more" : "less"} high stress`
-  return `vs. your typical ${l.weekday}: ${delta}`
+  const delta = Math.abs(m) < 1 ? "about the same high stress" : tr("{0} {1} high stress", [durationWords(Math.abs(m)), m > 0 ? tr("more") : tr("less")])
+  return tr("vs. your typical {0}: {1}", [l.weekday, delta])
 }
 
 export default async function StressPage({ searchParams }: PageProps<"/health/stress">) {
@@ -103,7 +104,7 @@ export default async function StressPage({ searchParams }: PageProps<"/health/st
 
   return (
     <DetailShell
-      title="Stress Monitor"
+      title={tr("Stress Monitor")}
       dateSwitcher={{ mode: "day" }}
       info={INFO}
       hero={
@@ -114,26 +115,26 @@ export default async function StressPage({ searchParams }: PageProps<"/health/st
           value={g.value?.value ?? null}
           reason={g.reason}
           provisional={g.provisional}
-          caption={g.value ? (g.value.dayAverage || !vm.isToday ? "Day average" : g.value.at ? `Last updated ${clock(g.value.at, timeZone, timeFormat)}` : undefined) : undefined}
+          caption={g.value ? (g.value.dayAverage || !vm.isToday ? tr("Day average") : g.value.at ? tr("Last updated {0}", [clock(g.value.at, timeZone, timeFormat)]) : undefined) : undefined}
         />
         {g.reason === "no_data" && <p className="max-w-[36ch] text-center text-xs leading-4 font-medium text-muted-foreground">{EMPTY}</p>}
         </div>
       }
       insight={vm.insight && <InsightCard body={vm.insight} />}
       primary={
-        <SectionShell variant="card" title={vm.isToday ? "Today" : dayLabel(d, today)} info={{ title: "Stress throughout the day", body: "Body activation during still minutes, from 0 to 3. Movement, workouts and sleep appear as excluded periods rather than stress scores." }}>
+        <SectionShell variant="card" title={vm.isToday ? tr("Today") : dayLabel(d, today)} info={{ title: tr("Stress throughout the day"), body: tr("Body activation during still minutes, from 0 to 3. Movement, workouts and sleep appear as excluded periods rather than stress scores.") }}>
           <StressChart variant="full" data={stressSeries(vm.chart)} />
         </SectionShell>
       }
       secondary={[
-        <SectionShell key="levels" variant="card" title="Total day" info={{ title: "Time at each stress level", body: "Scored still minutes split into low, medium and high activation. When available, the faded bar compares the same weekday in your recent history." }}>
+        <SectionShell key="levels" variant="card" title={tr("Total day")} info={{ title: tr("Time at each stress level"), body: tr("Scored still minutes split into low, medium and high activation. When available, the faded bar compares the same weekday in your recent history.") }}>
           <MetricState metric={vm.levels} skeleton={<Skeleton className="h-24 w-full" />} renderReason={() => <EmptyState body={EMPTY} />}>
-            {(l) => <TotalDay l={l} day={vm.isToday ? "Today" : dayLabel(d, today)} />}
+            {(l) => <TotalDay l={l} day={vm.isToday ? tr("Today") : dayLabel(d, today)} />}
           </MetricState>
         </SectionShell>,
-        <SectionShell key="trend" variant="card" title="30-day trend" info={{ title: "Daily stress trend", body: "Average activation across each day's scored still minutes over the last 30 days. Days without enough data remain gaps." }}>
+        <SectionShell key="trend" variant="card" title={tr("30-day trend")} info={{ title: tr("Daily stress trend"), body: tr("Average activation across each day's scored still minutes over the last 30 days. Days without enough data remain gaps.") }}>
           <TrendChart
-            label="Stress"
+            label={tr("Stress")}
             data={{ value: vm.trend.points.map((p) => ({ date: p.day, value: p.value })), reason: null, provisional: false }}
             format="decimal1"
             colorBy="stress"

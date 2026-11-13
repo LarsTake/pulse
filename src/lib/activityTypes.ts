@@ -1,19 +1,20 @@
 // The activity types a person can log or record (activity-add-type-picker, activity-start-type-picker): Select Activity's catalogue. Static; the
 // hidden Add Activity and Start Activity flows read it (FEATURES.logActivity, FEATURES.startActivity).
 import type { ActivityKind } from "@/server/queries/types"
+import { t as tr } from "@/lib/i18n"
 
 /** Select Activity's tabs: what the activity does for you. */
 export const ACTIVITY_CATEGORIES = [
-  { key: "strain", label: "Strain" },
-  { key: "recovery", label: "Recovery" },
-  { key: "sleep", label: "Sleep" },
+  { key: "strain", label: tr("Strain") },
+  { key: "recovery", label: tr("Recovery") },
+  { key: "sleep", label: tr("Sleep") },
 ] as const
 export type ActivityCategory = (typeof ACTIVITY_CATEGORIES)[number]["key"]
 
 /** `kind` picks the icon and how Pulse files the activity (src/server/queries/common.ts activityKind). */
 export type ActivityType = { key: string; label: string; category: ActivityCategory; kind: ActivityKind }
 
-const t = (key: string, label: string, category: ActivityCategory, kind: ActivityKind = "workout"): ActivityType => ({ key, label, category, kind })
+const t = (key: string, label: string, category: ActivityCategory, kind: ActivityKind = "workout"): ActivityType => ({ key, label: tr(label), category, kind })
 
 /** A to Z. */
 export const ACTIVITY_TYPES: readonly ActivityType[] = [

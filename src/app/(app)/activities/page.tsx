@@ -11,10 +11,11 @@ import { ACTIVITY_PAGE_DAYS, getActivities } from "@/server/queries/activities"
 import { userCtx } from "@/server/queries/common"
 import type { ActivitiesVM } from "@/server/queries/types"
 import { CAPTION } from "../_lib/view"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Activities", description: "Every workout, newest first, grouped by day with its Strain." }
+export const metadata = { title: tr("Activities"), description: tr("Every workout, newest first, grouped by day with its Strain.") }
 
-const KIND_LABEL: Record<ActivityKind, string> = { run: "Runs", ride: "Rides", walk: "Walks", strength: "Strength", workout: "Workouts" }
+const KIND_LABEL: Record<ActivityKind, string> = { run: tr("Runs"), ride: tr("Rides"), walk: tr("Walks"), strength: tr("Strength"), workout: "Workouts" }
 const STAT_LABEL = "text-xs leading-4 font-bold tracking-[0.1em] text-foreground-secondary uppercase"
 const PILL =
   "relative grid h-9 shrink-0 place-items-center rounded-full px-4 after:absolute after:-inset-y-1 text-xs font-bold tracking-[0.1em] uppercase outline-none transition-[background-color,color] duration-150 ease-standard focus-visible:ring-3 focus-visible:ring-ring/50"
@@ -47,13 +48,13 @@ export default async function ActivitiesPage({ searchParams }: PageProps<"/activ
 
   return (
     <DetailShell
-      title="Activities"
+      title={tr("Activities")}
       backHref="/"
       primary={
         <div className={MORE_COLUMN}>
           {items.length > 0 && <Summary items={items} days={days} />}
           {kinds.length > 1 && (
-            <nav aria-label="Sport" className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none]">
+            <nav aria-label={tr("Sport")} className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none]">
               {[null, ...kinds].map((k) => (
                 <Link
                   key={k ?? "all"}
@@ -63,7 +64,7 @@ export default async function ActivitiesPage({ searchParams }: PageProps<"/activ
                   aria-current={kind === k ? "page" : undefined}
                   className={cn(PILL, kind === k ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground")}
                 >
-                  {k ? KIND_LABEL[k] : "All"}
+                  {k ? KIND_LABEL[k] : tr("All")}
                 </Link>
               ))}
             </nav>
@@ -72,7 +73,7 @@ export default async function ActivitiesPage({ searchParams }: PageProps<"/activ
             <Day key={g.day} g={g} today={vm.today} timeZone={timeZone} />
           ))}
           {!items.length && groups.length <= 1 && !vm.older && (
-            <EmptyState body="No workouts in the last month. Workouts you record on your Fitbit or phone appear here after they sync." />
+            <EmptyState body={tr("No workouts in the last month. Workouts you record on your Fitbit or phone appear here after they sync.")} />
           )}
           {vm.older ? (
             <Link
@@ -81,10 +82,9 @@ export default async function ActivitiesPage({ searchParams }: PageProps<"/activ
               scroll={false}
               className="mx-auto grid h-11 place-items-center rounded-full px-5 text-xs font-bold tracking-[0.1em] text-foreground/85 uppercase outline-none transition-[background-color,color] duration-150 ease-standard hover:bg-foreground/[0.06] hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
             >
-              Show older
-            </Link>
+              {tr("Show older")}</Link>
           ) : (
-            items.length > 0 && <p className={cn(CAPTION, "text-center")}>No older activities</p>
+            items.length > 0 && <p className={cn(CAPTION, "text-center")}>{tr("No older activities")}</p>
           )}
         </div>
       }
@@ -107,12 +107,12 @@ function Summary({ items, days }: { items: ActivitiesVM["groups"][number]["items
   return (
     <section aria-labelledby="summary-title" className="space-y-2">
       <h2 id="summary-title" className={GROUP_LABEL}>
-        Last {days} days
+        {tr("Last")}{" "}{days} days
       </h2>
       <dl className={cn(CARD_MATERIAL, "grid grid-cols-3 gap-3 p-4")}>
-        {stat(items.length, items.length === 1 ? "Activity" : "Activities")}
-        {stat(hmm(minutes), "Time")}
-        {stat(<span className={avg === null ? "text-muted-foreground" : "text-strain-text"}>{formatValue("decimal1", avg)}</span>, "Avg strain")}
+        {stat(items.length, items.length === 1 ? tr("Activity") : tr("Activities"))}
+        {stat(hmm(minutes), tr("Time"))}
+        {stat(<span className={avg === null ? "text-muted-foreground" : "text-strain-text"}>{formatValue("decimal1", avg)}</span>, tr("Avg strain"))}
       </dl>
     </section>
   )
@@ -131,7 +131,7 @@ function Day({ g, today, timeZone }: { g: ActivitiesVM["groups"][number]; today:
           {g.steps !== null && g.dayStrain !== null && " · "}
           {g.dayStrain !== null && (
             <>
-              Day strain <span className="font-bold text-strain-text">{formatValue("decimal1", g.dayStrain)}</span>
+              {tr("Day strain")}{" "}<span className="font-bold text-strain-text">{formatValue("decimal1", g.dayStrain)}</span>
             </>
           )}
         </p>
@@ -144,7 +144,7 @@ function Day({ g, today, timeZone }: { g: ActivitiesVM["groups"][number]; today:
           ))}
         </div>
       ) : (
-        <p className={cn(CARD_MATERIAL, CAPTION, "px-4 py-4")}>No activities yet today. Workouts appear after Fitbit syncs them.</p>
+        <p className={cn(CARD_MATERIAL, CAPTION, "px-4 py-4")}>{tr("No activities yet today. Workouts appear after Fitbit syncs them.")}</p>
       )}
     </section>
   )

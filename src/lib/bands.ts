@@ -1,6 +1,7 @@
 // Band and tone logic for data colour (spec §2.3, §5.0). Colour is a data channel: every helper
 // here returns a meaning first, and the token for it second.
 import { acwrBand, type AcwrBand } from "@/core/scoring/readiness";
+import { t as tr } from "@/lib/i18n"
 
 /** Data tokens. `bg`/`text` are literal class names so Tailwind sees them; `css` is for Recharts props. */
 export const DATA_COLORS = {
@@ -89,7 +90,7 @@ export function stressLevel(value: number): StressLevel {
   if (value >= 1) return "medium";
   return "low";
 }
-export const STRESS_WORD: Record<StressLevel, string> = { low: "Low", medium: "Medium", high: "High" };
+export const STRESS_WORD: Record<StressLevel, string> = { low: tr("Low"), medium: "Medium", high: tr("High") };
 export const STRESS_COLOR: Record<StressLevel, DataColor> = {
   low: "stress-low",
   medium: "stress-medium",

@@ -7,6 +7,7 @@ import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { EmptyState } from "@/components/shells/EmptyState"
 import { MetricState } from "@/components/shells/MetricState"
 import { LABEL } from "@/components/metrics/primitives"
+import { t as tr } from "@/lib/i18n"
 
 /** `zone` 0-5 orders the rows (0 is time under Zone 1: `min` 0, `max` the bpm below Zone 1); `label` names it ("Zone 1"). */
 export type ZoneRow = {
@@ -56,8 +57,7 @@ function Rows({ zones, note, noteLink }: { zones: ZoneRow[]; note?: string; note
     return (
       <div className="flex flex-1 flex-col justify-center">
         <p className="rounded-lg bg-secondary px-3 py-3 text-[15px] leading-[22px] text-pretty text-foreground-secondary">
-          Heart rate stayed under the {lowest.label} zone ({lowest.min}{"\u00a0"}bpm) the whole time.
-        </p>
+          {tr("Heart rate stayed under the")}{" "}{lowest.label} {" "}{tr("zone (")}{lowest.min}{"\u00a0"}{tr("bpm) the whole time.")}</p>
         <Note note={note} link={noteLink} />
       </div>
     )
@@ -69,11 +69,9 @@ function Rows({ zones, note, noteLink }: { zones: ZoneRow[]; note?: string; note
       <div aria-hidden className="mb-2 flex items-baseline justify-between px-1">
         <span className={cn(LABEL, "flex items-baseline gap-1.5 text-muted-foreground", !typical && "invisible")}>
           <span className="size-2.5 self-center rounded-[2px] bg-(image:--pattern-hatch) ring-1 ring-border" />
-          Typical range
-        </span>
+          {tr("Typical range")}</span>
         <span className={cn(LABEL, "flex items-baseline gap-2 text-muted-foreground")}>
-          Duration
-          <span className="font-numeric text-[15px] leading-5 font-bold text-foreground tabular-nums">
+          {tr("Duration")}<span className="font-numeric text-[15px] leading-5 font-bold text-foreground tabular-nums">
             {hmm(Math.floor(T / 60))}
             <span className="text-xs text-muted-foreground">:{String(T % 60).padStart(2, "0")}</span>
           </span>
@@ -82,8 +80,8 @@ function Rows({ zones, note, noteLink }: { zones: ZoneRow[]; note?: string; note
       <ul role="list" className="flex flex-1 flex-col gap-2">
         {sorted.map((z) => {
           const below = z.zone === 0
-          const range = below ? `<${z.max! + 1}\u00a0bpm` : z.max === null ? `${z.min}+\u00a0bpm` : `${z.min}-${z.max}\u00a0bpm`
-          const spoken = below ? `under ${z.max! + 1} bpm` : range.replace("-", " to ").replace("+", " and above")
+          const range = below ? tr("<{0} bpm", [z.max! + 1]) : z.max === null ? tr("{0}+ bpm", [z.min]) : tr("{0}-{1} bpm", [z.min, z.max])
+          const spoken = below ? tr("under {0} bpm", [z.max! + 1]) : range.replace("-", " to ").replace("+", " and above")
           const sh = share(z.seconds, total)
           const t = Math.round(z.seconds)
           const minutes = Math.floor(t / 60)
@@ -91,7 +89,7 @@ function Rows({ zones, note, noteLink }: { zones: ZoneRow[]; note?: string; note
           return (
             <li
               key={z.zone}
-              aria-label={`${z.label} zone, ${spoken}, ${durationWords(minutes)}, ${sh === "<1%" ? "under 1 percent" : sh.replace("%", " percent")}`}
+              aria-label={tr("{0} zone, {1}, {2}, {3}", [z.label, spoken, durationWords(minutes), sh === "<1%" ? tr("under 1 percent") : sh.replace("%", " percent")])}
               className={cn("flex flex-1 flex-col justify-center gap-2 rounded-lg bg-secondary px-3 py-2.5", !z.seconds && "opacity-40")}
             >
               <div aria-hidden className="flex items-baseline gap-2">
@@ -192,7 +190,7 @@ export function ZoneBarsSkeleton({ variant }: { variant: "rows" | "stacked" }) {
     return (
       // Each zone row's own box: the real zone name, bars for range and time, the hatched track.
       <div aria-hidden className="space-y-2">
-        {["Zone 5", "Zone 4", "Zone 3", "Zone 2", "Zone 1", "Zone 0"].map((k) => (
+        {[tr("Zone 5"), tr("Zone 4"), tr("Zone 3"), tr("Zone 2"), tr("Zone 1"), tr("Zone 0")].map((k) => (
           <div key={k} className="space-y-2 rounded-lg bg-secondary px-3 py-2.5">
             <div className="flex items-center gap-3">
               <span className={LABEL}>{k}</span>

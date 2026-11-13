@@ -3,8 +3,9 @@ import { coachMode } from "@/server/coach/store"
 import { adminGate } from "../gate"
 import { People } from "../People"
 import { PageHeader } from "../ui"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "People" }
+export const metadata = { title: tr("People") }
 
 const requestTime = () => Date.now()
 
@@ -16,8 +17,8 @@ export default async function PeoplePage() {
   return (
     <>
       <PageHeader
-        title="People"
-        description="Everyone with an account here. Admins see who they are and how active, never their health data. Owners come from ADMIN_EMAILS and are changed there."
+        title={tr("People")}
+        description={tr("Everyone with an account here. Admins see who they are and how active, never their health data. Owners come from ADMIN_EMAILS and are changed there.")}
       />
       <People people={people} me={user.userId} now={requestTime()} chosen={coach === "chosen"} canReset={isOwnerEmail(user.email)} />
     </>

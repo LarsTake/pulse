@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import { t as tr } from "@/lib/i18n"
 
 /**
  * The Pulse wordmark (docs/design/brand.md). The glyphs are monoline strokes on a 20-unit cap
@@ -66,7 +67,7 @@ export function Wordmark({
 }) {
   const { d, viewBox } = GLYPHS[weight]
   return (
-    <svg viewBox={viewBox} role="img" aria-label={title ?? "Pulse"} className={cn("h-4 w-auto shrink-0", className)}>
+    <svg viewBox={viewBox} role="img" aria-label={title ?? tr("Pulse")} className={cn("h-4 w-auto shrink-0", className)}>
       {title && <title>{title}</title>}
       <path d={d} fill="none" stroke="currentColor" strokeWidth={STROKE[weight]} strokeMiterlimit={8} />
     </svg>

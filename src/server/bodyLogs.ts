@@ -9,16 +9,17 @@ import { exerciseDef, type StrengthSession } from "@/core/algorithms/strength";
 import type { Db } from "./db";
 import { bpReadings, labResults, loggedEntries, strengthSessions } from "./db/schema";
 import { fromWall, localDay } from "./time";
+import { t as tr } from "@/lib/i18n"
 
 type Result<T = void> = { ok: true; data: T } | { ok: false; error: string };
 
-const At = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, "Choose a time").optional();
-const int = (lo: number, hi: number, what: string) => z.number().int(`${what}: whole numbers`).min(lo, `${what}: ${lo} to ${hi}`).max(hi, `${what}: ${lo} to ${hi}`);
+const At = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, tr("Choose a time")).optional();
+const int = (lo: number, hi: number, what: string) => z.number().int(tr("{0}: whole numbers", [what])).min(lo, tr("{0}: {1} to {2}", [what, lo, hi])).max(hi, tr("{0}: {1} to {2}", [what, lo, hi]));
 
 function when(at: string | undefined, tz: string, now: number): Result<number> {
   const ts = at ? fromWall(at, tz) : now;
-  if (ts > now + 60) return { ok: false, error: "Can’t log the future" };
-  if (ts < now - 20 * 366 * 86_400) return { ok: false, error: "That is too far back" };
+  if (ts > now + 60) return { ok: false, error: tr("Can’t log the future") };
+  if (ts < now - 20 * 366 * 86_400) return { ok: false, error: tr("That is too far back") };
   return { ok: true, data: ts };
 }
 
@@ -26,12 +27,12 @@ function when(at: string | undefined, tz: string, now: number): Result<number> {
 
 export const BpInput = z
   .object({
-    systolic: int(...BP_LIMITS.systolic, "Systolic"),
-    diastolic: int(...BP_LIMITS.diastolic, "Diastolic"),
-    pulse: int(...BP_LIMITS.pulse, "Pulse").nullable(),
+    systolic: int(...BP_LIMITS.systolic, tr("Systolic")),
+    diastolic: int(...BP_LIMITS.diastolic, tr("Diastolic")),
+    pulse: int(...BP_LIMITS.pulse, tr("Pulse")).nullable(),
     at: At,
   })
-  .refine((v) => v.systolic > v.diastolic, "Systolic is the higher number");
+  .refine((v) => v.systolic > v.diastolic, tr("Systolic is the higher number"));
 export type BpInput = z.input<typeof BpInput>;
 
 export async function addBp(db: Db, userId: number, input: BpInput, tz: string, now: number): Promise<Result<{ id: string }>> {
@@ -57,10 +58,10 @@ export async function bpSince(db: Db, userId: number, from: number): Promise<(Bp
 
 const num = z.number().finite();
 export const LabInput = z.object({
-  day: z.iso.date("Choose the test day"),
+  day: z.iso.date(tr("Choose the test day")),
   results: z
-    .array(z.object({ marker: z.string().refine((k) => labMarker(k) !== null, "Unknown marker"), value: num.min(0, "Values are not negative").max(100_000), refLow: num.nullable(), refHigh: num.nullable() }))
-    .min(1, "Enter at least one value")
+    .array(z.object({ marker: z.string().refine((k) => labMarker(k) !== null, tr("Unknown marker")), value: num.min(0, tr("Values are not negative")).max(100_000), refLow: num.nullable(), refHigh: num.nullable() }))
+    .min(1, tr("Enter at least one value"))
     .max(40),
 });
 export type LabInput = z.input<typeof LabInput>;
@@ -68,8 +69,8 @@ export type LabInput = z.input<typeof LabInput>;
 export async function addLabs(db: Db, userId: number, input: LabInput, tz: string, now: number): Promise<Result<{ count: number }>> {
   const r = LabInput.safeParse(input);
   if (!r.success) return { ok: false, error: r.error.issues[0].message };
-  if (r.data.day > localDay(now, tz)) return { ok: false, error: "Can’t log a future day" };
-  for (const x of r.data.results) if (x.refLow !== null && x.refHigh !== null && x.refLow > x.refHigh) return { ok: false, error: "The range’s low end is above its high end" };
+  if (r.data.day > localDay(now, tz)) return { ok: false, error: tr("Can’t log a future day") };
+  for (const x of r.data.results) if (x.refLow !== null && x.refHigh !== null && x.refLow > x.refHigh) return { ok: false, error: tr("The range’s low end is above its high end") };
   await db.insert(labResults).values(r.data.results.map((x) => ({ userId, id: randomUUID(), day: r.data.day, marker: x.marker, value: x.value, refLow: x.refLow, refHigh: x.refHigh, createdAt: now })));
   return { ok: true, data: { count: r.data.results.length } };
 }
@@ -86,18 +87,18 @@ export async function allLabs(db: Db, userId: number): Promise<(LabResult & { id
 
 export const StrengthInput = z.object({
   at: At,
-  durationMin: z.number().int().min(1, "Duration: 1 to 600 min").max(600, "Duration: 1 to 600 min").nullable(),
+  durationMin: z.number().int().min(1, tr("Duration: 1 to 600 min")).max(600, tr("Duration: 1 to 600 min")).nullable(),
   exercises: z
     .array(
       z.object({
-        key: z.string().refine((k) => exerciseDef(k) !== null, "Unknown exercise"),
+        key: z.string().refine((k) => exerciseDef(k) !== null, tr("Unknown exercise")),
         sets: z
-          .array(z.object({ reps: z.number().int().min(1, "Reps: 1 to 200").max(200, "Reps: 1 to 200"), kg: z.number().min(0, "Weight: 0 to 600 kg").max(600, "Weight: 0 to 600 kg") }))
-          .min(1, "Every exercise needs a set")
+          .array(z.object({ reps: z.number().int().min(1, tr("Reps: 1 to 200")).max(200, tr("Reps: 1 to 200")), kg: z.number().min(0, tr("Weight: 0 to 600 kg")).max(600, tr("Weight: 0 to 600 kg")) }))
+          .min(1, tr("Every exercise needs a set"))
           .max(30),
       }),
     )
-    .min(1, "Add an exercise")
+    .min(1, tr("Add an exercise"))
     .max(30),
 });
 export type StrengthInput = z.input<typeof StrengthInput>;

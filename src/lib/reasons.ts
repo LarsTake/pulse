@@ -1,4 +1,5 @@
 import { Activity, HeartPulse, Hourglass, RefreshCw, Watch, type LucideIcon } from "lucide-react";
+import { t as tr } from "@/lib/i18n"
 
 // The single source of reason copy (spec §5.14) and the metric shape every view model uses (§4.8).
 
@@ -29,27 +30,27 @@ type ReasonEntry = { icon: LucideIcon | null; short: string; long: (nightsLeft?:
 export const REASONS: Record<ReasonCode, ReasonEntry> = {
   calibrating: {
     icon: Hourglass,
-    short: "Calibrating",
+    short: tr("Calibrating"),
     long: (n) =>
       n === undefined ? "Calibrating" : `Calibrating: ${n} ${n === 1 ? "night" : "nights"} left`,
   },
   no_hrv_last_night: {
     icon: HeartPulse,
-    short: "No HRV last night",
+    short: tr("No HRV last night"),
     long: () => "No HRV last night (needs about 3 h of sleep)",
   },
   awaiting_sleep_sync: {
     icon: RefreshCw,
-    short: "Waiting for sleep",
+    short: tr("Waiting for sleep"),
     long: () => "Waiting for last night’s sleep to sync",
   },
   insufficient_hr_data: {
     icon: Activity,
-    short: "Not enough data",
+    short: tr("Not enough data"),
     long: () => "Not enough heart-rate data",
   },
-  band_not_worn: { icon: Watch, short: "Not worn", long: () => "No data: band not worn" },
-  no_data: { icon: null, short: "--", long: () => "No data" },
+  band_not_worn: { icon: Watch, short: tr("Not worn"), long: () => "No data: band not worn" },
+  no_data: { icon: null, short: "--", long: () => tr("No data") },
 };
 
 /** Any unknown or missing code falls back to `no_data`. */
@@ -66,12 +67,12 @@ export function reasonCopy(code: string | null | undefined, nightsLeft?: number)
 /** Tags shown next to a number, with the explanation used in tooltips and info sheets. */
 export const TAG_COPY = {
   provisional: {
-    label: "Provisional",
-    explain: "Based on fewer than 14 nights. It firms up as your baseline fills in.",
+    label: tr("Provisional"),
+    explain: tr("Based on fewer than 14 nights. It firms up as your baseline fills in."),
   },
   stale_baseline: {
-    label: "Baseline stale",
-    explain: "Your baseline has 14 nights or more missing. Scores firm up as new nights arrive.",
+    label: tr("Baseline stale"),
+    explain: tr("Your baseline has 14 nights or more missing. Scores firm up as new nights arrive."),
   },
-  updated: { label: "Updated", explain: "Updated after a late sync added data." },
+  updated: { label: tr("Updated"), explain: tr("Updated after a late sync added data.") },
 } as const;

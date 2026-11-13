@@ -10,6 +10,9 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY patches ./patches
 RUN pnpm install --frozen-lockfile
 COPY . .
+# Interface language (en or de): pages prerendered at build time need it too, not only the running server.
+ARG PULSE_LOCALE=en
+ENV PULSE_LOCALE=$PULSE_LOCALE
 RUN pnpm build
 # Scripts run outside the Next server, so each gets its own bundle with its dependencies inside.
 RUN for s in reset-password.mjs:reset-password seed-demo-user.mts:seed-user; do \

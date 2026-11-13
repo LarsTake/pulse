@@ -9,6 +9,7 @@ import type { TrendMetricKey } from "@/server/queries/trends"
 import { CARD_LINK } from "@/components/shells/SectionShell"
 import { ResponsiveSheet } from "@/components/shells/ResponsiveSheet"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { t as tr } from "@/lib/i18n"
 
 export type MetricGroup = { group: string; metrics: { key: TrendMetricKey; label: string }[] }
 
@@ -78,7 +79,7 @@ export function MetricSheet({ groups, current, r }: { groups: MetricGroup[]; cur
   return (
     <>
       {trigger}
-      <ResponsiveSheet open={open} onOpenChange={setOpen} title="Metric">
+      <ResponsiveSheet open={open} onOpenChange={setOpen} title={tr("Metric")}>
         <ul className="flex flex-col px-4 pb-[max(env(safe-area-inset-bottom),16px)]">
           {groups.map(({ group, metrics }) => {
             const on = group === expanded

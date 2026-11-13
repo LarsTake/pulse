@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { UI_LOCALE } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
 import { PwaRuntime } from "@/components/pwa/PwaRuntime"
 import { SW_SCRIPT } from "@/lib/sw"
@@ -8,6 +9,7 @@ import { THEME_SCRIPT } from "@/lib/theme";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import launchScreens from "./launch-screens.json"
 import "./globals.css";
+import { t as tr } from "@/lib/i18n"
 
 // Fonts ship in node_modules (@fontsource), so a build needs no access to Google Fonts (home servers, offline CI).
 // Figtree: a plain geometric sans for text. Barlow: tight, even numerals for scores. See docs/design/spec.md §3.
@@ -42,14 +44,14 @@ const DESCRIPTION =
   "Recovery, strain and sleep from your Fitbit Air: Healthspan, Energy Bank, stress and a journal, all on your own server.";
 
 export const metadata: Metadata = {
-  title: { default: "Pulse", template: "%s · Pulse" },
+  title: { default: tr("Pulse"), template: "%s · Pulse" },
   description: DESCRIPTION,
-  applicationName: "Pulse",
-  appleWebApp: { capable: true, title: "Pulse", statusBarStyle: "black-translucent", startupImage: LAUNCH_SCREENS },
+  applicationName: tr("Pulse"),
+  appleWebApp: { capable: true, title: tr("Pulse"), statusBarStyle: "black-translucent", startupImage: LAUNCH_SCREENS },
   formatDetection: { telephone: false, email: false, address: false },
   // Private, single-user app behind its own sign-in: keep it out of search indexes.
   robots: { index: false, follow: false, nocache: true },
-  openGraph: { title: "Pulse", description: DESCRIPTION, siteName: "Pulse", type: "website" },
+  openGraph: { title: tr("Pulse"), description: DESCRIPTION, siteName: tr("Pulse"), type: "website" },
 };
 
 // width=device-width, initial-scale=1, viewport-fit=cover for the safe-area insets; zoom is never disabled (spec §9).
@@ -71,7 +73,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang={UI_LOCALE}
       suppressHydrationWarning
       className={`${figtree.variable} ${barlow.variable} h-full scroll-pt-[calc(120px+var(--inset-top))] scroll-pb-[110px] antialiased md:scroll-pb-24`}
     >

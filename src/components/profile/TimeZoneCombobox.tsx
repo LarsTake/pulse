@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Check, ChevronDown, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { t as tr } from "@/lib/i18n"
 
 /** Old names some browsers still report (ICU keeps them canonical), mapped to today's names. */
 const RENAMED: Record<string, string> = {
@@ -188,11 +189,11 @@ export function TimeZoneCombobox({
           ref={list}
           id={listId}
           role="listbox"
-          aria-label="Time zones"
+          aria-label={tr("Time zones")}
           onMouseDown={(e) => e.preventDefault()}
           className="max-h-[152px] snap-y scroll-pt-1 overflow-y-auto overscroll-none rounded-xl bg-field p-1 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-top-1"
         >
-          {matches.length === 0 && <li className="px-3 py-3 text-[15px] leading-5 text-muted-foreground">No time zone matches “{query}”.</li>}
+          {matches.length === 0 && <li className="px-3 py-3 text-[15px] leading-5 text-muted-foreground">{tr("No time zone matches “")}{query}”.</li>}
           {matches.map((z, i) => {
             const selected = z.id === canonicalZone(value)
             return (

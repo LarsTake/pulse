@@ -85,6 +85,7 @@ ADMIN_EMAILS=$AdminEmail
 GOOGLE_CLIENT_ID=$clientId
 GOOGLE_CLIENT_SECRET=$clientSecret
 APP_URL=https://$Domain
+PULSE_LOCALE=de
 "@ | Set-Content -Encoding ascii .\.env
 Ok ".env written"
 

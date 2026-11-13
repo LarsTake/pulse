@@ -6,8 +6,9 @@ import { getConfig } from "@/server/config"
 import { AUTH_FOOTNOTE, AUTH_LINK, AuthHero } from "@/components/auth/AuthHero"
 import { AuthShell } from "@/components/shells/AuthShell"
 import { Button } from "@/components/ui/button"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata: Metadata = { title: "Forgot password" }
+export const metadata: Metadata = { title: tr("Forgot password") }
 
 const GUIDE = "https://github.com/adityaongit/pulse/blob/main/docs/admin.md#reset-a-password"
 
@@ -15,7 +16,7 @@ const GUIDE = "https://github.com/adityaongit/pulse/blob/main/docs/admin.md#rese
 const mailto = (to: string) =>
   `mailto:${to}?${new URLSearchParams({
     subject: "Pulse password reset",
-    body: "Hi,\n\nPlease reset the password for my Pulse account.\n\nMy username or email: \n\nThanks!",
+    body: tr("Hi,\n\nPlease reset the password for my Pulse account.\n\nMy username or email: \n\nThanks!"),
   })
     .toString()
     .replaceAll("+", "%20")}`
@@ -35,9 +36,9 @@ export default async function ForgotPage() {
   ]
   return (
     <AuthShell>
-      <AuthHero compact title="Forgot your password?" body="Pulse doesn’t send email, so the person who runs it resets your password for you." />
+      <AuthHero compact title={tr("Forgot your password?")} body={tr("Pulse doesn’t send email, so the person who runs it resets your password for you.")} />
       <div className="mt-8 space-y-5">
-        <ol className="space-y-4 rounded-2xl bg-secondary p-4" aria-label="How to reset your password">
+        <ol className="space-y-4 rounded-2xl bg-secondary p-4" aria-label={tr("How to reset your password")}>
           {steps.map((step, i) => (
             <li key={i} className="flex gap-3">
               <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-full bg-background/60 font-numeric text-[13px] leading-none font-bold text-foreground tabular-nums">
@@ -52,8 +53,7 @@ export default async function ForgotPage() {
             <Button asChild size="sheet">
               <a href={mailto(support)}>
                 <Mail aria-hidden strokeWidth={2} />
-                Email the admin
-              </a>
+                {tr("Email the admin")}</a>
             </Button>
             <p className="text-center text-[13px] leading-[18px] break-all text-muted-foreground" translate="no">
               {support}
@@ -62,14 +62,12 @@ export default async function ForgotPage() {
         )}
         <p className={AUTH_FOOTNOTE}>
           <Link href="/login" className={AUTH_LINK}>
-            Back to sign in
-          </Link>
+            {tr("Back to sign in")}</Link>
         </p>
         <p className={AUTH_FOOTNOTE}>
-          Running your own Pulse?{" "}
+          {tr("Running your own Pulse?")}{" "}
           <a href={GUIDE} target="_blank" rel="noreferrer" className={AUTH_LINK}>
-            Reset a password from the server
-            <span className="sr-only"> (opens in a new tab)</span>
+            {tr("Reset a password from the server")}<span className="sr-only"> {" "}{tr("(opens in a new tab)")}</span>
           </a>
         </p>
       </div>

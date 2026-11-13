@@ -14,6 +14,7 @@ import { GoogleError } from "./sources/google/oauth";
 import { googleSource } from "./sources/google/sync";
 import { ensureDemoUser, seedSource } from "./sources/seed/generate";
 import type { Source } from "./sources/types";
+import { t as tr } from "@/lib/i18n"
 
 const INTERVAL_MS = 15 * 60_000;
 /** Raw heart rate is kept this many days before compaction to per-minute means (sync re-lists sessions 30 days back). */
@@ -266,7 +267,7 @@ export async function pullHeartRate(userId: number) {
  */
 export async function syncAndWait(userId: number, timeoutMs = 60_000): Promise<{ ok: boolean; error: string | null }> {
   const w = g.__pulseWorker;
-  if (!w) return { ok: false, error: "The sync worker isn’t running" };
+  if (!w) return { ok: false, error: tr("The sync worker isn’t running") };
   let runs = w.isRunning(userId) ? 2 : 1;
   let seen = w.stateOf(userId).lastRunAt;
   w.requestSync({ userId, force: true });

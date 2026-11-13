@@ -36,18 +36,19 @@
     <button id="cancel" class="quiet" type="button" hidden>Cancel</button>
   </form>
 </main>
+<script src="i18n.js"></script>
 <script>
   // Only a server origin is kept: Pulse is served from the root of its host.
   function normalize(raw) {
     const text = raw.trim();
-    if (!text) return { error: "Enter your Pulse server’s address." };
+    if (!text) return { error: T("Enter your Pulse server’s address.") };
     let url;
     try {
       url = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(text) ? text : `https://${text}`);
     } catch {
-      return { error: "That isn’t a web address." };
+      return { error: T("That isn’t a web address.") };
     }
-    if (url.protocol !== "https:") return { error: "Use an https:// address. The app only connects over HTTPS." };
+    if (url.protocol !== "https:") return { error: T("Use an https:// address. The app only connects over HTTPS.") };
     return { value: url.origin };
   }
 
@@ -88,12 +89,12 @@
     }
     input.value = result.value;
     connect.disabled = true;
-    connect.textContent = "Checking…";
+    connect.textContent = T("Checking…");
     const ok = await reachable(result.value);
     connect.disabled = false;
-    connect.textContent = "Connect";
+    connect.textContent = T("Connect");
     if (!ok) {
-      error.textContent = "Couldn’t reach that server. Check the address and your connection.";
+      error.textContent = T("Couldn’t reach that server. Check the address and your connection.");
       return;
     }
     server.set({ url: result.value });

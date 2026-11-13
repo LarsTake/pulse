@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FIELD, nowLocal, parseNum, Section, todayLocal } from "../_lib/forms"
+import { t as tr } from "@/lib/i18n"
 
 function ErrorLine({ error }: { error: string | null }) {
   return error ? (
@@ -61,8 +62,8 @@ export function BpSheet() {
     <ResponsiveSheet
       open={open}
       onOpenChange={(o) => !o && !saving && closeSheet("bp")}
-      title="Log blood pressure"
-      description="Saved in Pulse only"
+      title={tr("Log blood pressure")}
+      description={tr("Saved in Pulse only")}
       footer={
         <>
           <ErrorLine error={error} />
@@ -79,22 +80,22 @@ export function BpSheet() {
           void save()
         }}
       >
-        <Section title="Reading">
+        <Section title={tr("Reading")}>
           <div className="grid grid-cols-3 gap-2">
-            <Field id="bp-sys" label="Systolic" hint="(top)">
+            <Field id="bp-sys" label={tr("Systolic")} hint="(top)">
               <Input id="bp-sys" inputMode="numeric" autoComplete="off" placeholder="120" value={f.sys} onChange={set("sys")} className={FIELD} autoFocus />
             </Field>
-            <Field id="bp-dia" label="Diastolic" hint="(bottom)">
+            <Field id="bp-dia" label={tr("Diastolic")} hint="(bottom)">
               <Input id="bp-dia" inputMode="numeric" autoComplete="off" placeholder="80" value={f.dia} onChange={set("dia")} className={FIELD} />
             </Field>
-            <Field id="bp-pulse" label="Pulse">
-              <Input id="bp-pulse" inputMode="numeric" autoComplete="off" placeholder="Optional" value={f.pulse} onChange={set("pulse")} className={FIELD} />
+            <Field id="bp-pulse" label={tr("Pulse")}>
+              <Input id="bp-pulse" inputMode="numeric" autoComplete="off" placeholder={tr("Optional")} value={f.pulse} onChange={set("pulse")} className={FIELD} />
             </Field>
           </div>
-          <p className={CAPTION}>mmHg. Sit quietly for 5 minutes first, arm at heart height; two readings a minute apart beat one.</p>
+          <p className={CAPTION}>{tr("mmHg. Sit quietly for 5 minutes first, arm at heart height; two readings a minute apart beat one.")}</p>
         </Section>
-        <Section title="When">
-          <Field id="bp-at" label="Time" hint="(empty: now)">
+        <Section title={tr("When")}>
+          <Field id="bp-at" label={tr("Time")} hint={tr("(empty: now)")}>
             <Input id="bp-at" type="datetime-local" max={nowLocal()} value={f.at} onChange={set("at")} className={FIELD} />
           </Field>
         </Section>
@@ -138,7 +139,7 @@ export function LabSheet() {
       if (value === null) continue
       const refLow = r.own ? parseNum(r.low) : null
       const refHigh = r.own ? parseNum(r.high) : null
-      if ([value, refLow, refHigh].some((x) => Number.isNaN(x))) return setError(`${m.label}: numbers only.`)
+      if ([value, refLow, refHigh].some((x) => Number.isNaN(x))) return setError(tr("{0}: numbers only.", [m.label]))
       results.push({ marker: r.marker, value, refLow, refHigh })
     }
     if (!results.length) return setError("Enter at least one value.")
@@ -155,8 +156,8 @@ export function LabSheet() {
     <ResponsiveSheet
       open={open}
       onOpenChange={(o) => !o && !saving && closeSheet("labs")}
-      title="Log lab results"
-      description="Saved in Pulse only"
+      title={tr("Log lab results")}
+      description={tr("Saved in Pulse only")}
       size="tall"
       footer={
         <>
@@ -174,8 +175,8 @@ export function LabSheet() {
           void save()
         }}
       >
-        <Section title="Test day">
-          <Field id="lab-day" label="Blood drawn on">
+        <Section title={tr("Test day")}>
+          <Field id="lab-day" label={tr("Blood drawn on")}>
             <Input id="lab-day" type="date" max={todayLocal()} value={day} onChange={(e) => setDay(e.target.value)} className={FIELD} />
           </Field>
         </Section>
@@ -187,17 +188,17 @@ export function LabSheet() {
               key={r.marker}
               title={m.label}
               action={
-                <Button type="button" variant="ghost" size="icon-touch" aria-label={`Remove ${m.label}`} onClick={() => setRows((rs) => rs.filter((_, j) => j !== i))}>
+                <Button type="button" variant="ghost" size="icon-touch" aria-label={tr("Remove {0}", [m.label])} onClick={() => setRows((rs) => rs.filter((_, j) => j !== i))}>
                   <X aria-hidden strokeWidth={1.75} />
                 </Button>
               }
             >
-              <Field id={`lab-${r.marker}`} label="Value" hint={`(${m.unit})`}>
+              <Field id={`lab-${r.marker}`} label={tr("Value")} hint={`(${m.unit})`}>
                 <Input id={`lab-${r.marker}`} inputMode="decimal" autoComplete="off" value={r.value} onChange={(e) => upd(i, "value", e.target.value)} className={FIELD} />
               </Field>
               {r.own ? (
                 <div className="grid grid-cols-2 gap-2">
-                  <Field id={`lab-${r.marker}-lo`} label="Range from">
+                  <Field id={`lab-${r.marker}-lo`} label={tr("Range from")}>
                     <Input id={`lab-${r.marker}-lo`} inputMode="decimal" placeholder="none" value={r.low} onChange={(e) => upd(i, "low", e.target.value)} className={FIELD} />
                   </Field>
                   <Field id={`lab-${r.marker}-hi`} label="to">
@@ -206,22 +207,21 @@ export function LabSheet() {
                 </div>
               ) : (
                 <button type="button" className={cn(CAPTION, "self-start underline underline-offset-4")} onClick={() => upd(i, "own", true)}>
-                  Use the range printed on your report
-                </button>
+                  {tr("Use the range printed on your report")}</button>
               )}
             </Section>
           )
         })}
 
-        <Section title="Add a marker">
+        <Section title={tr("Add a marker")}>
           <div className="flex gap-2">
             <select
-              aria-label="Marker"
+              aria-label={tr("Marker")}
               value={adding}
               onChange={(e) => setAdding(e.target.value)}
               className="h-11 min-w-0 flex-1 rounded-xl border border-input bg-input/30 px-3 text-base text-foreground outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
             >
-              <option value="">Choose…</option>
+              <option value="">{tr("Choose…")}</option>
               {Object.entries(LAB_GROUP_LABEL).map(([g, label]) => (
                 <optgroup key={g} label={label}>
                   {LAB_MARKERS.filter((m) => m.group === g && !used.has(m.key)).map((m) => (
@@ -243,10 +243,9 @@ export function LabSheet() {
               }}
             >
               <Plus aria-hidden strokeWidth={1.75} />
-              Add
-            </Button>
+              {tr("Add")}</Button>
           </div>
-          <p className={CAPTION}>Units as listed; convert if your lab reports others (e.g. mmol/L cholesterol × 38.67 = mg/dL).</p>
+          <p className={CAPTION}>{tr("Units as listed; convert if your lab reports others (e.g. mmol/L cholesterol × 38.67 = mg/dL).")}</p>
         </Section>
         <button type="submit" hidden />
       </form>

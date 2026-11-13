@@ -12,6 +12,7 @@ import { HypnogramChart } from "@/components/charts/Hypnogram"
 import { SleepHrChart, SleepHrChartSkeleton, type SleepHr } from "@/components/charts/SleepHrChart"
 import { ReasonPlaceholder } from "./ReasonPlaceholder"
 import { DeltaMark, LABEL } from "./primitives"
+import { t as tr } from "@/lib/i18n"
 
 type Stage = "awake" | "rem" | "light" | "deep"
 export type SleepStagesNight = {
@@ -42,7 +43,7 @@ const HERO = "font-numeric text-[32px] leading-9 font-bold tracking-[-0.01em]"
 function HoursHero({ h }: { h: SleepHours }) {
   const t = h.average === null ? undefined : deltaTone(GOOD_DIRECTION.hours, h.asleepMin, h.average, h.sd)
   const sentence = statSentence({
-    label: "Hours of sleep",
+    label: tr("Hours of sleep"),
     valueText: durationWords(h.asleepMin),
     averageText: h.average === null ? undefined : durationWords(h.average),
     dir: t?.dir,
@@ -50,7 +51,7 @@ function HoursHero({ h }: { h: SleepHours }) {
   })
   return (
     <div>
-      <p className={cn(LABEL, "text-foreground-secondary")}>Hours of sleep</p>
+      <p className={cn(LABEL, "text-foreground-secondary")}>{tr("Hours of sleep")}</p>
       <p className="sr-only">{sentence}</p>
       <div aria-hidden className="mt-1.5 grid w-fit grid-cols-[auto_8px] items-center gap-x-2">
         <span className={cn(HERO, "tabular-nums")}>{hmm(h.asleepMin)}</span>
@@ -62,7 +63,7 @@ function HoursHero({ h }: { h: SleepHours }) {
 }
 
 /** WHOOP's stage names; Fitbit's "Deep" is slow-wave sleep. */
-const ROW_LABEL: Record<Stage, string> = { awake: "Awake", light: "Light", deep: "SWS (Deep)", rem: "REM" }
+const ROW_LABEL: Record<Stage, string> = { awake: tr("Awake"), light: tr("Light"), deep: tr("SWS (Deep)"), rem: tr("REM") }
 const TABS = [
   ["breakdown", "Breakdown"],
   ["timeline", "Timeline"],
@@ -78,9 +79,9 @@ function RestorativeRow({ r }: { r: { minutes: number; average: number | null; s
   return (
     <div className="flex items-center gap-3 border-t border-border pt-4">
       <span aria-hidden className="size-4 shrink-0 rounded-[3px] bg-linear-135 from-stage-deep to-stage-rem" />
-      <span className={cn(LABEL, "min-w-0 flex-1 text-[13px]")}>Restorative sleep</span>
+      <span className={cn(LABEL, "min-w-0 flex-1 text-[13px]")}>{tr("Restorative sleep")}</span>
       <span className="sr-only">
-        {statSentence({ label: "Restorative sleep", valueText: durationWords(r.minutes), averageText: r.average === null ? undefined : durationWords(r.average), dir: t?.dir, tone: t?.tone })}
+        {statSentence({ label: tr("Restorative sleep"), valueText: durationWords(r.minutes), averageText: r.average === null ? undefined : durationWords(r.average), dir: t?.dir, tone: t?.tone })}
       </span>
       <span aria-hidden className="grid grid-cols-[auto_8px] items-center gap-x-2 text-right">
         <span className="font-numeric text-[22px] leading-7 font-bold tabular-nums">{hmm(r.minutes)}</span>
@@ -100,7 +101,7 @@ function Rows({ night, selected, onSelect, restorative }: { night: SleepStagesNi
   return (
     <div className="space-y-4">
       {/* One view at a time: the stage breakdown (WHOOP's rows) or the night's timeline (the hypnogram). */}
-      <div role="tablist" aria-label="Stages view" className="flex gap-0.5 rounded-lg bg-muted p-0.5">
+      <div role="tablist" aria-label={tr("Stages view")} className="flex gap-0.5 rounded-lg bg-muted p-0.5">
         {TABS.map(([id, label]) => (
           <button
             key={id}
@@ -122,13 +123,12 @@ function Rows({ night, selected, onSelect, restorative }: { night: SleepStagesNi
         {tab === "breakdown" ? (
           <span className={cn(LABEL, "flex items-baseline gap-2 text-foreground-secondary")}>
             <span aria-hidden className={cn("h-4 w-3.5 self-center", RANGE_BOX)} />
-            Typical range
-          </span>
+            {tr("Typical range")}</span>
         ) : (
-          <h3 className={cn(LABEL, "text-foreground-secondary")}>Stages</h3>
+          <h3 className={cn(LABEL, "text-foreground-secondary")}>{tr("Stages")}</h3>
         )}
         <span className="flex items-baseline gap-2">
-          <span className={cn(LABEL, "text-muted-foreground")}>Duration</span>
+          <span className={cn(LABEL, "text-muted-foreground")}>{tr("Duration")}</span>
           <span className="font-numeric text-[17px] leading-5 font-bold text-foreground tabular-nums">{hmm(span / 60_000)}</span>
         </span>
       </div>
@@ -136,7 +136,7 @@ function Rows({ night, selected, onSelect, restorative }: { night: SleepStagesNi
         <HypnogramChart night={night} />
       ) : (
         // Choosing a stage lights its stretches on the heart-rate line above.
-        <div role="radiogroup" aria-label="Highlight a sleep stage" className="space-y-5 pt-1">
+        <div role="radiogroup" aria-label={tr("Highlight a sleep stage")} className="space-y-5 pt-1">
           {rows.map((r) => {
             const on = r.stage === selected
             const color = DATA_COLORS[`stage-${r.stage}`]
@@ -149,7 +149,7 @@ function Rows({ night, selected, onSelect, restorative }: { night: SleepStagesNi
                     value={r.stage}
                     checked={on}
                     onChange={() => onSelect(r.stage)}
-                    aria-label={`${ROW_LABEL[r.stage]}, ${Math.round(r.pct)} percent, ${hmm(r.minutes)}. Typical ${r.typical[0]} to ${r.typical[1]} percent`}
+                    aria-label={tr("{0}, {1} percent, {2}. Typical {3} to {4} percent", [ROW_LABEL[r.stage], Math.round(r.pct), hmm(r.minutes), r.typical[0], r.typical[1]])}
                     className="peer sr-only"
                   />
                   {/* the reference app's radio: a white ring, filled white with a dark centre when chosen. */}
@@ -228,10 +228,10 @@ function StageRowsSkeleton() {
     <div aria-hidden className="space-y-4">
       <Skeleton className="h-11 rounded-lg" />
       <div className="flex items-baseline justify-between">
-        <span className={cn(LABEL, "text-foreground-secondary")}>Typical range</span>
+        <span className={cn(LABEL, "text-foreground-secondary")}>{tr("Typical range")}</span>
         <SkeletonText className="w-24 text-[17px] leading-5" />
       </div>
-      {["Awake", "Light", "SWS (Deep)", "REM"].map((l) => (
+      {[tr("Awake"), tr("Light"), tr("SWS (Deep)"), tr("REM")].map((l) => (
         <div key={l} className="space-y-2.5">
           <div className="flex items-center gap-3">
             <span className="size-[26px] rounded-full ring-2 ring-foreground/30 ring-inset" />
@@ -250,7 +250,7 @@ export function SleepStagesSkeleton() {
   return (
     <div aria-hidden className="space-y-4">
       <div>
-        <p className={cn(LABEL, "text-foreground-secondary")}>Hours of sleep</p>
+        <p className={cn(LABEL, "text-foreground-secondary")}>{tr("Hours of sleep")}</p>
         <SkeletonText className={cn(HERO, "mt-1.5 w-[4ch]")} />
         <SkeletonText className="w-[4ch] text-[13px] leading-4" />
       </div>

@@ -4,6 +4,7 @@ import * as React from "react"
 import { toast } from "sonner"
 import "@/lib/install" // registers the install-prompt listener as early as the bundle runs
 import { SW_URL } from "@/lib/sw"
+import { t as tr } from "@/lib/i18n"
 
 
 /**
@@ -15,7 +16,7 @@ import { SW_URL } from "@/lib/sw"
 export function PwaRuntime() {
   React.useEffect(() => {
     const reload = (id: string) =>
-      toast("New version available", { id, duration: Infinity, action: { label: "Reload", onClick: () => location.reload() } })
+      toast("New version available", { id, duration: Infinity, action: { label: tr("Reload"), onClick: () => location.reload() } })
 
     const onRejection = (e: PromiseRejectionEvent) => {
       if (String(e.reason?.message ?? e.reason).includes("Failed to find Server Action")) reload("stale-build")
@@ -31,7 +32,7 @@ export function PwaRuntime() {
             id: "sw-update",
             duration: Infinity,
             action: {
-              label: "Reload",
+              label: tr("Reload"),
               onClick: () => {
                 asked = true
                 w.postMessage("SKIP_WAITING")

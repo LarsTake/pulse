@@ -25,6 +25,7 @@ import { DATA_COLORS } from "@/lib/bands"
 import { loadCalendarMonth } from "@/server/actions/calendar"
 import type { CalendarDayVM } from "@/server/queries/types"
 import { useShellCalendar } from "./ShellStatus"
+import { t as tr } from "@/lib/i18n"
 
 export type CalendarPanelProps = {
   /** The selected day (`?d=`, default today); it carries the circle (CAL5). */
@@ -184,12 +185,11 @@ function MonthPanel({
         {(selected !== today || month !== monthOf(today)) && (
           <button
             type="button"
-            aria-label="Back to today"
+            aria-label={tr("Back to today")}
             onClick={() => onSelect(today)}
             className="relative h-8 touch-manipulation rounded-full bg-foreground/[0.08] px-3.5 text-[11px] leading-4 font-bold tracking-[0.1em] uppercase transition-[background-color,scale] duration-150 ease-standard outline-none after:absolute after:inset-x-0 after:-inset-y-1.5 hover:bg-foreground/[0.12] focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
           >
-            Today
-          </button>
+            {tr("Today")}</button>
         )}
         <Legend context={context} />
       </div>
@@ -213,9 +213,9 @@ function ChevronButton({ dir, disabled, onClick }: { dir: "prev" | "next"; disab
 }
 
 const VALUE_TEXT: Record<CalendarContext, (v: number) => string> = {
-  recovery: (v) => `Recovery ${Math.round(v)}%`,
-  strain: (v) => `Strain ${formatValue("decimal1", v)}`,
-  sleep: (v) => `Sleep ${Math.round(v)}%`,
+  recovery: (v) => tr("Recovery {0}%", [Math.round(v)]),
+  strain: (v) => tr("Strain {0}", [formatValue("decimal1", v)]),
+  sleep: (v) => tr("Sleep {0}%", [Math.round(v)]),
 }
 
 function Day({
@@ -273,8 +273,8 @@ const LEGEND: Record<CalendarContext, { label: string; color: keyof typeof DATA_
     { label: "34% - 66%", color: "recovery-yellow" },
     { label: ">66%", color: "recovery-green" },
   ],
-  strain: [{ label: `Day Strain ${STRAIN_DOT}+`, color: "strain" }],
-  sleep: [{ label: `Sleep ${SLEEP_DOT}%+`, color: "sleep" }],
+  strain: [{ label: tr("Day Strain {0}+", [STRAIN_DOT]), color: "strain" }],
+  sleep: [{ label: tr("Sleep {0}%+", [SLEEP_DOT]), color: "sleep" }],
 }
 
 function Legend({ context }: { context: CalendarContext }) {

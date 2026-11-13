@@ -11,6 +11,7 @@ import { DateSwitcher, type DateSwitcherProps } from "./DateSwitcher"
 import { InfoButton, type InfoContent } from "./InfoButton"
 import { useShellCalendar } from "./ShellStatus"
 import { HEADER_TITLE, HeaderFrame, HeaderRow } from "./TopBar"
+import { t as tr } from "@/lib/i18n"
 
 export type DetailHeaderProps = {
   title: string
@@ -58,7 +59,7 @@ export function DetailHeaderRow({
       <Link
         href={parent}
         replace
-        aria-label={dismiss === "close" ? "Close" : "Back"}
+        aria-label={dismiss === "close" ? "Close" : tr("Back")}
         onClick={(e) => {
           if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
           e.preventDefault()

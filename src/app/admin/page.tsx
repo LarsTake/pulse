@@ -5,8 +5,9 @@ import { coachMode } from "@/server/coach/store"
 import { cn } from "@/lib/utils"
 import { adminGate } from "./gate"
 import { BTN, PageHeader, Panel, Pill, relative, StatCard } from "./ui"
+import { t as tr } from "@/lib/i18n"
 
-export const metadata = { title: "Overview" }
+export const metadata = { title: tr("Overview") }
 
 /** The request time; ages are computed against it on the server. */
 const requestTime = () => Date.now()
@@ -37,34 +38,33 @@ export default async function AdminOverview() {
   const peak = Math.max(1, ...weeks.map((w) => w.n))
   const recent = [...accounts].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(0, 6)
   const activity = [
-    { label: "Today", n: active.today },
-    { label: "This week", n: active.week },
-    { label: "This month", n: active.month },
-    { label: "Not in 30 days", n: accounts.length - active.month },
+    { label: tr("Today"), n: active.today },
+    { label: tr("This week"), n: active.week },
+    { label: tr("This month"), n: active.month },
+    { label: tr("Not in 30 days"), n: accounts.length - active.month },
   ]
 
   return (
     <>
       <PageHeader
-        title="Overview"
-        description="Who uses this Pulse server, how active they are, and how it is set up."
+        title={tr("Overview")}
+        description={tr("Who uses this Pulse server, how active they are, and how it is set up.")}
         action={
           <Link href="/admin/invites" className={cn(BTN.primary, "h-9 px-4 text-[14px]")}>
             <Plus aria-hidden strokeWidth={2.25} />
-            Invite someone
-          </Link>
+            {tr("Invite someone")}</Link>
         }
       />
 
-      <section aria-label="At a glance" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-        <StatCard label="People" value={accounts.length} note={newThisWeek ? `+${newThisWeek} joined this week` : "No one new this week"} icon={Users} />
-        <StatCard label="Active this week" value={active.week} note={accounts.length ? `${Math.round((active.week / accounts.length) * 100)}% of everyone` : "No one yet"} icon={Activity} />
-        <StatCard label="Open invites" value={open.length} note={open.length ? "Waiting to be used" : "None waiting"} icon={MailPlus} />
-        <StatCard label="AI coach set up" value={coachReady} note={coach === "off" ? "Coach is off" : `of ${plural(accounts.length, "person", "people")}`} icon={Bot} />
+      <section aria-label={tr("At a glance")} className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        <StatCard label={tr("People")} value={accounts.length} note={newThisWeek ? tr("+{0} joined this week", [newThisWeek]) : "No one new this week"} icon={Users} />
+        <StatCard label={tr("Active this week")} value={active.week} note={accounts.length ? tr("{0}% of everyone", [Math.round((active.week / accounts.length) * 100)]) : "No one yet"} icon={Activity} />
+        <StatCard label={tr("Open invites")} value={open.length} note={open.length ? "Waiting to be used" : "None waiting"} icon={MailPlus} />
+        <StatCard label={tr("AI coach set up")} value={coachReady} note={coach === "off" ? "Coach is off" : tr("of {0}", [plural(accounts.length, "person", "people")])} icon={Bot} />
       </section>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-        <Panel title="New people" description="Accounts created per week, the last 8 weeks.">
+        <Panel title={tr("New people")} description={tr("Accounts created per week, the last 8 weeks.")}>
           <div role="img" aria-label={weeks.map((w) => `${w.label}: ${w.n}`).join(", ")} className="flex h-44 items-end gap-1.5 pt-4 sm:gap-2">
             {weeks.map((w) => (
               <div key={w.label} className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1.5">
@@ -79,7 +79,7 @@ export default async function AdminOverview() {
           </div>
         </Panel>
 
-        <Panel title="Activity" description="When people last used Pulse.">
+        <Panel title={tr("Activity")} description={tr("When people last used Pulse.")}>
           <ul className="grid gap-3.5 pt-1">
             {activity.map((a) => (
               <li key={a.label} className="grid gap-1.5">
@@ -98,11 +98,10 @@ export default async function AdminOverview() {
 
       <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <Panel
-          title="Newest people"
+          title={tr("Newest people")}
           action={
             <Link href="/admin/people" className={LINK}>
-              View all
-            </Link>
+              {tr("View all")}</Link>
           }
           flush
         >
@@ -124,16 +123,15 @@ export default async function AdminOverview() {
 
         <div className="grid content-start gap-4">
           <Panel
-            title="Open invites"
+            title={tr("Open invites")}
             action={
               <Link href="/admin/invites" className={LINK}>
-                Manage
-              </Link>
+                {tr("Manage")}</Link>
             }
             flush
           >
             {open.length === 0 ? (
-              <p className="px-4 pb-5 text-[14px] text-muted-foreground sm:px-5">No open invites.</p>
+              <p className="px-4 pb-5 text-[14px] text-muted-foreground sm:px-5">{tr("No open invites.")}</p>
             ) : (
               <ul className="divide-y divide-border">
                 {open.slice(0, 4).map((i) => {
@@ -141,7 +139,7 @@ export default async function AdminOverview() {
                   return (
                     <li key={i.id} className="flex items-center justify-between gap-3 px-4 py-3 sm:px-5">
                       <span className="min-w-0 truncate text-[14px] font-medium">{i.label ?? "Unnamed invite"}</span>
-                      <Pill tone={left <= 2 ? "warn" : "coach"}>{left === 1 ? "1 day left" : `${left} days left`}</Pill>
+                      <Pill tone={left <= 2 ? "warn" : "coach"}>{left === 1 ? "1 day left" : tr("{0} days left", [left])}</Pill>
                     </li>
                   )
                 })}
@@ -150,28 +148,27 @@ export default async function AdminOverview() {
           </Panel>
 
           <Panel
-            title="Access"
+            title={tr("Access")}
             action={
               <Link href="/admin/access" className={LINK}>
-                Change
-              </Link>
+                {tr("Change")}</Link>
             }
           >
             <dl className="grid gap-3 text-[14px]">
               <div className="flex items-center justify-between gap-3">
-                <dt className="text-foreground-secondary">Sign-up</dt>
+                <dt className="text-foreground-secondary">{tr("Sign-up")}</dt>
                 <dd>
                   <Pill tone={signup === "open" ? "warn" : signup === "closed" ? "neutral" : "good"}>{SIGNUP[signup]}</Pill>
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <dt className="text-foreground-secondary">AI coach</dt>
+                <dt className="text-foreground-secondary">{tr("AI coach")}</dt>
                 <dd>
                   <Pill tone={coach === "off" ? "neutral" : "coach"}>{COACH[coach]}</Pill>
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <dt className="text-foreground-secondary">Admins</dt>
+                <dt className="text-foreground-secondary">{tr("Admins")}</dt>
                 <dd className="font-numeric font-semibold tabular-nums">{accounts.filter((a) => a.role !== "user").length}</dd>
               </div>
             </dl>

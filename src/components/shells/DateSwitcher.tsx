@@ -10,6 +10,7 @@ import { dayHref, parseDay, stepDay, weekOf } from "@/lib/url"
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import { CalendarPanel } from "./CalendarPanel"
 import { useShellCalendar } from "./ShellStatus"
+import { t as tr } from "@/lib/i18n"
 
 export type DateSwitcherProps = {
   mode: "day" | "week"
@@ -129,14 +130,14 @@ function Switcher({ mode, calendar, placement = "body", narrow = false, steppers
     <Dialog open={open} onOpenChange={setOpen}>
       <div className={cn("inline-flex items-center", bare ? "gap-1" : "h-[30px] rounded-full bg-foreground/[0.04] p-px")}>
         {steppers && (
-          <button type="button" className={bare ? BARE_STEP : cn(STEP, narrow && NARROW_STEP)} aria-label={`Previous ${unit}`} disabled={atStart} onClick={() => by(-step)}>
+          <button type="button" className={bare ? BARE_STEP : cn(STEP, narrow && NARROW_STEP)} aria-label={tr("Previous {0}", [tr(unit)])} disabled={atStart} onClick={() => by(-step)}>
             <ChevronLeft aria-hidden className={bare ? "size-4" : "size-[18px]"} strokeWidth={2.25} />
           </button>
         )}
         <DialogTrigger asChild>
           <button
             type="button"
-            aria-label={`${label}. Open calendar`}
+            aria-label={tr("{0}. Open calendar", [label])}
             aria-busy={loading || undefined}
             className={cn(
               PRESS,
@@ -149,7 +150,7 @@ function Switcher({ mode, calendar, placement = "body", narrow = false, steppers
           </button>
         </DialogTrigger>
         {steppers && (
-          <button type="button" className={bare ? BARE_STEP : cn(STEP, narrow && NARROW_STEP)} aria-label={`Next ${unit}`} disabled={atEnd} onClick={() => by(step)}>
+          <button type="button" className={bare ? BARE_STEP : cn(STEP, narrow && NARROW_STEP)} aria-label={tr("Next {0}", [tr(unit)])} disabled={atEnd} onClick={() => by(step)}>
             <ChevronRight aria-hidden className={bare ? "size-4" : "size-[18px]"} strokeWidth={2.25} />
           </button>
         )}

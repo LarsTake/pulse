@@ -9,6 +9,7 @@ import { ContributorRow } from "@/components/metrics/ContributorRow"
 import { CAPTION, TEXT_LINK } from "@/components/metrics/primitives"
 import { SectionShell } from "@/components/shells/SectionShell"
 import { Accordion as AccordionPrimitive } from "radix-ui"
+import { t as tr } from "@/lib/i18n"
 
 const ICON: Record<string, React.ReactNode> = {
   sleepHours: <Moon />,
@@ -46,7 +47,7 @@ export function ContributorCard({ title, items, className }: { title: string; it
     <SectionShell
       variant="card"
       title={title}
-      info={{ title: `${title} and Pulse Age`, body: "Each factor's bar marks your 6-month average above it and your 30-day average below it, from poor to good for your age. Pulse Age uses the 6-month average; Pace of Aging compares the 30 days with it." }}
+      info={{ title: tr("{0} and Pulse Age", [title]), body: tr("Each factor's bar marks your 6-month average above it and your 30-day average below it, from poor to good for your age. Pulse Age uses the 6-month average; Pace of Aging compares the 30 days with it.") }}
       className={className}
       fill
     >
@@ -84,13 +85,12 @@ export function ContributorCard({ title, items, className }: { title: string; it
                       <p className="max-w-[65ch] text-[15px] leading-[22px] text-pretty text-foreground-secondary">{c.state.body}</p>
                     </div>
                   )}
-                  <p className="text-[15px] leading-[22px] text-foreground-secondary">Target for your age: {show(c.target)}</p>
+                  <p className="text-[15px] leading-[22px] text-foreground-secondary">{tr("Target for your age:")}{" "}{show(c.target)}</p>
                   {c.caption && c.metric.value !== null && <p className={CAPTION}>{c.caption}</p>}
                   <p className="max-w-[65ch] text-[15px] leading-[22px] text-pretty">{c.explanation}</p>
-                  <p className={CAPTION}>Source: {c.source}.</p>
+                  <p className={CAPTION}>{tr("Source:")}{" "}{c.source}.</p>
                   <Link href={c.trendHref} className={TEXT_LINK}>
-                    View trend
-                    <ArrowRight aria-hidden className="size-3.5" strokeWidth={2} />
+                    {tr("View trend")}<ArrowRight aria-hidden className="size-3.5" strokeWidth={2} />
                   </Link>
                 </div>
               </AccordionPrimitive.Content>

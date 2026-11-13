@@ -7,6 +7,7 @@ import { ResponsiveSheet } from "@/components/shells/ResponsiveSheet"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
+import { t as tr } from "@/lib/i18n"
 
 /** Exported avatars are this many pixels square: sharp on a 3× phone at the 56 px Settings size, ~50–150 KB as WebP. */
 export const AVATAR_PX = 512
@@ -153,8 +154,8 @@ export function AvatarCropSheet({ photo, open, pending, error, onCancel, onUse }
     <ResponsiveSheet
       open={open}
       onOpenChange={(o) => !o && !pending && onCancel()}
-      title="Photo"
-      description="Drag to move. Pinch or scroll to zoom."
+      title={tr("Photo")}
+      description={tr("Drag to move. Pinch or scroll to zoom.")}
       footer={
         <>
           {error && (
@@ -166,8 +167,7 @@ export function AvatarCropSheet({ photo, open, pending, error, onCancel, onUse }
             {pending ? "Saving…" : "Use photo"}
           </Button>
           <Button size="sheet" variant="outline-pill" onClick={onCancel} disabled={pending}>
-            Cancel
-          </Button>
+            {tr("Cancel")}</Button>
         </>
       }
     >
@@ -178,7 +178,7 @@ export function AvatarCropSheet({ photo, open, pending, error, onCancel, onUse }
         tabIndex={0}
         role="group"
         aria-roledescription="photo cropper"
-        aria-label="Photo position. Arrow keys move it, plus and minus zoom."
+        aria-label={tr("Photo position. Arrow keys move it, plus and minus zoom.")}
         onPointerDown={down}
         onPointerMove={move}
         onPointerUp={up}
@@ -197,7 +197,7 @@ export function AvatarCropSheet({ photo, open, pending, error, onCancel, onUse }
       <div className="mx-auto mt-3 flex max-w-[400px] items-center gap-3 text-muted-foreground">
         <ZoomOut aria-hidden strokeWidth={1.75} className="size-5 shrink-0" />
         <Slider
-          aria-label="Zoom"
+          aria-label={tr("Zoom")}
           min={1}
           max={MAX_ZOOM}
           step={0.01}

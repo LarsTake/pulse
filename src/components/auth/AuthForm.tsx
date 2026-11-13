@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { AUTH_LINK, AuthAlert } from "./AuthHero"
+import { t as tr } from "@/lib/i18n"
 
 // The reference app's caps labels over filled dark fields: 48 px tall, 16 px text (no iOS zoom), a 12 px radius.
 const LABEL = "text-xs leading-4 font-bold tracking-[0.1em] text-foreground-secondary uppercase"
@@ -115,10 +116,10 @@ export function LoginForm() {
   return (
     <form onSubmit={submit} className="flex flex-col gap-5">
       {error && <AuthAlert>{error}</AuthAlert>}
-      <AuthField label="Email or username" name="identifier" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck={false} required autoFocus />
+      <AuthField label={tr("Email or username")} name="identifier" autoComplete="username" autoCapitalize="none" autoCorrect="off" spellCheck={false} required autoFocus />
       <AuthField
         ref={password}
-        label="Password"
+        label={tr("Password")}
         name="password"
         type="password"
         autoComplete="current-password"
@@ -126,11 +127,10 @@ export function LoginForm() {
         aria-invalid={error && error !== OFFLINE && error !== RATE_LIMITED ? true : undefined}
         aside={
           <Link href="/forgot" className={AUTH_LINK}>
-            Forgot password?
-          </Link>
+            {tr("Forgot password?")}</Link>
         }
       />
-      <AuthSubmit pending={pending} label="Sign in" pendingLabel="Signing in…" className="mt-3" />
+      <AuthSubmit pending={pending} label={tr("Sign in")} pendingLabel="Signing in…" className="mt-3" />
     </form>
   )
 }
@@ -204,9 +204,9 @@ export function SignupForm({ invite }: { invite?: string }) {
   return (
     <form ref={formRef} onSubmit={submit} className="flex flex-col gap-4">
       {error && <AuthAlert>{error}</AuthAlert>}
-      <AuthField label="Name" name="name" autoComplete="name" enterKeyHint="next" required maxLength={100} autoFocus error={fields.name} />
+      <AuthField label={tr("Name")} name="name" autoComplete="name" enterKeyHint="next" required maxLength={100} autoFocus error={fields.name} />
       <AuthField
-        label="Username"
+        label={tr("Username")}
         name="username"
         autoComplete="username"
         autoCapitalize="none"
@@ -216,14 +216,14 @@ export function SignupForm({ invite }: { invite?: string }) {
         minLength={3}
         maxLength={30}
         pattern="[A-Za-z0-9_.]{3,30}"
-        title="3–30 letters, numbers, _ or ."
+        title={tr("3–30 letters, numbers, _ or .")}
         enterKeyHint="next"
-        hint="Letters, numbers, _ and . (3–30)"
+        hint={tr("Letters, numbers, _ and . (3–30)")}
         error={fields.username}
       />
-      <AuthField label="Email" name="email" type="email" autoComplete="email" enterKeyHint="next" autoCapitalize="none" spellCheck={false} required error={fields.email} />
+      <AuthField label={tr("Email")} name="email" type="email" autoComplete="email" enterKeyHint="next" autoCapitalize="none" spellCheck={false} required error={fields.email} />
       <AuthField
-        label="Password"
+        label={tr("Password")}
         name="password"
         type="password"
         autoComplete="new-password"
@@ -231,10 +231,10 @@ export function SignupForm({ invite }: { invite?: string }) {
         minLength={10}
         maxLength={128}
         enterKeyHint="go"
-        hint="At least 10 characters."
+        hint={tr("At least 10 characters.")}
         error={fields.password}
       />
-      <AuthSubmit pending={pending} label="Create account" pendingLabel="Creating account…" className="mt-2" />
+      <AuthSubmit pending={pending} label={tr("Create account")} pendingLabel="Creating account…" className="mt-2" />
     </form>
   )
 }

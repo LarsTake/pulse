@@ -7,6 +7,7 @@ import { useNow } from "@/hooks/use-now"
 import type { HeartRateLive, HeartRateVM } from "@/server/queries/types"
 import { IntradayHrChart } from "@/components/charts/IntradayHrChart"
 import { CAPTION, LABEL, ValueUnit } from "@/components/metrics/primitives"
+import { t as tr } from "@/lib/i18n"
 
 const POLL_MS = 60_000
 const MAX_BACKOFF_MS = 10 * 60_000
@@ -84,7 +85,7 @@ export function LastReading({ t, className }: { t: number; className?: string })
           <span className="relative size-2 rounded-full bg-strain" />
         </span>
       )}
-      {fresh && <span className="sr-only">Live, </span>}
+      {fresh && <span className="sr-only">{tr("Live,")}{" "}</span>}
       {ago(t, now)}
     </span>
   )
@@ -99,9 +100,9 @@ export function HeartRateHero() {
   const avg = bpms.length ? Math.round(mean(bpms)) : null
   const big = v.isToday ? (v.latest?.bpm ?? null) : avg
   const stats = [
-    { label: "Range", value: bpms.length ? `${Math.min(...bpms)}–${Math.max(...bpms)}` : MISSING, spoken: bpms.length ? `${Math.min(...bpms)} to ${Math.max(...bpms)}` : "no readings" },
-    ...(v.isToday ? [{ label: "Average", value: avg === null ? MISSING : String(avg), spoken: avg === null ? "no readings" : String(avg) }] : []),
-    { label: "Resting", value: v.restingHr === null ? MISSING : String(v.restingHr), spoken: v.restingHr === null ? "not yet" : String(v.restingHr) },
+    { label: tr("Range"), value: bpms.length ? `${Math.min(...bpms)}–${Math.max(...bpms)}` : MISSING, spoken: bpms.length ? tr("{0} to {1}", [Math.min(...bpms), Math.max(...bpms)]) : "no readings" },
+    ...(v.isToday ? [{ label: tr("Average"), value: avg === null ? MISSING : String(avg), spoken: avg === null ? "no readings" : String(avg) }] : []),
+    { label: tr("Resting"), value: v.restingHr === null ? MISSING : String(v.restingHr), spoken: v.restingHr === null ? "not yet" : String(v.restingHr) },
   ]
   return (
     <div className="flex w-full max-w-[360px] flex-col items-center gap-2 py-4 text-center">
@@ -112,13 +113,13 @@ export function HeartRateHero() {
         unitClassName="text-xl leading-7 font-semibold text-foreground-secondary"
       />
       {v.isToday ? (
-        v.latest ? <LastReading t={v.latest.t} /> : <p className={CAPTION}>No readings yet today</p>
+        v.latest ? <LastReading t={v.latest.t} /> : <p className={CAPTION}>{tr("No readings yet today")}</p>
       ) : (
         <p className={CAPTION}>{avg === null ? "No readings on this day" : "Day average"}</p>
       )}
       <ul className={cn("mt-4 grid w-full gap-3", stats.length === 3 ? "grid-cols-3" : "grid-cols-2")}>
         {stats.map((s) => (
-          <li key={s.label} aria-label={`${s.label}: ${s.spoken}${s.spoken.match(/\d/) ? " beats per minute" : ""}`}>
+          <li key={s.label} aria-label={`${s.label}: ${s.spoken}${s.spoken.match(/\d/) ? tr(" beats per minute") : ""}`}>
             <p aria-hidden className="font-numeric text-xl leading-6 font-bold tabular-nums">
               {s.value}
             </p>
